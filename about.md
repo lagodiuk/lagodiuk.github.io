@@ -1,11 +1,15 @@
 ---
 layout: page
-title: About
+title: About me
 permalink: /about/
 ---
 
-This is the base Jekyll theme. You can find out more info about customizing your Jekyll theme, as well as basic Jekyll usage documentation at [jekyllrb.com](http://jekyllrb.com/)
+I have experience of solving the wide range of technical problems: systems design, scalability, performance
+optimization. 
 
-You can find the source code for the Jekyll new theme at: [github.com/jglovier/jekyll-new](https://github.com/jglovier/jekyll-new)
+I prefer algorithmic approach in order to attack problems, but I also appreciate the data-driven approach, and
+domain-specific insights about the nature of problems.
 
-You can find the source code for Jekyll at [github.com/jekyll/jekyll](https://github.com/jekyll/jekyll)
+Currently I am working in company [HERE](https://company.here.com/here/). 
+In my daily work I focused on development of search and ranking functionality of [Geocoding
+service](https://developer.here.com/rest-apis/documentation/geocoder).
