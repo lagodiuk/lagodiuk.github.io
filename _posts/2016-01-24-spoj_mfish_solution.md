@@ -198,4 +198,63 @@ So, the following expressions are equivalent:
 So, our final recurrence relation is following:
 ![Recurrence relation](/images/spoj/mfish/recurrence_relation_2.png)
 
+Below presented recursive solution, which is based on recurrence relation from above:
+
+{% highlight java %}
+import java.util.Arrays;
+
+public class MFISH {
+
+	static int solve(int[] fish, Boat[] boats) {
+		Arrays.sort(boats, (b1, b2) -> Integer.compare(b1.anchor, b2.anchor));
+		int result = solve(boats, fish, 1, 0);
+		return result;
+	}
+
+	static final int NEGATIVE_INFINITY = -100000000;
+
+	static int solve(Boat[] boats, int[] fish, int start, int boat) {
+
+		if (boat == boats.length) {
+			// all boats successfully aligned
+			return 0;
+		}
+
+		if (start > boats[boat].anchor) {
+			// anchor of the boat is unreachable
+			// from given start position
+			return NEGATIVE_INFINITY;
+		}
+
+		if (((fish.length - start) + 1) < boats[boat].length) {
+			// boat can't fit into the river 
+            // (intersects the right boundary of the fish array)
+			return NEGATIVE_INFINITY;
+		}
+
+		if ((start + boats[boat].length) <= boats[boat].anchor) {
+			// given start position is too far from
+			// anchor of current boat
+			// so, the start position has to be closer
+			return solve(boats, fish, start + 1, boat);
+		}
+
+		int subProblem1 = solve(boats, fish, start + 1, boat);
+
+		int coverage = countFish(fish, start, (start + boats[boat].length) - 1);
+		int subProblem2 = solve(boats, fish, start + boats[boat].length, boat + 1) + coverage;
+
+		return Math.max(subProblem1, subProblem2);
+	}
+
+	static int countFish(int[] fish, int from, int to) {
+		int coverage = 0;
+		for (int i = from - 1; i <= (to - 1); i++) {
+			coverage += fish[i];
+		}
+		return coverage;
+	}
+}
+{% endhighlight %}
+
 ## [Dynamic Programming solution](#dynamic-programming-solution)
