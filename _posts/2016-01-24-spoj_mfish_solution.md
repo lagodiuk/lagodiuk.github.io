@@ -151,7 +151,18 @@ After analysis of restrictions of the problem (boats can't overlap, and must be 
 
 ## [Brute force solution](#brute-force-solution)
 
-Let's represent the solution of the instance of problem, through solutions of smaller subproblems:
+Let's look closer into the instance of our problem, and try to trace the possible solution of the problem:
+- imagine, that we put the `1st boat` into some *feasible position* `x` (such that distance to anchor is smaller than length of the boat: `(x + boats[1].length) >= boats[1].anchor`)
+- now, we must put `2nd boat` into its *feasible position* `y` - and, with respect to restrictions of your problem (boats can't overlap), we have to choose such `y`, that `y > (x + boats[1].length)`
+- now, we have to put `3rd boat` into its *feasible position* `z`, such that   
+`z > (y + boats[2].length)`
+- and so on...
+
+So, we can see that steps of our solution are very similar, and we just have to:
+- track the index of the current boat: `b`
+- track the first feasible position for curent boat on the river: `s` (such position, which doesn't overlap with previous boat)
+
+Based on the observations from above - we can represent the solution of the instance of problem, through solutions of smaller subproblems:
 
 ![Recurrence relation](/images/spoj/mfish/recurrence_relation.png)
 
@@ -180,7 +191,7 @@ static int max(int[] arr, int i) {
 }
 {% endhighlight %}
 
-Recursive implementation allows to get rid of explicit loop routine, hance the same approach can be used for simplification our recurrence relation.
+Recursive implementation allows to get rid of explicit loop routine, hence the same approach can be used for simplification of our recurrence relation.
 So, the following expressions are equivalent:
 ![Loopless recurrence formula](/images/spoj/mfish/equivalent_max.png)
 
