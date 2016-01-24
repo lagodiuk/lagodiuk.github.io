@@ -152,8 +152,8 @@ After analysis of restrictions of the problem (boats can't overlap, and must be 
 ## [Brute force solution](#brute-force-solution)
 
 Let's look closer into the instance of our problem, and try to trace the possible solution of the problem:
-- imagine, that we put the `1st boat` into some *feasible position* `x` (such that distance to anchor is smaller than length of the boat: `(x + boats[1].length) >= boats[1].anchor`)
-- now, we must put `2nd boat` into its *feasible position* `y` - and, with respect to restrictions of your problem (boats can't overlap), we have to choose such `y`, that `y > (x + boats[1].length)`
+- imagine, that we put the `1st boat` into some *feasible position* `x` (such that distance to its anchor is smaller than length of the boat: `(x + boats[1].length) >= boats[1].anchor`)
+- now, we must put `2nd boat` into its *feasible position* `y` - and, with respect to restrictions of our problem (boats can't overlap), we have to choose such `y`, that `y > (x + boats[1].length)`
 - now, we have to put `3rd boat` into its *feasible position* `z`, such that   
 `z > (y + boats[2].length)`
 - and so on...
