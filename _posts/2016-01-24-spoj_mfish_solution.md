@@ -1,0 +1,190 @@
+---
+layout: post
+title:  "Catch Fish problem from SPOJ: MFISH"
+date:   2016-01-23 16:04:33
+categories: spoj dynamic_programming
+tags:
+- jekyll
+- code
+---
+
+Analysis and solution of the problem: http://www.spoj.com/problems/MFISH/
+
+<!--more-->
+
+## Table of contents
+
+* <a href="#description-of-the-problem"> Description of the problem </a>
+* <a href="#understanding-the-problem"> Understanding the problem </a>
+* <a href="#modelling-the-problem"> Modelling the problem </a>
+* <a href="#brute-force-solution"> Brute Force solution </a>
+* <a href="#dynamic-programming-solution"> Dynamic Programming solution </a>
+
+## [Description of the problem](#description-of-the-problem)
+
+> During his childhood, Mirko liked to play “Sea battle” a lot, but once he got bored of it and invented a new game imaginatively called “Ships catch fish on a river”.
+>
+> The game board consists of N fields lined up in a row and numbered 1 to N in ascending order from left to right. These fields represent a river on which M ships are to be placed. For each field the amount of fish swimming in that part of the river is known. Every ship has a specific length, i.e. it occupies the specific number of consecutive fields. A ship must somewhere drop an anchor but is allowed to do that in a certain field only. That means that one of the fields a ship will occupy is predetermined.
+> 
+> There can be only one ship or a part of only one ship on a single field of the board. We define the total amount of fish caught as the sum of amounts of fish swimming in all fields occupied by ships. Goal of the game is to place all ships on the river in a way that the total amount of fish caught is maximal.
+>
+> While playing an instance of this game, Mirko is in doubt whether the way he placed ships is optimal. Therefore asked you to help him calculate the maximum possible amount of fish caught.
+>
+
+### Input  
+
+> First line of the input file contains an integer N, the number of fields on board, 1 ≤ N ≤ 100000.
+> 
+> In the next line there are N integers, separated by whitespaces, which represent the amounts of fish swimming in appropriate field, given in kilograms. These numbers will not be less than 1 nor greater than 100.
+>
+> The next line contains an integer M, number of the ships, 1 ≤ M ≤ N.
+>
+> Each of the following M lines consists of two integers B and D separated by a whitespace. That means that the appropriate ship should drop the anchor in a field numbered with B and that its length is D.
+> 
+> Note: input data will always be such that the solution will exist
+>
+
+### Output
+
+>
+> The only line of the output file should contain the maximum possible total amount of fish caught.
+>
+
+### Sample
+
+>
+> #### Input
+>> 11  
+>> 2 5 3 4 7 6 2 1 3 8 5  
+>> 2  
+>> 8 3  
+>> 3 2  
+>
+> #### Output
+>> 20 
+>
+> #### Input
+>> 13   
+>> 3 2 4 7 2 1 3 6 1 2 6 4 1   
+>> 2  
+>> 5 7   
+>> 11 4  
+>
+> #### Output  
+>> 38  
+>
+> #### Input
+>> 11  
+>> 1 1 6 4 4 1 1 3 10 1 1  
+>> 3  
+>> 2 3  
+>> 6 4  
+>> 10 2
+>
+> #### Output
+>> 31
+
+## [Understanding the problem](#understanding-the-problem)
+
+Below presented a graphical representation of the problem's description:
+
+![Illustration to the problem](/images/spoj/mfish/river.png)
+
+Each boat has to put its anchor, strictly, into its own position. Positions of anchors are fixed - which means, that at least one segment of every boat has to be located in segment of the river with a boat's anchor. 
+
+Apart from that - it is possible to vary alignment of the boats (boats are not allowed to overlap). Each alignment can be characterized by total coverage of fish. 
+
+So, we have to find the largest possible coverage of fish (with respect to predefined anchor positions, and lengths of the boats). Below presented few possible alignments of the boats:
+
+![Example of alignments](/images/spoj/mfish/alignments_example.png)
+
+## [Modelling the problem](#modelling-the-problem)
+
+The river can be modelled just by simple array `int[] fish` - where each cell represents amount of fish in corresponding location (according to problem's description, indexing of positions starts from 1, in contradiction to commonly used 0-based indexing in arrays - so we have to be careful).
+
+For convenience, let's define class, which represents boat:
+
+{% highlight java %}
+class Boat {
+    int anchor;
+    int length;
+
+    // let's introduce a variable, which represents
+    // the leftmost allowed position of the boat
+    int minPos;
+
+    Boat(int anchor, int length) {
+        this.anchor = anchor;
+        this.length = length;
+        this.minPos = (anchor - length) + 1;
+        if (this.minPos < 1) {
+            this.minPos = 1;
+        }
+    }
+}
+{% endhighlight %}
+
+So, we have to develop some function, which returns the largest possible coverage for given array of boats and array of fish amounts:
+
+{% highlight java %}
+static int solve(int[] fish, Boat[] boats) {
+    // ...
+    // Our algorithm will be here
+    // ...
+    return result;
+}
+{% endhighlight %}
+
+As far, as description of the problem does not tell anything about the order of the boats inside input data - let's sort the boats by location of anchors:
+
+{% highlight java %}
+static int solve(int[] fish, Boat[] boats) {
+    Arrays.sort(boats, (b1, b2) -> Integer.compare(b1.anchor, b2.anchor));
+    // ...
+    // Our algorithm will be here
+    // ...
+    return result;
+}
+{% endhighlight %}
+
+After analysis of restrictions of the problem (boats can't overlap, and must be connected with their anchors), we can notice an **important insight about the problem: (after sorting boats by anchor location) - the precedence order of the boats will be fixed for any possible alignment of boats.**
+
+## [Brute force solution](#brute-force-solution)
+
+Let's represent the solution of the instance of problem, through solutions of smaller subproblems:
+
+![Recurrence relation](/images/spoj/mfish/recurrence_relation.png)
+
+Let's simplify our recurrence relation a bit. To do this, let's consider two possible ways of implementing the function, which finds the maximum value inside array:
+
+Iterative:
+{% highlight java %}
+static int max(int[] arr) {
+    int result = Integer.MIN_VALUE;
+    for(int i = 0; i < arr.length; i++) {
+        result = Math.max(result, arr[i]);
+    }
+    return result;
+}
+{% endhighlight %}
+
+Recursive:
+{% highlight java %}
+static int max(int[] arr) {
+    return max(arr, 0);
+}
+
+static int max(int[] arr, int i) {
+    if(i == arr.length) return Integer.MIN_VALUE;
+    return Math.max(arr[i], max(arr, i + 1));
+}
+{% endhighlight %}
+
+Recursive implementation allows to get rid of explicit loop routine, hance the same approach can be used for simplification our recurrence relation.
+So, the following expressions are equivalent:
+![Loopless recurrence formula](/images/spoj/mfish/equivalent_max.png)
+
+So, our final recurrence relation is following:
+![Recurrence relation](/images/spoj/mfish/recurrence_relation_2.png)
+
+## [Dynamic Programming solution](#dynamic-programming-solution)

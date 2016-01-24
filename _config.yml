@@ -9,6 +9,13 @@ baseurl: "" # the subpath of your site, e.g. /blog/
 url: "http://lagodiuk.github.io" # the base hostname & protocol for your site
 twitter_username: ylahodiuk
 github_username:  lagodiuk
+excerpt_separator: <!--more-->
 
 # Build settings
-markdown: kramdown
+#markdown: kramdown
+
+markdown: redcarpet
+markdown_ext:  markdown,mkdown,mkdn,mkd,md
+
+redcarpet:
+  extensions: ["lax_spacing", "tables", "autolink", "strikethrough", "space_after_headers", "with_toc_data", "fenced_code_blocks"]
