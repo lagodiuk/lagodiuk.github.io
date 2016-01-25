@@ -11,6 +11,8 @@ twitter_username: ylahodiuk
 github_username:  lagodiuk
 excerpt_separator: <!--more-->
 
+highlighter: pygments
+
 # Build settings
 #markdown: kramdown
 
