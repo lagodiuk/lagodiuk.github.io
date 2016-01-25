@@ -18,7 +18,7 @@ Analysis and solution of the problem: http://www.spoj.com/problems/MFISH/
 * <a href="#understanding-the-problem"> Understanding the problem </a>
 * <a href="#modelling-the-problem"> Modelling the problem </a>
 * <a href="#brute-force-solution"> Brute Force solution </a>
-* <a href="#dynamic-programming-solution"> Dynamic Programming solution </a>
+* <a href="#dynamic-programming-solution-o-n-m"> Dynamic Programming solution O(N * M) </a>
 
 ## [Description of the problem](#description-of-the-problem)
 
@@ -86,7 +86,7 @@ Analysis and solution of the problem: http://www.spoj.com/problems/MFISH/
 
 ## [Understanding the problem](#understanding-the-problem)
 
-Below presented a graphical representation of the problem's description:
+Below provided a graphical representation of the problem's description:
 
 ![Illustration to the problem](/images/spoj/mfish/river.png)
 
@@ -200,13 +200,15 @@ So, our final recurrence relation is following:
 
 Below presented recursive solution, which is based on recurrence relation from above:
 
-{% highlight java %}
+{% highlight java linenos=table %}
 import java.util.Arrays;
 
 public class MFISH {
 
 	static int solve(int[] fish, Boat[] boats) {
-		Arrays.sort(boats, (b1, b2) -> Integer.compare(b1.anchor, b2.anchor));
+		Arrays.sort(boats, 
+                    (b1, b2) -> Integer.compare(b1.anchor, b2.anchor));
+                    
 		int result = solve(boats, fish, 1, 0);
 		return result;
 	}
@@ -241,8 +243,11 @@ public class MFISH {
 
 		int subProblem1 = solve(boats, fish, start + 1, boat);
 
-		int coverage = countFish(fish, start, (start + boats[boat].length) - 1);
-		int subProblem2 = solve(boats, fish, start + boats[boat].length, boat + 1) + coverage;
+		int coverage = 
+                countFish(fish, start, (start + boats[boat].length) - 1);
+                
+		int subProblem2 = coverage +
+                solve(boats, fish, start + boats[boat].length, boat + 1);
 
 		return Math.max(subProblem1, subProblem2);
 	}
@@ -257,4 +262,92 @@ public class MFISH {
 }
 {% endhighlight %}
 
-## [Dynamic Programming solution](#dynamic-programming-solution)
+## [Dynamic Programming solution O(N * M)](#dynamic-programming-solution-o-n-m)
+
+We can notice that solution of every subproblem depends only on two variables:
+- `s` - position in the river
+- `b` - index of current boat
+
+Based on the information from the problem's description - we can see, that there are only `N` possible values of `s`, and only `M` possible values of `b`.   
+Hence, there are only `M * N` possible combinations of `s` and `b` (let's call them - *states*).
+
+So, we can make use of [Memoization technique](https://en.wikipedia.org/wiki/Memoization) - in order to transform brute force solution into **Top Down Dynamic Programming** solution.
+Below presented code, which is very similar to the previous one - but, additionally, augmented with logic for memoization (highlighted lines of code):
+
+{% highlight java linenos=table hl_lines="9 10 11 12 23 42 43 44 61 62" %}
+import java.util.Arrays;
+
+public class MFISH {
+
+	static int solve(int[] fish, Boat[] boats) {
+		Arrays.sort(boats, 
+                    (b1, b2) -> Integer.compare(b1.anchor, b2.anchor));
+
+		int[][] memoized = new int[fish.length + 1][boats.length];
+		for (int[] row : memoized) {
+			Arrays.fill(row, NOT_INITIALIZED);
+		}
+
+		int result = solve(boats, fish, 1, 0, memoized);
+		return result;
+	}
+
+	static final int NEGATIVE_INFINITY = -100000000;
+	static final int NOT_INITIALIZED = -1;
+
+	static int solve(Boat[] boats, int[] fish,
+			int start, int boat,
+			int[][] memoized) {
+
+		if (boat == boats.length) {
+			// all boats successfully aligned
+			return 0;
+		}
+
+		if (start > boats[boat].anchor) {
+			// anchor of the boat is unreachable
+			// from given start position
+			return NEGATIVE_INFINITY;
+		}
+
+		if (((fish.length - start) + 1) < boats[boat].length) {
+			// boat can't fit into the river
+			// (intersects the right boundary of the fish array)
+			return NEGATIVE_INFINITY;
+		}
+
+		if (memoized[start][boat] != NOT_INITIALIZED) {
+			return memoized[start][boat];
+		}
+
+		if ((start + boats[boat].length) <= boats[boat].anchor) {
+			// given start position is too far from
+			// anchor of current boat
+			// so, the start position has to be closer
+			return solve(boats, fish, start + 1, boat, memoized);
+		}
+
+		int subProblem1 = solve(boats, fish, start + 1, boat, memoized);
+
+		int coverage = 
+                countFish(fish, start, (start + boats[boat].length) - 1);
+                
+		int subProblem2 = coverage +
+        solve(boats, fish, start + boats[boat].length, boat + 1, memoized);
+
+		memoized[start][boat] = Math.max(subProblem1, subProblem2);
+		return memoized[start][boat];
+	}
+
+	static int countFish(int[] fish, int from, int to) {
+		int coverage = 0;
+		for (int i = from - 1; i <= (to - 1); i++) {
+			coverage += fish[i];
+		}
+		return coverage;
+	}
+}
+{% endhighlight %}
+
+Runtime complexity of each recursive step is O(1) - algorithm performs constant amount of opertaions.   
+The total amount of *states* is `M * N` - hence, overall complexity of solution is O(N * M).

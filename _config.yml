@@ -11,6 +11,8 @@ twitter_username: ylahodiuk
 github_username:  lagodiuk
 excerpt_separator: <!--more-->
 
+highlighter: pygments
+
 # Build settings
 #markdown: kramdown
 
@@ -18,4 +20,4 @@ markdown: redcarpet
 markdown_ext:  markdown,mkdown,mkdn,mkd,md
 
 redcarpet:
-  extensions: ["lax_spacing", "tables", "autolink", "strikethrough", "space_after_headers", "with_toc_data", "fenced_code_blocks"]
+  extensions: ["superscript", "lax_spacing", "tables", "autolink", "strikethrough", "space_after_headers", "with_toc_data", "fenced_code_blocks"]

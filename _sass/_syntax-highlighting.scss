@@ -64,4 +64,27 @@
     .vg    { color: #008080 } // Name.Variable.Global
     .vi    { color: #008080 } // Name.Variable.Instance
     .il    { color: #099 } // Literal.Number.Integer.Long
+
+    .lineno { color: #669999 }
+    .hll { background-color: #99ffcc }
+}
+
+// http://flanneljesus.github.io/jekyll/2014-08-30/solving-jekyll-highlight-linenos/
+table.highlighttable {
+  overflow-x:auto;
+  display:block;
+}
+
+table.highlighttable td.code {
+  width:100%;
+}
+
+pre code {
+  white-space: pre;
+}
+
+table.highlighttable { 
+  border-collapse:collapse;
+  border:none;
+  outline:none;
 }
