@@ -19,7 +19,7 @@ task :deploy => [:check_git] do
   deploy_branch = 'master'
   message = "Site updated at #{Time.now.utc}"
 
-  system "jekyll bild"
+  system "jekyll build"
   system "git checkout \"#{deploy_branch}\""
   system "cp -r _site/* . && rm -rf _site/ && touch .nojekyll"
 
