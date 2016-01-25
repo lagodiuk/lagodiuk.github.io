@@ -274,7 +274,7 @@ Hence, there are only `M * N` possible combinations of `s` and `b` (let's call t
 So, we can make use of [Memoization technique](https://en.wikipedia.org/wiki/Memoization) - in order to transform brute force solution into **Top Down Dynamic Programming** solution.
 Below presented code, which is very similar to the previous one - but, additionally, augmented with logic for memoization (highlighted lines of code):
 
-{% highlight java linenos hl_lines=9 %}
+{% highlight java linenos=table hl_lines="9 10 11 12 23 42 43 44 61 62" %}
 import java.util.Arrays;
 
 public class MFISH {
