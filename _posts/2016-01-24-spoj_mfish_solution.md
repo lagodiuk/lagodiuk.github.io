@@ -19,6 +19,7 @@ Analysis and solution of the problem: http://www.spoj.com/problems/MFISH/
 * <a href="#modelling-the-problem"> Modelling the problem </a>
 * <a href="#brute-force-solution"> Brute Force solution </a>
 * <a href="#dynamic-programming-solution-o-n-m"> Dynamic Programming solution O(N * M) </a>
+* <a href="#dynamic-programming-solution-o-n"> Dynamic Programming solution O(N) </a>
 
 ## [Description of the problem](#description-of-the-problem)
 
@@ -351,3 +352,13 @@ public class MFISH {
 
 Runtime complexity of each recursive step is O(1) - algorithm performs constant amount of opertaions.   
 The total amount of *states* is `M * N` - hence, overall complexity of solution is O(N * M).
+
+To avoid recursive calls overhead, povided algorithm could be easily transformed into **Bottom Up Dynamic Programming** solution.
+
+Unfortunately, taking into account boundary conditions of the problem: `M <= N <= 100000` - we can see, that our `O(M * N)` solution is not sufficient for the instances of problem with large `M` and `N`.
+
+Can we do better?
+
+## [Dynamic Programming solution O(N)](#dynamic-programming-solution-o-n)
+
+Will be soon...

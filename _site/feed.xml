@@ -6,8 +6,8 @@
 </description>
     <link>http://lagodiuk.github.io/</link>
     <atom:link href="http://lagodiuk.github.io/feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Mon, 25 Jan 2016 02:40:36 +0100</pubDate>
-    <lastBuildDate>Mon, 25 Jan 2016 02:40:36 +0100</lastBuildDate>
+    <pubDate>Mon, 25 Jan 2016 08:47:53 +0100</pubDate>
+    <lastBuildDate>Mon, 25 Jan 2016 08:47:53 +0100</lastBuildDate>
     <generator>Jekyll v2.4.0</generator>
     
       <item>
@@ -24,6 +24,7 @@
 &lt;li&gt;&lt;a href=&quot;#modelling-the-problem&quot;&gt; Modelling the problem &lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&quot;#brute-force-solution&quot;&gt; Brute Force solution &lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&quot;#dynamic-programming-solution-o-n-m&quot;&gt; Dynamic Programming solution O(N * M) &lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#dynamic-programming-solution-o-n&quot;&gt; Dynamic Programming solution O(N) &lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;h2 id=&quot;description-of-the-problem&quot;&gt;&lt;a href=&quot;#description-of-the-problem&quot;&gt;Description of the problem&lt;/a&gt;&lt;/h2&gt;
@@ -508,6 +509,16 @@ Below presented code, which is very similar to the previous one - but, additiona
 
 &lt;p&gt;Runtime complexity of each recursive step is O(1) - algorithm performs constant amount of opertaions.&lt;br&gt;
 The total amount of &lt;em&gt;states&lt;/em&gt; is &lt;code&gt;M * N&lt;/code&gt; - hence, overall complexity of solution is O(N * M).&lt;/p&gt;
+
+&lt;p&gt;To avoid recursive calls overhead, povided algorithm could be easily transformed into &lt;strong&gt;Bottom Up Dynamic Programming&lt;/strong&gt; solution.&lt;/p&gt;
+
+&lt;p&gt;Unfortunately, taking into account boundary conditions of the problem: &lt;code&gt;M &amp;lt;= N &amp;lt;= 100000&lt;/code&gt; - we can see, that our &lt;code&gt;O(M * N)&lt;/code&gt; solution is not sufficient for the instances of problem with large &lt;code&gt;M&lt;/code&gt; and &lt;code&gt;N&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Can we do better?&lt;/p&gt;
+
+&lt;h2 id=&quot;dynamic-programming-solution-o-n&quot;&gt;&lt;a href=&quot;#dynamic-programming-solution-o-n&quot;&gt;Dynamic Programming solution O(N)&lt;/a&gt;&lt;/h2&gt;
+
+&lt;p&gt;Will be soon...&lt;/p&gt;
 </description>
         <pubDate>Sat, 23 Jan 2016 17:04:33 +0100</pubDate>
         <link>http://lagodiuk.github.io/spoj/dynamic_programming/2016/01/23/spoj_mfish_solution.html</link>

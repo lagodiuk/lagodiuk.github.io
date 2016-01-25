@@ -74,6 +74,7 @@
 <li><a href="#modelling-the-problem"> Modelling the problem </a></li>
 <li><a href="#brute-force-solution"> Brute Force solution </a></li>
 <li><a href="#dynamic-programming-solution-o-n-m"> Dynamic Programming solution O(N * M) </a></li>
+<li><a href="#dynamic-programming-solution-o-n"> Dynamic Programming solution O(N) </a></li>
 </ul>
 
 <h2 id="description-of-the-problem"><a href="#description-of-the-problem">Description of the problem</a></h2>
@@ -558,6 +559,16 @@ Below presented code, which is very similar to the previous one - but, additiona
 
 <p>Runtime complexity of each recursive step is O(1) - algorithm performs constant amount of opertaions.<br>
 The total amount of <em>states</em> is <code>M * N</code> - hence, overall complexity of solution is O(N * M).</p>
+
+<p>To avoid recursive calls overhead, povided algorithm could be easily transformed into <strong>Bottom Up Dynamic Programming</strong> solution.</p>
+
+<p>Unfortunately, taking into account boundary conditions of the problem: <code>M &lt;= N &lt;= 100000</code> - we can see, that our <code>O(M * N)</code> solution is not sufficient for the instances of problem with large <code>M</code> and <code>N</code>.</p>
+
+<p>Can we do better?</p>
+
+<h2 id="dynamic-programming-solution-o-n"><a href="#dynamic-programming-solution-o-n">Dynamic Programming solution O(N)</a></h2>
+
+<p>Will be soon...</p>
 
   </article>
 
