@@ -18,8 +18,11 @@ Analysis and solution of the problem: http://www.spoj.com/problems/MFISH/
 * <a href="#understanding-the-problem"> Understanding the problem </a>
 * <a href="#modelling-the-problem"> Modelling the problem </a>
 * <a href="#brute-force-solution"> Brute Force solution </a>
-* <a href="#dynamic-programming-solution-o-n-m"> Dynamic Programming solution O(N * M) </a>
-* <a href="#dynamic-programming-solution-o-n"> Dynamic Programming solution O(N) </a>
+* <a href="#dynamic-programming-solution-with-o-n-m-complexity"> Dynamic Programming solution with O(N * M) complexity </a>
+* <a href="#dynamic-programming-solution-with-o-n-complexity"> Dynamic Programming solution with O(N) complexity </a>
+* <a href="#other-optimizations"> Other optimizations </a>
+  * <a href="#counting-boat-coverage-with-o-1-complexity"> Counting boat coverage with O(1) complexity </a>
+  * <a href="#sorting-boats-with-o-n-complexity"> Sorting boats with O(N) complexity </a>
 
 ## [Description of the problem](#description-of-the-problem)
 
@@ -263,7 +266,7 @@ public class MFISH {
 }
 {% endhighlight %}
 
-## [Dynamic Programming solution O(N * M)](#dynamic-programming-solution-o-n-m)
+## [Dynamic Programming solution with O(N * M) complexity](#dynamic-programming-solution-with-o-n-m-complexity)
 
 We can notice that solution of every subproblem depends only on two variables:
 - `s` - position in the river
@@ -340,6 +343,8 @@ public class MFISH {
 		return memoized[start][boat];
 	}
 
+	// This method can be implemented with O(1) complexity,
+    // using cumulative sum array
 	static int countFish(int[] fish, int from, int to) {
 		int coverage = 0;
 		for (int i = from - 1; i <= (to - 1); i++) {
@@ -350,15 +355,25 @@ public class MFISH {
 }
 {% endhighlight %}
 
-Runtime complexity of each recursive step is O(1) - algorithm performs constant amount of opertaions.   
-The total amount of *states* is `M * N` - hence, overall complexity of solution is O(N * M).
+Provided code - contains implementation of method `countFish` with O(N) runtime complexity. 
+But, actually, calculation of amount of fish on the interval - can be done with O(1) runtime complexity, using **cumulative sum array** (see: [Counting boat coverage with O(1) complexity](#counting-boat-coverage-with-o-1-complexity)).
+So, for now, let's assume that runtime complexity of method `countFish` is O(1).
 
-To avoid recursive calls overhead, povided algorithm could be easily transformed into **Bottom Up Dynamic Programming** solution.
+Hence, runtime complexity of each recursive step is O(1) - algorithm performs constant amount of opertaions.
+The total amount of *states* is `M * N` - so, **overall complexity of solution is `O(N * M)`**.
 
-Unfortunately, taking into account boundary conditions of the problem: `M <= N <= 100000` - we can see, that our `O(M * N)` solution is not sufficient for the instances of problem with large `M` and `N`.
+To avoid the overhead of recursive calls mechanics (memory frame allocations), povided algorithm could be transformed into **Bottom Up Dynamic Programming** solution.
+
+Unfortunately, the boundary conditions of the problem are pretty big: `M <= N <= 100000` - so, our `O(M * N)` solution is not sufficient for the instances of problem with large `M` and `N`.
 
 Can we do better?
 
-## [Dynamic Programming solution O(N)](#dynamic-programming-solution-o-n)
+## [Dynamic Programming solution with O(N) complexity](#dynamic-programming-solution-with-o-n-complexity)
 
 Will be soon...
+
+## [Other optimizations](#other-optimizations)
+
+### [Counting boat coverage with O(1) complexity](#counting-boat-coverage-with-o-1-complexity)
+
+### [Sorting boats with O(N) complexity](#sorting-boats-with-o-n-complexity)
