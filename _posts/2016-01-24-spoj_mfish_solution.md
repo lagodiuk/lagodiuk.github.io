@@ -20,6 +20,8 @@ Analysis and solution of the problem: http://www.spoj.com/problems/MFISH/
 * <a href="#brute-force-solution"> Brute Force solution </a>
 * <a href="#dynamic-programming-solution-with-o-n-m-complexity"> Dynamic Programming solution with O(N * M) complexity </a>
 * <a href="#dynamic-programming-solution-with-o-n-complexity"> Dynamic Programming solution with O(N) complexity </a>
+  * <a href="#additional-analysis-of-the-problem"> Additional analysis of the problem </a>
+  * <a href="#o-n-algorithm"> O(N) algorithm </a>
 * <a href="#other-optimizations"> Other optimizations </a>
   * <a href="#counting-boat-coverage-with-o-1-complexity"> Counting boat coverage with O(1) complexity </a>
   * <a href="#sorting-boats-with-o-n-complexity"> Sorting boats with O(N) complexity </a>
@@ -370,10 +372,31 @@ Can we do better?
 
 ## [Dynamic Programming solution with O(N) complexity](#dynamic-programming-solution-with-o-n-complexity)
 
+### [Additional analysis of the problem](#additional-analysis-of-the-problem)
+
+Let's analyze the set of possible locations of *the leftmost border* of each boat.
+Below presented the illustration, which helps to disclose the useful insight about the problem:
+
+![Analysis of location of the leftmost borders of the boats](/images/spoj/mfish/leftmost_border_of_boats.png)
+
+Which implies, that **there is 1:1 relation between position on the river - `s`, and index of boat - `b`, which can start at given position!**
+
+Mathematically, it means that `b = g(s)` - index of the boat is just a function of the position on the river (`b` can be derived from given position on the river - `s`).
+
+To be continued...
+
+### [O(N) algorithm](#o-n-algorithm)
+
 Will be soon...
 
 ## [Other optimizations](#other-optimizations)
 
+Will be soon...
+
 ### [Counting boat coverage with O(1) complexity](#counting-boat-coverage-with-o-1-complexity)
 
+Will be soon...
+
 ### [Sorting boats with O(N) complexity](#sorting-boats-with-o-n-complexity)
+
+Will be soon...
