@@ -73,8 +73,19 @@
 <li><a href="#understanding-the-problem"> Understanding the problem </a></li>
 <li><a href="#modelling-the-problem"> Modelling the problem </a></li>
 <li><a href="#brute-force-solution"> Brute Force solution </a></li>
-<li><a href="#dynamic-programming-solution-o-n-m"> Dynamic Programming solution O(N * M) </a></li>
-<li><a href="#dynamic-programming-solution-o-n"> Dynamic Programming solution O(N) </a></li>
+<li><a href="#dynamic-programming-solution-with-o-n-m-complexity"> Dynamic Programming solution with O(N * M) complexity </a></li>
+<li><a href="#dynamic-programming-solution-with-o-n-complexity"> Dynamic Programming solution with O(N) complexity </a>
+
+<ul>
+<li><a href="#additional-analysis-of-the-problem"> Additional analysis of the problem </a></li>
+<li><a href="#o-n-algorithm"> O(N) algorithm </a></li>
+</ul></li>
+<li><a href="#other-optimizations"> Other optimizations </a>
+
+<ul>
+<li><a href="#counting-boat-coverage-with-o-1-complexity"> Counting boat coverage with O(1) complexity </a></li>
+<li><a href="#sorting-boats-with-o-n-complexity"> Sorting boats with O(N) complexity </a></li>
+</ul></li>
 </ul>
 
 <h2 id="description-of-the-problem"><a href="#description-of-the-problem">Description of the problem</a></h2>
@@ -396,7 +407,7 @@ So, the following expressions are equivalent:
 </pre></div>
 </td></tr></table>
 
-<h2 id="dynamic-programming-solution-o-n-m"><a href="#dynamic-programming-solution-o-n-m">Dynamic Programming solution O(N * M)</a></h2>
+<h2 id="dynamic-programming-solution-with-o-n-m-complexity"><a href="#dynamic-programming-solution-with-o-n-m-complexity">Dynamic Programming solution with O(N * M) complexity</a></h2>
 
 <p>We can notice that solution of every subproblem depends only on two variables:</p>
 
@@ -482,7 +493,9 @@ Below presented code, which is very similar to the previous one - but, additiona
 69
 70
 71
-72</code></pre></div></td><td class="code"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">java.util.Arrays</span><span class="o">;</span>
+72
+73
+74</code></pre></div></td><td class="code"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">java.util.Arrays</span><span class="o">;</span>
 
 <span class="kd">public</span> <span class="kd">class</span> <span class="nc">MFISH</span> <span class="o">{</span>
 
@@ -546,6 +559,8 @@ Below presented code, which is very similar to the previous one - but, additiona
 </span><span class="hll">       <span class="k">return</span> <span class="n">memoized</span><span class="o">[</span><span class="n">start</span><span class="o">][</span><span class="n">boat</span><span class="o">];</span>
 </span> <span class="o">}</span>
 
+    <span class="c1">// This method can be implemented with O(1) complexity,</span>
+    <span class="c1">// using cumulative sum array</span>
     <span class="kd">static</span> <span class="kt">int</span> <span class="nf">countFish</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">fish</span><span class="o">,</span> <span class="kt">int</span> <span class="n">from</span><span class="o">,</span> <span class="kt">int</span> <span class="n">to</span><span class="o">)</span> <span class="o">{</span>
         <span class="kt">int</span> <span class="n">coverage</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
         <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">from</span> <span class="o">-</span> <span class="mi">1</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="o">(</span><span class="n">to</span> <span class="o">-</span> <span class="mi">1</span><span class="o">);</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
@@ -557,16 +572,47 @@ Below presented code, which is very similar to the previous one - but, additiona
 </pre></div>
 </td></tr></table>
 
-<p>Runtime complexity of each recursive step is O(1) - algorithm performs constant amount of opertaions.<br>
-The total amount of <em>states</em> is <code>M * N</code> - hence, overall complexity of solution is O(N * M).</p>
+<p>Provided code - contains implementation of method <code>countFish</code> with O(N) runtime complexity. 
+But, actually, calculation of amount of fish on the interval - can be done with O(1) runtime complexity, using <strong>cumulative sum array</strong> (see: <a href="#counting-boat-coverage-with-o-1-complexity">Counting boat coverage with O(1) complexity</a>).
+So, for now, let&#39;s assume that runtime complexity of method <code>countFish</code> is O(1).</p>
 
-<p>To avoid recursive calls overhead, povided algorithm could be easily transformed into <strong>Bottom Up Dynamic Programming</strong> solution.</p>
+<p>Hence, runtime complexity of each recursive step is O(1) - algorithm performs constant amount of opertaions.
+The total amount of <em>states</em> is <code>M * N</code> - so, <strong>overall complexity of solution is <code>O(N * M)</code></strong>.</p>
 
-<p>Unfortunately, taking into account boundary conditions of the problem: <code>M &lt;= N &lt;= 100000</code> - we can see, that our <code>O(M * N)</code> solution is not sufficient for the instances of problem with large <code>M</code> and <code>N</code>.</p>
+<p>To avoid the overhead of recursive calls mechanics (memory frame allocations), povided algorithm could be transformed into <strong>Bottom Up Dynamic Programming</strong> solution.</p>
+
+<p>Unfortunately, the boundary conditions of the problem are pretty big: <code>M &lt;= N &lt;= 100000</code> - so, our <code>O(M * N)</code> solution is not sufficient for the instances of problem with large <code>M</code> and <code>N</code>.</p>
 
 <p>Can we do better?</p>
 
-<h2 id="dynamic-programming-solution-o-n"><a href="#dynamic-programming-solution-o-n">Dynamic Programming solution O(N)</a></h2>
+<h2 id="dynamic-programming-solution-with-o-n-complexity"><a href="#dynamic-programming-solution-with-o-n-complexity">Dynamic Programming solution with O(N) complexity</a></h2>
+
+<h3 id="additional-analysis-of-the-problem"><a href="#additional-analysis-of-the-problem">Additional analysis of the problem</a></h3>
+
+<p>Let&#39;s analyze the set of possible locations of <em>the leftmost border</em> of each boat.
+Below presented the illustration, which helps to disclose the useful insight about the problem:</p>
+
+<p><img src="/images/spoj/mfish/leftmost_border_of_boats.png" alt="Analysis of location of the leftmost borders of the boats"></p>
+
+<p>Which implies, that <strong>there is 1:1 relation between position on the river - <code>s</code>, and index of boat - <code>b</code>, which can start at given position!</strong></p>
+
+<p>Mathematically, it means that <code>b = g(s)</code> - index of the boat is just a function of the position on the river (<code>b</code> can be derived from given position on the river - <code>s</code>).</p>
+
+<p>To be continued...</p>
+
+<h3 id="o-n-algorithm"><a href="#o-n-algorithm">O(N) algorithm</a></h3>
+
+<p>Will be soon...</p>
+
+<h2 id="other-optimizations"><a href="#other-optimizations">Other optimizations</a></h2>
+
+<p>Will be soon...</p>
+
+<h3 id="counting-boat-coverage-with-o-1-complexity"><a href="#counting-boat-coverage-with-o-1-complexity">Counting boat coverage with O(1) complexity</a></h3>
+
+<p>Will be soon...</p>
+
+<h3 id="sorting-boats-with-o-n-complexity"><a href="#sorting-boats-with-o-n-complexity">Sorting boats with O(N) complexity</a></h3>
 
 <p>Will be soon...</p>
 

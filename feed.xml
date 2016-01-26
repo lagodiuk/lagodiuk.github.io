@@ -6,8 +6,8 @@
 </description>
     <link>http://lagodiuk.github.io/</link>
     <atom:link href="http://lagodiuk.github.io/feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Mon, 25 Jan 2016 20:36:54 +0100</pubDate>
-    <lastBuildDate>Mon, 25 Jan 2016 20:36:54 +0100</lastBuildDate>
+    <pubDate>Tue, 26 Jan 2016 08:38:23 +0100</pubDate>
+    <lastBuildDate>Tue, 26 Jan 2016 08:38:23 +0100</lastBuildDate>
     <generator>Jekyll v2.4.0</generator>
     
       <item>
@@ -23,8 +23,19 @@
 &lt;li&gt;&lt;a href=&quot;#understanding-the-problem&quot;&gt; Understanding the problem &lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&quot;#modelling-the-problem&quot;&gt; Modelling the problem &lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&quot;#brute-force-solution&quot;&gt; Brute Force solution &lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;#dynamic-programming-solution-o-n-m&quot;&gt; Dynamic Programming solution O(N * M) &lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;#dynamic-programming-solution-o-n&quot;&gt; Dynamic Programming solution O(N) &lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#dynamic-programming-solution-with-o-n-m-complexity&quot;&gt; Dynamic Programming solution with O(N * M) complexity &lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#dynamic-programming-solution-with-o-n-complexity&quot;&gt; Dynamic Programming solution with O(N) complexity &lt;/a&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;#additional-analysis-of-the-problem&quot;&gt; Additional analysis of the problem &lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#o-n-algorithm&quot;&gt; O(N) algorithm &lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#other-optimizations&quot;&gt; Other optimizations &lt;/a&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;#counting-boat-coverage-with-o-1-complexity&quot;&gt; Counting boat coverage with O(1) complexity &lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#sorting-boats-with-o-n-complexity&quot;&gt; Sorting boats with O(N) complexity &lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;h2 id=&quot;description-of-the-problem&quot;&gt;&lt;a href=&quot;#description-of-the-problem&quot;&gt;Description of the problem&lt;/a&gt;&lt;/h2&gt;
@@ -346,7 +357,7 @@ So, the following expressions are equivalent:
 &lt;/pre&gt;&lt;/div&gt;
 &lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 
-&lt;h2 id=&quot;dynamic-programming-solution-o-n-m&quot;&gt;&lt;a href=&quot;#dynamic-programming-solution-o-n-m&quot;&gt;Dynamic Programming solution O(N * M)&lt;/a&gt;&lt;/h2&gt;
+&lt;h2 id=&quot;dynamic-programming-solution-with-o-n-m-complexity&quot;&gt;&lt;a href=&quot;#dynamic-programming-solution-with-o-n-m-complexity&quot;&gt;Dynamic Programming solution with O(N * M) complexity&lt;/a&gt;&lt;/h2&gt;
 
 &lt;p&gt;We can notice that solution of every subproblem depends only on two variables:&lt;/p&gt;
 
@@ -432,7 +443,9 @@ Below presented code, which is very similar to the previous one - but, additiona
 69
 70
 71
-72&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;java.util.Arrays&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+72
+73
+74&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;java.util.Arrays&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
 
 &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;MFISH&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
 
@@ -496,6 +509,8 @@ Below presented code, which is very similar to the previous one - but, additiona
 &lt;/span&gt;&lt;span class=&quot;hll&quot;&gt;       &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;memoized&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;start&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;boat&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;];&lt;/span&gt;
 &lt;/span&gt; &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
 
+    &lt;span class=&quot;c1&quot;&gt;// This method can be implemented with O(1) complexity,&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;// using cumulative sum array&lt;/span&gt;
     &lt;span class=&quot;kd&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;countFish&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[]&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;fish&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;from&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;to&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
         &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;coverage&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
         &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;to&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
@@ -507,16 +522,47 @@ Below presented code, which is very similar to the previous one - but, additiona
 &lt;/pre&gt;&lt;/div&gt;
 &lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 
-&lt;p&gt;Runtime complexity of each recursive step is O(1) - algorithm performs constant amount of opertaions.&lt;br&gt;
-The total amount of &lt;em&gt;states&lt;/em&gt; is &lt;code&gt;M * N&lt;/code&gt; - hence, overall complexity of solution is O(N * M).&lt;/p&gt;
+&lt;p&gt;Provided code - contains implementation of method &lt;code&gt;countFish&lt;/code&gt; with O(N) runtime complexity. 
+But, actually, calculation of amount of fish on the interval - can be done with O(1) runtime complexity, using &lt;strong&gt;cumulative sum array&lt;/strong&gt; (see: &lt;a href=&quot;#counting-boat-coverage-with-o-1-complexity&quot;&gt;Counting boat coverage with O(1) complexity&lt;/a&gt;).
+So, for now, let&amp;#39;s assume that runtime complexity of method &lt;code&gt;countFish&lt;/code&gt; is O(1).&lt;/p&gt;
 
-&lt;p&gt;To avoid recursive calls overhead, povided algorithm could be easily transformed into &lt;strong&gt;Bottom Up Dynamic Programming&lt;/strong&gt; solution.&lt;/p&gt;
+&lt;p&gt;Hence, runtime complexity of each recursive step is O(1) - algorithm performs constant amount of opertaions.
+The total amount of &lt;em&gt;states&lt;/em&gt; is &lt;code&gt;M * N&lt;/code&gt; - so, &lt;strong&gt;overall complexity of solution is &lt;code&gt;O(N * M)&lt;/code&gt;&lt;/strong&gt;.&lt;/p&gt;
 
-&lt;p&gt;Unfortunately, taking into account boundary conditions of the problem: &lt;code&gt;M &amp;lt;= N &amp;lt;= 100000&lt;/code&gt; - we can see, that our &lt;code&gt;O(M * N)&lt;/code&gt; solution is not sufficient for the instances of problem with large &lt;code&gt;M&lt;/code&gt; and &lt;code&gt;N&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;To avoid the overhead of recursive calls mechanics (memory frame allocations), povided algorithm could be transformed into &lt;strong&gt;Bottom Up Dynamic Programming&lt;/strong&gt; solution.&lt;/p&gt;
+
+&lt;p&gt;Unfortunately, the boundary conditions of the problem are pretty big: &lt;code&gt;M &amp;lt;= N &amp;lt;= 100000&lt;/code&gt; - so, our &lt;code&gt;O(M * N)&lt;/code&gt; solution is not sufficient for the instances of problem with large &lt;code&gt;M&lt;/code&gt; and &lt;code&gt;N&lt;/code&gt;.&lt;/p&gt;
 
 &lt;p&gt;Can we do better?&lt;/p&gt;
 
-&lt;h2 id=&quot;dynamic-programming-solution-o-n&quot;&gt;&lt;a href=&quot;#dynamic-programming-solution-o-n&quot;&gt;Dynamic Programming solution O(N)&lt;/a&gt;&lt;/h2&gt;
+&lt;h2 id=&quot;dynamic-programming-solution-with-o-n-complexity&quot;&gt;&lt;a href=&quot;#dynamic-programming-solution-with-o-n-complexity&quot;&gt;Dynamic Programming solution with O(N) complexity&lt;/a&gt;&lt;/h2&gt;
+
+&lt;h3 id=&quot;additional-analysis-of-the-problem&quot;&gt;&lt;a href=&quot;#additional-analysis-of-the-problem&quot;&gt;Additional analysis of the problem&lt;/a&gt;&lt;/h3&gt;
+
+&lt;p&gt;Let&amp;#39;s analyze the set of possible locations of &lt;em&gt;the leftmost border&lt;/em&gt; of each boat.
+Below presented the illustration, which helps to disclose the useful insight about the problem:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/spoj/mfish/leftmost_border_of_boats.png&quot; alt=&quot;Analysis of location of the leftmost borders of the boats&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;Which implies, that &lt;strong&gt;there is 1:1 relation between position on the river - &lt;code&gt;s&lt;/code&gt;, and index of boat - &lt;code&gt;b&lt;/code&gt;, which can start at given position!&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;Mathematically, it means that &lt;code&gt;b = g(s)&lt;/code&gt; - index of the boat is just a function of the position on the river (&lt;code&gt;b&lt;/code&gt; can be derived from given position on the river - &lt;code&gt;s&lt;/code&gt;).&lt;/p&gt;
+
+&lt;p&gt;To be continued...&lt;/p&gt;
+
+&lt;h3 id=&quot;o-n-algorithm&quot;&gt;&lt;a href=&quot;#o-n-algorithm&quot;&gt;O(N) algorithm&lt;/a&gt;&lt;/h3&gt;
+
+&lt;p&gt;Will be soon...&lt;/p&gt;
+
+&lt;h2 id=&quot;other-optimizations&quot;&gt;&lt;a href=&quot;#other-optimizations&quot;&gt;Other optimizations&lt;/a&gt;&lt;/h2&gt;
+
+&lt;p&gt;Will be soon...&lt;/p&gt;
+
+&lt;h3 id=&quot;counting-boat-coverage-with-o-1-complexity&quot;&gt;&lt;a href=&quot;#counting-boat-coverage-with-o-1-complexity&quot;&gt;Counting boat coverage with O(1) complexity&lt;/a&gt;&lt;/h3&gt;
+
+&lt;p&gt;Will be soon...&lt;/p&gt;
+
+&lt;h3 id=&quot;sorting-boats-with-o-n-complexity&quot;&gt;&lt;a href=&quot;#sorting-boats-with-o-n-complexity&quot;&gt;Sorting boats with O(N) complexity&lt;/a&gt;&lt;/h3&gt;
 
 &lt;p&gt;Will be soon...&lt;/p&gt;
 </description>
