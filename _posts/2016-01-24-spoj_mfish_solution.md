@@ -381,13 +381,146 @@ Below presented the illustration, which helps to disclose the useful insight abo
 
 Which implies, that **there is 1:1 relation between position on the river - `s`, and index of boat - `b`, which can start at given position!**
 
-Mathematically, it means that `b = g(s)` - index of the boat is just a function of the position on the river (`b` can be derived from given position on the river - `s`).
+Formally speaking, it means that `b = g(s)` - index of the boat is just a function of the position on the river (`b` can be derived from given position on the river - `s`).
 
-To be continued...
+As far as variables, which represent *state* (`b` and `s`) are not independent - we can get rid of redundant variable:
+
+![Enhanced recurrence relation](/images/spoj/mfish/recurrence_relation_3.png)
+
+So, as you can see - the *state*, which represents partial solution of the problem depends only on variable `s`.
+As far as there are only `N` different values of `s` - we have to solve only `N` different subproblems, in order to find the optimal solution.
 
 ### [O(N) algorithm](#o-n-algorithm)
 
-Will be soon...
+{% highlight java linenos=table hl_lines="8 9 13 25 26 29 31 34 65 70 71 72 73 84 85 86 87 98 99 100 101 102 103 104 105 106 107 108 109 110 111 112 113 114 115 116" %}
+import java.util.Arrays;
+
+public class MFISH {
+
+	static int solve(int[] fish, Boat[] boats) {
+		Arrays.sort(boats,
+				(b1, b2) -> Integer.compare(b1.anchor, b2.anchor));
+		// We have to memoize only O(N) solutions of subproblems!
+		int[] memoized = new int[fish.length + 1];
+		Arrays.fill(memoized, NOT_INITIALIZED);
+
+		// Get 1:1 mapping of river segments -> to boat indices
+		int[] boatIndices = getBoatIndicesMapping(fish, boats);
+
+		int result = solve(boats, fish, 1, boatIndices, memoized);
+		return result;
+	}
+
+	static final int NEGATIVE_INFINITY = -100000000;
+	static final int NOT_INITIALIZED = -1;
+	static final int NO_BOAT_CAN_BE_HERE = -1;
+
+	static int solve(Boat[] boats, int[] fish,
+			int start,
+			int[] boatIndices,
+			int[] memoized) {
+
+		// get index of current boat (from 1:1 mapping)
+		int boat = boatIndices[start];
+
+		if (boat == NO_BOAT_CAN_BE_HERE) {
+			// in case, if no boat can be aligned
+			// in the current segment of the river
+			return NEGATIVE_INFINITY;
+		}
+
+		if (boat == boats.length) {
+			// all boats successfully aligned
+			return 0;
+		}
+
+		if (start > boats[boat].anchor) {
+			// anchor of the boat is unreachable
+			// from given start position
+			return NEGATIVE_INFINITY;
+		}
+
+		if (((fish.length - start) + 1) < boats[boat].length) {
+			// boat can't fit into the river
+			// (intersects the right boundary of the fish array)
+			return NEGATIVE_INFINITY;
+		}
+
+		if (memoized[start] != NOT_INITIALIZED) {
+			return memoized[start];
+		}
+
+		if ((start + boats[boat].length) <= boats[boat].anchor) {
+			// given start position is too far from
+			// anchor of current boat
+			// so, the start position has to be closer
+			return solve(boats, fish, start + 1, boatIndices, memoized);
+		}
+
+		int nextBoatIndex;
+
+		// Subproblem 1
+		// we would like to check the gain, in case if we put current boat
+		// into the next position on the river
+		nextBoatIndex = ((start + 1) < boatIndices.length)
+				? boatIndices[start + 1]
+				: NO_BOAT_CAN_BE_HERE;
+		int subProblem1 = (nextBoatIndex == boat)
+				? solve(boats, fish, start + 1, boatIndices, memoized)
+				: NEGATIVE_INFINITY;
+
+		int coverage =
+				countFish(fish, start, (start + boats[boat].length) - 1);
+
+		// Subproblem 2
+		// we would like to check the gain, in case if we put current boat
+		// into the current position on the river
+		// (the index of next boat should differ by 1 - from the index of current boat)
+		nextBoatIndex = ((start + boats[boat].length) < boatIndices.length)
+				? boatIndices[start + boats[boat].length]
+				: NO_BOAT_CAN_BE_HERE;
+		int subProblem2 = (nextBoatIndex == (boat + 1))
+				? coverage + solve(boats, fish, start + boats[boat].length, boatIndices, memoized)
+				: coverage;
+
+		memoized[start] = Math.max(subProblem1, subProblem2);
+		return memoized[start];
+	}
+
+	// Calculating 1:1 mapping with O(N) complexity
+	// from the index of river segment
+	// to the index of boat, which can start at given segment
+	static int[] getBoatIndicesMapping(int[] fish, Boat[] boats) {
+		int[] boatIndices = new int[fish.length + 1];
+		Arrays.fill(boatIndices, NO_BOAT_CAN_BE_HERE);
+
+		int currBoatIdx = 0;
+		for (int i = 0; i < boatIndices.length; i++) {
+			boatIndices[i] = currBoatIdx;
+
+			if (boats[currBoatIdx].anchor == i) {
+				currBoatIdx++;
+
+				if (currBoatIdx == boats.length) {
+					break;
+				}
+			}
+		}
+
+		return boatIndices;
+	}
+
+	// This method can be implemented with O(1) complexity,
+	// using cumulative sum array
+	static int countFish(int[] fish, int from, int to) {
+		int coverage = 0;
+		for (int i = from - 1; i <= (to - 1); i++) {
+			coverage += fish[i];
+		}
+		return coverage;
+	}
+}
+{% endhighlight %}
 
 ## [Other optimizations](#other-optimizations)
 
