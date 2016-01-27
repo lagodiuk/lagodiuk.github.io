@@ -607,6 +607,8 @@ As far as there are only <code>N</code> different values of <code>s</code> - we 
 
 <h3 id="o-n-algorithm"><a href="#o-n-algorithm">O(N) algorithm</a></h3>
 
+<p>Below presented <strong>Top Down Synamic Programming solution with <code>O(N)</code></strong> complexity:</p>
+
 <table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><code class="language-java" data-lang="java">  1
   2
   3
@@ -863,17 +865,72 @@ As far as there are only <code>N</code> different values of <code>s</code> - we 
 </pre></div>
 </td></tr></table>
 
-<h2 id="other-optimizations"><a href="#other-optimizations">Other optimizations</a></h2>
+<p>Now, our <code>O(N)</code> solution can handle even large instances of the problems (when <code>N</code> around <code>100000</code>).
+For purpose of the further optimization (to avoid memory frame allocations on a stack) - given solution can be transformed to <strong>Bottom Up Dynamic Programming algorithm</strong> (we will need to traverse river&#39;s segments <strong>from right to left</strong>).</p>
 
-<p>Will be soon...</p>
+<p>Actually, you might already notice, that at the first step of our algorithm - we sort our boats (default implementation of sorting algorithm in Java has runtime complexity <code>O(N * log(N))</code>).
+But, actually, we can sort all boats with <code>O(N)</code> runtime complexity (see: <a href="#sorting-boats-with-o-n-complexity">Sorting boats with O(N) complexity</a>).</p>
+
+<h2 id="other-optimizations"><a href="#other-optimizations">Other optimizations</a></h2>
 
 <h3 id="counting-boat-coverage-with-o-1-complexity"><a href="#counting-boat-coverage-with-o-1-complexity">Counting boat coverage with O(1) complexity</a></h3>
 
-<p>Will be soon...</p>
+<p>We can use <strong>Cumulative sum array technique</strong> for counting fish, which covered by boat with <code>O(1)</code> runtime complexity.</p>
+
+<p>Initially, we have to precalculate <em>prefix-sum array</em>:</p>
+
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><code class="language-java" data-lang="java">1
+2
+3
+4
+5
+6</code></pre></div></td><td class="code"><div class="highlight"><pre><span class="c1">// Precalculate cumulative sum array - complexity O(N)</span>
+<span class="kt">int</span><span class="o">[]</span> <span class="n">cumulativeSumArray</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">fish</span><span class="o">.</span><span class="na">length</span> <span class="o">+</span> <span class="mi">1</span><span class="o">];</span>
+<span class="n">cumulativeSumArray</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+<span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">cumulativeSumArray</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+    <span class="n">cumulativeSumArray</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">cumulativeSumArray</span><span class="o">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="o">]</span> <span class="o">+</span> <span class="n">fish</span><span class="o">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="o">];</span>
+<span class="o">}</span>
+</pre></div>
+</td></tr></table>
+
+<p>Afterwards, we can use <em>prefix-sum array</em> - for calculation of elements sum on given interval:</p>
+
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><code class="language-java" data-lang="java">1
+2
+3
+4</code></pre></div></td><td class="code"><div class="highlight"><pre><span class="c1">// Complexity is O(1)</span>
+<span class="kd">static</span> <span class="kt">int</span> <span class="nf">countFish</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">cumulativeSumArray</span><span class="o">,</span> <span class="kt">int</span> <span class="n">from</span><span class="o">,</span> <span class="kt">int</span> <span class="n">to</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="n">cumulativeSumArray</span><span class="o">[</span><span class="n">to</span><span class="o">]</span> <span class="o">-</span> <span class="n">cumulativeSumArray</span><span class="o">[</span><span class="n">from</span> <span class="o">-</span> <span class="mi">1</span><span class="o">];</span>
+<span class="o">}</span>
+</pre></div>
+</td></tr></table>
+
+<p>More useful information can be found here: <a href="http://wcipeg.com/wiki/Prefix_sum_array_and_difference_array">http://wcipeg.com/wiki/Prefix_sum_array_and_difference_array</a></p>
 
 <h3 id="sorting-boats-with-o-n-complexity"><a href="#sorting-boats-with-o-n-complexity">Sorting boats with O(N) complexity</a></h3>
 
-<p>Will be soon...</p>
+<p>As far as we know limits of our problem: <code>N &lt;= 100000</code> - we can use <a href="https://www.cs.usfca.edu/%7Egalles/visualization/CountingSort.html">Counting sort</a> to sort boats with <code>O(N)</code> runtime complexity.</p>
+
+<div id="disqus_thread"></div>
+
+<script>
+
+var disqus_config = function () {
+this.page.url = "http://lagodiuk.github.io/spoj/dynamic_programming/2016/01/23/spoj_mfish_solution.html";
+this.page.identifier = "spoj_mfish_solution";
+};
+
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+
+s.src = '//lahodiuk.disqus.com/embed.js';
+
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
 
   </article>
 
