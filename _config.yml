@@ -12,6 +12,7 @@ github_username:  lagodiuk
 excerpt_separator: <!--more-->
 
 highlighter: pygments
+comments: true
 
 # Build settings
 #markdown: kramdown

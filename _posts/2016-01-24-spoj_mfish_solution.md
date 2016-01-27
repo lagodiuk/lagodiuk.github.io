@@ -7,6 +7,7 @@ tags:
 - spoj
 - dynamic_programming
 - java
+comments: true
 ---
 
 Analysis and solution of the problem: http://www.spoj.com/problems/MFISH/
@@ -562,3 +563,22 @@ More useful information can be found here: http://wcipeg.com/wiki/Prefix_sum_arr
 ### [Sorting boats with O(N) complexity](#sorting-boats-with-o-n-complexity)
 
 As far as we know limits of our problem: `N <= 100000` - we can use [Counting sort](https://www.cs.usfca.edu/~galles/visualization/CountingSort.html) to sort boats with `O(N)` runtime complexity.
+
+<div id="disqus_thread"></div>
+<script>
+
+var disqus_config = function () {
+this.page.url = "http://lagodiuk.github.io/spoj/dynamic_programming/2016/01/23/spoj_mfish_solution.html";
+this.page.identifier = "spoj_mfish_solution";
+};
+
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+
+s.src = '//lahodiuk.disqus.com/embed.js';
+
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
