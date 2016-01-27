@@ -4,8 +4,9 @@ title:  "Catch Fish problem from SPOJ: MFISH"
 date:   2016-01-23 16:04:33
 categories: spoj dynamic_programming
 tags:
-- jekyll
-- code
+- spoj
+- dynamic_programming
+- java
 ---
 
 Analysis and solution of the problem: http://www.spoj.com/problems/MFISH/
@@ -392,6 +393,8 @@ As far as there are only `N` different values of `s` - we have to solve only `N`
 
 ### [O(N) algorithm](#o-n-algorithm)
 
+Below presented **Top Down Synamic Programming solution with `O(N)`** complexity:
+
 {% highlight java linenos=table hl_lines="8 9 13 25 26 29 31 34 65 70 71 72 73 84 85 86 87 98 99 100 101 102 103 104 105 106 107 108 109 110 111 112 113 114 115 116" %}
 import java.util.Arrays;
 
@@ -522,14 +525,40 @@ public class MFISH {
 }
 {% endhighlight %}
 
-## [Other optimizations](#other-optimizations)
+Now, our `O(N)` solution can handle even large instances of the problems (when `N` around `100000`).
+For purpose of the further optimization (to avoid memory frame allocations on a stack) - given solution can be transformed to **Bottom Up Dynamic Programming algorithm** (we will need to traverse river's segments **from right to left**).
 
-Will be soon...
+Actually, you might already notice, that at the first step of our algorithm - we sort our boats (default implementation of sorting algorithm in Java has runtime complexity `O(N * log(N))`).
+But, actually, we can sort all boats with `O(N)` runtime complexity (see: [Sorting boats with O(N) complexity](#sorting-boats-with-o-n-complexity)).
+
+## [Other optimizations](#other-optimizations)
 
 ### [Counting boat coverage with O(1) complexity](#counting-boat-coverage-with-o-1-complexity)
 
-Will be soon...
+We can use **Cumulative sum array technique** for counting fish, which covered by boat with `O(1)` runtime complexity.
+
+Initially, we have to precalculate *prefix-sum array*:
+
+{% highlight java linenos=table %}
+// Precalculate cumulative sum array - complexity O(N)
+int[] cumulativeSumArray = new int[fish.length + 1];
+cumulativeSumArray[0] = 0;
+for (int i = 1; i < cumulativeSumArray.length; i++) {
+    cumulativeSumArray[i] = cumulativeSumArray[i - 1] + fish[i - 1];
+}
+{% endhighlight %}
+
+Afterwards, we can use *prefix-sum array* - for calculation of elements sum on given interval:
+
+{% highlight java linenos=table %}
+// Complexity is O(1)
+static int countFish(int[] cumulativeSumArray, int from, int to) {
+    return cumulativeSumArray[to] - cumulativeSumArray[from - 1];
+}
+{% endhighlight %}
+
+More useful information can be found here: http://wcipeg.com/wiki/Prefix_sum_array_and_difference_array
 
 ### [Sorting boats with O(N) complexity](#sorting-boats-with-o-n-complexity)
 
-Will be soon...
+As far as we know limits of our problem: `N <= 100000` - we can use [Counting sort](https://www.cs.usfca.edu/~galles/visualization/CountingSort.html) to sort boats with `O(N)` runtime complexity.
