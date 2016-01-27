@@ -596,13 +596,272 @@ Below presented the illustration, which helps to disclose the useful insight abo
 
 <p>Which implies, that <strong>there is 1:1 relation between position on the river - <code>s</code>, and index of boat - <code>b</code>, which can start at given position!</strong></p>
 
-<p>Mathematically, it means that <code>b = g(s)</code> - index of the boat is just a function of the position on the river (<code>b</code> can be derived from given position on the river - <code>s</code>).</p>
+<p>Formally speaking, it means that <code>b = g(s)</code> - index of the boat is just a function of the position on the river (<code>b</code> can be derived from given position on the river - <code>s</code>).</p>
 
-<p>To be continued...</p>
+<p>As far as variables, which represent <em>state</em> (<code>b</code> and <code>s</code>) are not independent - we can get rid of redundant variable:</p>
+
+<p><img src="/images/spoj/mfish/recurrence_relation_3.png" alt="Enhanced recurrence relation"></p>
+
+<p>So, as you can see - the <em>state</em>, which represents partial solution of the problem depends only on variable <code>s</code>.
+As far as there are only <code>N</code> different values of <code>s</code> - we have to solve only <code>N</code> different subproblems, in order to find the optimal solution.</p>
 
 <h3 id="o-n-algorithm"><a href="#o-n-algorithm">O(N) algorithm</a></h3>
 
-<p>Will be soon...</p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><code class="language-java" data-lang="java">  1
+  2
+  3
+  4
+  5
+  6
+  7
+  8
+  9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ 21
+ 22
+ 23
+ 24
+ 25
+ 26
+ 27
+ 28
+ 29
+ 30
+ 31
+ 32
+ 33
+ 34
+ 35
+ 36
+ 37
+ 38
+ 39
+ 40
+ 41
+ 42
+ 43
+ 44
+ 45
+ 46
+ 47
+ 48
+ 49
+ 50
+ 51
+ 52
+ 53
+ 54
+ 55
+ 56
+ 57
+ 58
+ 59
+ 60
+ 61
+ 62
+ 63
+ 64
+ 65
+ 66
+ 67
+ 68
+ 69
+ 70
+ 71
+ 72
+ 73
+ 74
+ 75
+ 76
+ 77
+ 78
+ 79
+ 80
+ 81
+ 82
+ 83
+ 84
+ 85
+ 86
+ 87
+ 88
+ 89
+ 90
+ 91
+ 92
+ 93
+ 94
+ 95
+ 96
+ 97
+ 98
+ 99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127</code></pre></div></td><td class="code"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">java.util.Arrays</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">MFISH</span> <span class="o">{</span>
+
+    <span class="kd">static</span> <span class="kt">int</span> <span class="nf">solve</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">fish</span><span class="o">,</span> <span class="n">Boat</span><span class="o">[]</span> <span class="n">boats</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">Arrays</span><span class="o">.</span><span class="na">sort</span><span class="o">(</span><span class="n">boats</span><span class="o">,</span>
+                <span class="o">(</span><span class="n">b1</span><span class="o">,</span> <span class="n">b2</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">Integer</span><span class="o">.</span><span class="na">compare</span><span class="o">(</span><span class="n">b1</span><span class="o">.</span><span class="na">anchor</span><span class="o">,</span> <span class="n">b2</span><span class="o">.</span><span class="na">anchor</span><span class="o">));</span>
+<span class="hll">      <span class="c1">// We have to memoize only O(N) solutions of subproblems!</span>
+</span><span class="hll">       <span class="kt">int</span><span class="o">[]</span> <span class="n">memoized</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">fish</span><span class="o">.</span><span class="na">length</span> <span class="o">+</span> <span class="mi">1</span><span class="o">];</span>
+</span>     <span class="n">Arrays</span><span class="o">.</span><span class="na">fill</span><span class="o">(</span><span class="n">memoized</span><span class="o">,</span> <span class="n">NOT_INITIALIZED</span><span class="o">);</span>
+
+        <span class="c1">// Get 1:1 mapping of river segments -&gt; to boat indices</span>
+<span class="hll">      <span class="kt">int</span><span class="o">[]</span> <span class="n">boatIndices</span> <span class="o">=</span> <span class="n">getBoatIndicesMapping</span><span class="o">(</span><span class="n">fish</span><span class="o">,</span> <span class="n">boats</span><span class="o">);</span>
+</span>
+        <span class="kt">int</span> <span class="n">result</span> <span class="o">=</span> <span class="n">solve</span><span class="o">(</span><span class="n">boats</span><span class="o">,</span> <span class="n">fish</span><span class="o">,</span> <span class="mi">1</span><span class="o">,</span> <span class="n">boatIndices</span><span class="o">,</span> <span class="n">memoized</span><span class="o">);</span>
+        <span class="k">return</span> <span class="n">result</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">static</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">NEGATIVE_INFINITY</span> <span class="o">=</span> <span class="o">-</span><span class="mi">100000000</span><span class="o">;</span>
+    <span class="kd">static</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">NOT_INITIALIZED</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+    <span class="kd">static</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">NO_BOAT_CAN_BE_HERE</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+
+    <span class="kd">static</span> <span class="kt">int</span> <span class="nf">solve</span><span class="o">(</span><span class="n">Boat</span><span class="o">[]</span> <span class="n">boats</span><span class="o">,</span> <span class="kt">int</span><span class="o">[]</span> <span class="n">fish</span><span class="o">,</span>
+            <span class="kt">int</span> <span class="n">start</span><span class="o">,</span>
+<span class="hll">          <span class="kt">int</span><span class="o">[]</span> <span class="n">boatIndices</span><span class="o">,</span>
+</span><span class="hll">           <span class="kt">int</span><span class="o">[]</span> <span class="n">memoized</span><span class="o">)</span> <span class="o">{</span>
+</span>
+        <span class="c1">// get index of current boat (from 1:1 mapping)</span>
+<span class="hll">      <span class="kt">int</span> <span class="n">boat</span> <span class="o">=</span> <span class="n">boatIndices</span><span class="o">[</span><span class="n">start</span><span class="o">];</span>
+</span>
+<span class="hll">      <span class="k">if</span> <span class="o">(</span><span class="n">boat</span> <span class="o">==</span> <span class="n">NO_BOAT_CAN_BE_HERE</span><span class="o">)</span> <span class="o">{</span>
+</span>         <span class="c1">// in case, if no boat can be aligned</span>
+            <span class="c1">// in the current segment of the river</span>
+<span class="hll">          <span class="k">return</span> <span class="n">NEGATIVE_INFINITY</span><span class="o">;</span>
+</span>     <span class="o">}</span>
+
+        <span class="k">if</span> <span class="o">(</span><span class="n">boat</span> <span class="o">==</span> <span class="n">boats</span><span class="o">.</span><span class="na">length</span><span class="o">)</span> <span class="o">{</span>
+            <span class="c1">// all boats successfully aligned</span>
+            <span class="k">return</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="o">}</span>
+
+        <span class="k">if</span> <span class="o">(</span><span class="n">start</span> <span class="o">&gt;</span> <span class="n">boats</span><span class="o">[</span><span class="n">boat</span><span class="o">].</span><span class="na">anchor</span><span class="o">)</span> <span class="o">{</span>
+            <span class="c1">// anchor of the boat is unreachable</span>
+            <span class="c1">// from given start position</span>
+            <span class="k">return</span> <span class="n">NEGATIVE_INFINITY</span><span class="o">;</span>
+        <span class="o">}</span>
+
+        <span class="k">if</span> <span class="o">(((</span><span class="n">fish</span><span class="o">.</span><span class="na">length</span> <span class="o">-</span> <span class="n">start</span><span class="o">)</span> <span class="o">+</span> <span class="mi">1</span><span class="o">)</span> <span class="o">&lt;</span> <span class="n">boats</span><span class="o">[</span><span class="n">boat</span><span class="o">].</span><span class="na">length</span><span class="o">)</span> <span class="o">{</span>
+            <span class="c1">// boat can&#39;t fit into the river</span>
+            <span class="c1">// (intersects the right boundary of the fish array)</span>
+            <span class="k">return</span> <span class="n">NEGATIVE_INFINITY</span><span class="o">;</span>
+        <span class="o">}</span>
+
+        <span class="k">if</span> <span class="o">(</span><span class="n">memoized</span><span class="o">[</span><span class="n">start</span><span class="o">]</span> <span class="o">!=</span> <span class="n">NOT_INITIALIZED</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="n">memoized</span><span class="o">[</span><span class="n">start</span><span class="o">];</span>
+        <span class="o">}</span>
+
+        <span class="k">if</span> <span class="o">((</span><span class="n">start</span> <span class="o">+</span> <span class="n">boats</span><span class="o">[</span><span class="n">boat</span><span class="o">].</span><span class="na">length</span><span class="o">)</span> <span class="o">&lt;=</span> <span class="n">boats</span><span class="o">[</span><span class="n">boat</span><span class="o">].</span><span class="na">anchor</span><span class="o">)</span> <span class="o">{</span>
+            <span class="c1">// given start position is too far from</span>
+            <span class="c1">// anchor of current boat</span>
+            <span class="c1">// so, the start position has to be closer</span>
+            <span class="k">return</span> <span class="nf">solve</span><span class="o">(</span><span class="n">boats</span><span class="o">,</span> <span class="n">fish</span><span class="o">,</span> <span class="n">start</span> <span class="o">+</span> <span class="mi">1</span><span class="o">,</span> <span class="n">boatIndices</span><span class="o">,</span> <span class="n">memoized</span><span class="o">);</span>
+        <span class="o">}</span>
+
+<span class="hll">      <span class="kt">int</span> <span class="n">nextBoatIndex</span><span class="o">;</span>
+</span>
+        <span class="c1">// Subproblem 1</span>
+        <span class="c1">// we would like to check the gain, in case if we put current boat</span>
+        <span class="c1">// into the next position on the river</span>
+<span class="hll">      <span class="n">nextBoatIndex</span> <span class="o">=</span> <span class="o">((</span><span class="n">start</span> <span class="o">+</span> <span class="mi">1</span><span class="o">)</span> <span class="o">&lt;</span> <span class="n">boatIndices</span><span class="o">.</span><span class="na">length</span><span class="o">)</span>
+</span><span class="hll">               <span class="o">?</span> <span class="n">boatIndices</span><span class="o">[</span><span class="n">start</span> <span class="o">+</span> <span class="mi">1</span><span class="o">]</span>
+</span><span class="hll">               <span class="o">:</span> <span class="n">NO_BOAT_CAN_BE_HERE</span><span class="o">;</span>
+</span><span class="hll">       <span class="kt">int</span> <span class="n">subProblem1</span> <span class="o">=</span> <span class="o">(</span><span class="n">nextBoatIndex</span> <span class="o">==</span> <span class="n">boat</span><span class="o">)</span>
+</span>             <span class="o">?</span> <span class="n">solve</span><span class="o">(</span><span class="n">boats</span><span class="o">,</span> <span class="n">fish</span><span class="o">,</span> <span class="n">start</span> <span class="o">+</span> <span class="mi">1</span><span class="o">,</span> <span class="n">boatIndices</span><span class="o">,</span> <span class="n">memoized</span><span class="o">)</span>
+                <span class="o">:</span> <span class="n">NEGATIVE_INFINITY</span><span class="o">;</span>
+
+        <span class="kt">int</span> <span class="n">coverage</span> <span class="o">=</span>
+                <span class="n">countFish</span><span class="o">(</span><span class="n">fish</span><span class="o">,</span> <span class="n">start</span><span class="o">,</span> <span class="o">(</span><span class="n">start</span> <span class="o">+</span> <span class="n">boats</span><span class="o">[</span><span class="n">boat</span><span class="o">].</span><span class="na">length</span><span class="o">)</span> <span class="o">-</span> <span class="mi">1</span><span class="o">);</span>
+
+        <span class="c1">// Subproblem 2</span>
+        <span class="c1">// we would like to check the gain, in case if we put current boat</span>
+        <span class="c1">// into the current position on the river</span>
+        <span class="c1">// (the index of next boat should differ by 1 - from the index of current boat)</span>
+<span class="hll">      <span class="n">nextBoatIndex</span> <span class="o">=</span> <span class="o">((</span><span class="n">start</span> <span class="o">+</span> <span class="n">boats</span><span class="o">[</span><span class="n">boat</span><span class="o">].</span><span class="na">length</span><span class="o">)</span> <span class="o">&lt;</span> <span class="n">boatIndices</span><span class="o">.</span><span class="na">length</span><span class="o">)</span>
+</span><span class="hll">               <span class="o">?</span> <span class="n">boatIndices</span><span class="o">[</span><span class="n">start</span> <span class="o">+</span> <span class="n">boats</span><span class="o">[</span><span class="n">boat</span><span class="o">].</span><span class="na">length</span><span class="o">]</span>
+</span><span class="hll">               <span class="o">:</span> <span class="n">NO_BOAT_CAN_BE_HERE</span><span class="o">;</span>
+</span><span class="hll">       <span class="kt">int</span> <span class="n">subProblem2</span> <span class="o">=</span> <span class="o">(</span><span class="n">nextBoatIndex</span> <span class="o">==</span> <span class="o">(</span><span class="n">boat</span> <span class="o">+</span> <span class="mi">1</span><span class="o">))</span>
+</span>             <span class="o">?</span> <span class="n">coverage</span> <span class="o">+</span> <span class="n">solve</span><span class="o">(</span><span class="n">boats</span><span class="o">,</span> <span class="n">fish</span><span class="o">,</span> <span class="n">start</span> <span class="o">+</span> <span class="n">boats</span><span class="o">[</span><span class="n">boat</span><span class="o">].</span><span class="na">length</span><span class="o">,</span> <span class="n">boatIndices</span><span class="o">,</span> <span class="n">memoized</span><span class="o">)</span>
+                <span class="o">:</span> <span class="n">coverage</span><span class="o">;</span>
+
+        <span class="n">memoized</span><span class="o">[</span><span class="n">start</span><span class="o">]</span> <span class="o">=</span> <span class="n">Math</span><span class="o">.</span><span class="na">max</span><span class="o">(</span><span class="n">subProblem1</span><span class="o">,</span> <span class="n">subProblem2</span><span class="o">);</span>
+        <span class="k">return</span> <span class="n">memoized</span><span class="o">[</span><span class="n">start</span><span class="o">];</span>
+    <span class="o">}</span>
+
+    <span class="c1">// Calculating 1:1 mapping with O(N) complexity</span>
+    <span class="c1">// from the index of river segment</span>
+    <span class="c1">// to the index of boat, which can start at given segment</span>
+<span class="hll">  <span class="kd">static</span> <span class="kt">int</span><span class="o">[]</span> <span class="nf">getBoatIndicesMapping</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">fish</span><span class="o">,</span> <span class="n">Boat</span><span class="o">[]</span> <span class="n">boats</span><span class="o">)</span> <span class="o">{</span>
+</span><span class="hll">       <span class="kt">int</span><span class="o">[]</span> <span class="n">boatIndices</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">fish</span><span class="o">.</span><span class="na">length</span> <span class="o">+</span> <span class="mi">1</span><span class="o">];</span>
+</span><span class="hll">       <span class="n">Arrays</span><span class="o">.</span><span class="na">fill</span><span class="o">(</span><span class="n">boatIndices</span><span class="o">,</span> <span class="n">NO_BOAT_CAN_BE_HERE</span><span class="o">);</span>
+</span><span class="hll">
+</span><span class="hll">       <span class="kt">int</span> <span class="n">currBoatIdx</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+</span><span class="hll">       <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">boatIndices</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+</span><span class="hll">           <span class="n">boatIndices</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">currBoatIdx</span><span class="o">;</span>
+</span><span class="hll">
+</span><span class="hll">           <span class="k">if</span> <span class="o">(</span><span class="n">boats</span><span class="o">[</span><span class="n">currBoatIdx</span><span class="o">].</span><span class="na">anchor</span> <span class="o">==</span> <span class="n">i</span><span class="o">)</span> <span class="o">{</span>
+</span><span class="hll">               <span class="n">currBoatIdx</span><span class="o">++;</span>
+</span><span class="hll">
+</span><span class="hll">               <span class="k">if</span> <span class="o">(</span><span class="n">currBoatIdx</span> <span class="o">==</span> <span class="n">boats</span><span class="o">.</span><span class="na">length</span><span class="o">)</span> <span class="o">{</span>
+</span><span class="hll">                   <span class="k">break</span><span class="o">;</span>
+</span><span class="hll">               <span class="o">}</span>
+</span><span class="hll">           <span class="o">}</span>
+</span><span class="hll">       <span class="o">}</span>
+</span><span class="hll">
+</span><span class="hll">       <span class="k">return</span> <span class="n">boatIndices</span><span class="o">;</span>
+</span><span class="hll">   <span class="o">}</span>
+</span>
+    <span class="c1">// This method can be implemented with O(1) complexity,</span>
+    <span class="c1">// using cumulative sum array</span>
+    <span class="kd">static</span> <span class="kt">int</span> <span class="nf">countFish</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">fish</span><span class="o">,</span> <span class="kt">int</span> <span class="n">from</span><span class="o">,</span> <span class="kt">int</span> <span class="n">to</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kt">int</span> <span class="n">coverage</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">from</span> <span class="o">-</span> <span class="mi">1</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="o">(</span><span class="n">to</span> <span class="o">-</span> <span class="mi">1</span><span class="o">);</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+            <span class="n">coverage</span> <span class="o">+=</span> <span class="n">fish</span><span class="o">[</span><span class="n">i</span><span class="o">];</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">coverage</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</td></tr></table>
 
 <h2 id="other-optimizations"><a href="#other-optimizations">Other optimizations</a></h2>
 
