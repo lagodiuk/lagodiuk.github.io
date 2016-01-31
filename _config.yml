@@ -2,14 +2,29 @@
 title: Yurii Lahodiuk
 email: yura.lagodiuk@gmail.com
 description: > # this means to ignore newlines until "baseurl:"
-  Blog about Algorithms, Programming Problems solving techniques and
-  interesting Computer Science topics.
+  This is my personal blog about Algorithms, Programming Problems solving techniques and
+  interesting Computer Science topics.  
   Expressed opinions are my own.
 baseurl: "" # the subpath of your site, e.g. /blog/
 url: "http://lagodiuk.github.io" # the base hostname & protocol for your site
 twitter_username: ylahodiuk
 github_username:  lagodiuk
 excerpt_separator: <!--more-->
+
+# Includes an icon in the footer for each username you enter
+footer-links:
+  dribbble:
+  email: yura.lagodiuk@gmail.com
+  facebook:
+  flickr:
+  github: lagodiuk
+  instagram:
+  linkedin: ylahodiuk
+  stackoverflow: users/653511/stemm?tab=profile
+  pinterest:
+  rss: true
+  twitter: ylahodiuk
+  googleplus: # anything in your profile username that comes after plus.google.com/
 
 highlighter: pygments
 comments: true
@@ -22,3 +37,4 @@ markdown_ext:  markdown,mkdown,mkdn,mkd,md
 
 redcarpet:
   extensions: ["superscript", "lax_spacing", "tables", "autolink", "strikethrough", "space_after_headers", "with_toc_data", "fenced_code_blocks"]
+  
