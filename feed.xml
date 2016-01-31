@@ -2,12 +2,12 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Yurii Lahodiuk</title>
-    <description>Blog about Algorithms, Programming Problems solving techniques and interesting Computer Science topics. Expressed opinions are my own.
+    <description>This is my personal blog about Algorithms, Programming Problems solving techniques and interesting Computer Science topics.   Expressed opinions are my own.
 </description>
     <link>http://lagodiuk.github.io/</link>
     <atom:link href="http://lagodiuk.github.io/feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Wed, 27 Jan 2016 23:18:06 +0100</pubDate>
-    <lastBuildDate>Wed, 27 Jan 2016 23:18:06 +0100</lastBuildDate>
+    <pubDate>Sun, 31 Jan 2016 17:39:52 +0100</pubDate>
+    <lastBuildDate>Sun, 31 Jan 2016 17:39:52 +0100</lastBuildDate>
     <generator>Jekyll v2.4.0</generator>
     
       <item>

@@ -237,6 +237,23 @@ pre {
   width: -webkit-calc(45% - (30px / 2));
   width: calc(45% - (30px / 2)); }
 
+.footer-col-50-percent {
+  padding-right: 30px;
+  width: -webkit-calc(50% - (30px / 2));
+  width: calc(50% - (30px / 2)); }
+
+.footer-col-right {
+  float: left;
+  margin-bottom: 15px;
+  padding-left: 15px;
+  width: -webkit-calc(45% - (30px / 2));
+  width: calc(45% - (30px / 2)); }
+
+.center-justified {
+  text-align: justify;
+  -moz-text-align-last: center;
+  text-align-last: left; }
+
 @media screen and (max-width: 800px) {
   .footer-col-1,
   .footer-col-2 {
