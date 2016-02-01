@@ -2,7 +2,7 @@
 layout: post
 title:  "Recurring decimal of a rational number"
 date:   2016-01-31 21:15:00
-categories: spoj dynamic_programming
+categories: programming_puzzles
 tags:
 - programming_puzzles
 comments: true
