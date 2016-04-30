@@ -6,12 +6,12 @@
     <meta name="viewport" content="width=device-width initial-scale=1" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-    <title>Yurii Lahodiuk</title>
+    <title>Is it possible to describe all prime numbers using a regular grammar?</title>
     <meta name="description" content="This is my personal blog about Algorithms, Programming Problems solving techniques and interesting Computer Science topics.   Expressed opinions are my own.
 ">
 
     <link rel="stylesheet" href="/css/main.css">
-    <link rel="canonical" href="http://lagodiuk.github.io/">
+    <link rel="canonical" href="http://lagodiuk.github.io/computer_science/2016/04/30/prime_numbers_regular_grammar.html">
 </head>
 
 
@@ -54,51 +54,106 @@
 
     <div class="page-content">
       <div class="wrapper">
-        <div class="home">
+        <div class="post">
 
-  <h1 class="page-heading">Posts</h1>
+  <header class="post-header">
+    <h1 class="post-title">Is it possible to describe all prime numbers using a regular grammar?</h1>
+    <p class="post-meta">Apr 30, 2016</p>
+  </header>
 
-  <ul class="post-list">
-    
-      <li>
-        <span class="post-meta">Apr 30, 2016</span>
+  <article class="post-content">
+    <p>We will use the Pumping Lemma, in order to understand whether it is possible to express the prime numbers via Regular Grammar.</p>
 
-        <h2>
-          <a class="post-link" href="/computer_science/2016/04/30/prime_numbers_regular_grammar.html">Is it possible to describe all prime numbers using a regular grammar?</a>
-        </h2>
-        <p>We will use the Pumping Lemma, in order to understand whether it is possible to express the prime numbers via Regular Grammar.</p>
+<!--more-->
 
-
-      </li>
-    
-      <li>
-        <span class="post-meta">Jan 31, 2016</span>
-
-        <h2>
-          <a class="post-link" href="/programming_puzzles/2016/01/31/puzzles_repeating_decimal.html">Recurring decimal of a rational number</a>
-        </h2>
-        <p>We will consider two algorithms for getting of decimal representation of rational numbers together with <a href="https://en.wikipedia.org/wiki/Repeating_decimal">recurring decimal</a> (e.g. <code>1/3 = 0.(3)</code>, <code>3227/555 = 5.8(144)</code>, etc.):</p>
+<h2 id="table-of-contents">Table of contents</h2>
 
 <ul>
-<li>with <em>O(N)</em> runtime complexity and <em>O(N)</em> memory consumption</li>
-<li>with <em>O(N)</em> runtime complexity and <em>O(1)</em> memory consumption (using <em>Floyd&#39;s Cycle Detection Algorithm</em>)</li>
+<li><a href="#problem-statement">Problem Statement</a></li>
+<li><a href="#pumping-lemma">Pumping Lemma</a></li>
+<li><a href="#proof">So, can we describe prime numbers using a regular grammar? (No)</a></li>
 </ul>
 
+<h2 id="problem-statement"><a href="#problem-analysis">Problem Statement</a></h2>
 
-      </li>
-    
-      <li>
-        <span class="post-meta">Jan 23, 2016</span>
+<p>For simplicity let&#39;s consider the <a href="https://en.wikipedia.org/wiki/Unary_numeral_system">unary numeral system</a> (number <em>N</em> is represented by word <em>X<sub>N</sub></em>, which consists of N consecutive symbols <strong>&#39;1&#39;</strong>).<br>
+Also, let&#39;s use the following notation: <em>|X<sub>i</sub>|</em> to express an amount of <strong>&#39;1&#39;</strong> symbols inside the word <em>X<sub>i</sub></em>.</p>
 
-        <h2>
-          <a class="post-link" href="/spoj/dynamic_programming/2016/01/23/spoj_mfish_solution.html">Catch Fish problem from SPOJ: MFISH</a>
-        </h2>
-        <p>Analysis and solution of the problem: <a href="http://www.spoj.com/problems/MFISH/">http://www.spoj.com/problems/MFISH/</a></p>
+<p>So, having the infinite set of words, which corresponds to prime numbers:</p>
 
+<p><em>X<sub>1</sub></em> = 11<br>
+<em>X<sub>2</sub></em> = 111<br>
+<em>X<sub>3</sub></em> = 11111<br>
+<em>X<sub>4</sub></em> = 1111111<br>
+<em>X<sub>5</sub></em> = 11111111111<br>
+...</p>
 
-      </li>
-    
-  </ul>
+<p>where <em>|X<sub>i</sub>|</em> is a prime number, for every <em>i</em>,</p>
+
+<p>we would like to understand, whether it is possible to describe all entities of this set using regular grammar?<br>
+In other words, is it possible construct the finite state machine, which will be able to recognize all prime numbers? (only the prime numbers)</p>
+
+<h2 id="pumping-lemma"><a href="#pumping-lemma">Pumping Lemma</a></h2>
+
+<p><a href="https://en.wikipedia.org/wiki/Pumping_lemma_for_regular_languages">The Pumping Lemma</a> states, that <em>every sufficiently long word</em> of a regular language can be expanded in a special way, such that <em>every new word (obtained after expansion of the original word) will belong to this language as well</em>.</p>
+
+<p>Formally saying, every word <em>X<sub>i</sub></em> (such, that length of the word is greater than some threshold <em>m</em>: <em>|X<sub>i</sub>| &gt; m</em>) can be splitted into 3 consecutive parts: <em>X</em>, <em>Y</em> and <em>Z</em>, and every new word (e.g. <em>XYYZ</em>, <em>XYYYZ</em>, <em>XYYYYZ</em>, ..., <em>XY<sup>n</sup>Z</em>) will belong to the same language as <em>XYZ</em>.</p>
+
+<p>This lemma is a very convenient tool for proving, that the language is not a regular.</p>
+
+<h2 id="so-can-we-describe-prime-numbers-using-a-regular-grammar-no"><a href="#proof">So, can we describe prime numbers using a regular grammar? (No)</a></h2>
+
+<p>The unary representation <em>W<sub>p</sub></em> of every prime number <em>p</em> (such that <em>|W<sub>p</sub>| = p</em>) can be splited into 3 parts: <em>X</em>, <em>Y</em> and <em>Z</em>.</p>
+
+<p>For example, in case if:<br>
+<em>W<sub>p</sub></em> = 11111111111  </p>
+
+<p>One of the possible ways to split <em>W<sub>p</sub></em> is:<br>
+<em>XYZ</em> = 11 _ 11111 _ 1111<br>
+So, the parts of the word are:<br>
+<em>X</em> = 11<br>
+<em>Y</em> = 11111<br>
+<em>Z</em> = 1111  </p>
+
+<p>Which, just literally means:<br>
+<em>|W<sub>p</sub>| = |XYZ| = |X| + |Y| + |Z|</em></p>
+
+<p><em>XY<sup>n</sup>Z</em> means, that we just should replicate <em>n</em> times the <em>Y</em> part of the word <em>W<sub>p</sub></em>.</p>
+
+<p>So, the amount of symbols <strong>&#39;1&#39;</strong> inside the generated word can be represented as:<br>
+<em>|XY<sup>n</sup>Z| = |X| + n|Y| + |Z| = (|X| + |Y| + |Z|) + (n - 1)x|Y| = |W<sub>p</sub>| + (n - 1)x|Y|</em></p>
+
+<p>We can choose the <em>n = |W<sub>p</sub>| + 1</em><br>
+Which implies, that:<br>
+<em>|XY<sup>n</sup>Z| = |W<sub>p</sub>| + (n - 1)x|Y| = |W<sub>p</sub>| + |W<sub>p</sub>|x|Y| = (|Y| + 1)x|W<sub>p</sub>|</em><br>
+Hence, <em>XY<sup>n</sup>Z</em> <strong>is a composite number</strong>.</p>
+
+<p><strong>Hence, for any arbitrary splitting of <em>W<sub>p</sub></em> (any arbitrary prime number), we can choose such <em>n</em>, that <em>XY<sup>n</sup>Z</em> will be a composite number.</strong></p>
+
+<p>Our implication contradicts to the Pumping Lemma, which leads to a conclusion, that the language, which consists of the prime numbers can’t be expressed using a Regular Grammar.</p>
+
+<div id="disqus_thread"></div>
+
+<script>
+
+var disqus_config = function () {
+this.page.url = "http://lagodiuk.github.io/computer_science/2016/04/30/prime_numbers_regular_grammar.html";
+this.page.identifier = "prime_numbers_regular_grammar";
+};
+
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+
+s.src = '//lahodiuk.disqus.com/embed.js';
+
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+  </article>
 
 </div>
 
