@@ -6,13 +6,13 @@
 </description>
     <link>http://lagodiuk.github.io/</link>
     <atom:link href="http://lagodiuk.github.io/feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Sat, 30 Apr 2016 02:28:42 +0200</pubDate>
-    <lastBuildDate>Sat, 30 Apr 2016 02:28:42 +0200</lastBuildDate>
+    <pubDate>Sat, 30 Apr 2016 13:16:34 +0200</pubDate>
+    <lastBuildDate>Sat, 30 Apr 2016 13:16:34 +0200</lastBuildDate>
     <generator>Jekyll v2.4.0</generator>
     
       <item>
-        <title>Is it possible to describe all prime numbers using a regular grammar?</title>
-        <description>&lt;p&gt;We will use the Pumping Lemma, in order to understand whether it is possible to express the prime numbers via Regular Grammar.&lt;/p&gt;
+        <title>Is it possible to express all prime numbers using a regular grammar?</title>
+        <description>&lt;p&gt;We will use the Pumping Lemma, in order to understand whether it is possible to describe the prime numbers using a Regular Grammar.&lt;/p&gt;
 
 &lt;!--more--&gt;
 
@@ -40,42 +40,47 @@ Also, let&amp;#39;s use the following notation: &lt;em&gt;|X&lt;sub&gt;i&lt;/sub
 
 &lt;p&gt;where &lt;em&gt;|X&lt;sub&gt;i&lt;/sub&gt;|&lt;/em&gt; is a prime number, for every &lt;em&gt;i&lt;/em&gt;,&lt;/p&gt;
 
-&lt;p&gt;we would like to understand, whether it is possible to describe all entities of this set using regular grammar?&lt;br&gt;
-In other words, is it possible construct the finite state machine, which will be able to recognize all prime numbers? (only the prime numbers)&lt;/p&gt;
+&lt;p&gt;we would like to understand, whether it is possible to express all words from this set using a regular grammar?  &lt;/p&gt;
+
+&lt;p&gt;In other words, is it possible construct the finite state machine, which will be able to recognize all prime numbers (only the prime numbers)?&lt;/p&gt;
 
 &lt;h2 id=&quot;pumping-lemma&quot;&gt;&lt;a href=&quot;#pumping-lemma&quot;&gt;Pumping Lemma&lt;/a&gt;&lt;/h2&gt;
 
 &lt;p&gt;&lt;a href=&quot;https://en.wikipedia.org/wiki/Pumping_lemma_for_regular_languages&quot;&gt;The Pumping Lemma&lt;/a&gt; states, that &lt;em&gt;every sufficiently long word&lt;/em&gt; of a regular language can be expanded in a special way, such that &lt;em&gt;every new word (obtained after expansion of the original word) will belong to this language as well&lt;/em&gt;.&lt;/p&gt;
 
-&lt;p&gt;Formally saying, every word &lt;em&gt;X&lt;sub&gt;i&lt;/sub&gt;&lt;/em&gt; (such, that length of the word is greater than some threshold &lt;em&gt;m&lt;/em&gt;: &lt;em&gt;|X&lt;sub&gt;i&lt;/sub&gt;| &amp;gt; m&lt;/em&gt;) can be splitted into 3 consecutive parts: &lt;em&gt;X&lt;/em&gt;, &lt;em&gt;Y&lt;/em&gt; and &lt;em&gt;Z&lt;/em&gt;, and every new word (e.g. &lt;em&gt;XYYZ&lt;/em&gt;, &lt;em&gt;XYYYZ&lt;/em&gt;, &lt;em&gt;XYYYYZ&lt;/em&gt;, ..., &lt;em&gt;XY&lt;sup&gt;n&lt;/sup&gt;Z&lt;/em&gt;) will belong to the same language as &lt;em&gt;XYZ&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;Formally saying, every word &lt;em&gt;X&lt;sub&gt;i&lt;/sub&gt;&lt;/em&gt; (such, that length of the word is greater than some threshold) can be splitted into 3 consecutive parts: &lt;em&gt;X&lt;/em&gt;, &lt;em&gt;Y&lt;/em&gt; and &lt;em&gt;Z&lt;/em&gt;, and every new word (e.g. &lt;em&gt;XYYZ&lt;/em&gt;, &lt;em&gt;XYYYZ&lt;/em&gt;, ..., &lt;em&gt;XY&lt;sup&gt;n&lt;/sup&gt;Z&lt;/em&gt;) will belong to the same language as &lt;em&gt;XYZ&lt;/em&gt;.&lt;/p&gt;
 
-&lt;p&gt;This lemma is a very convenient tool for proving, that the language is not a regular.&lt;/p&gt;
+&lt;p&gt;This lemma is a very convenient tool for proving, that the language is not regular.&lt;/p&gt;
 
-&lt;h2 id=&quot;so-can-we-describe-prime-numbers-using-a-regular-grammar-no&quot;&gt;&lt;a href=&quot;#proof&quot;&gt;So, can we describe prime numbers using a regular grammar? (No)&lt;/a&gt;&lt;/h2&gt;
-
-&lt;p&gt;The unary representation &lt;em&gt;W&lt;sub&gt;p&lt;/sub&gt;&lt;/em&gt; of every prime number &lt;em&gt;p&lt;/em&gt; (such that &lt;em&gt;|W&lt;sub&gt;p&lt;/sub&gt;| = p&lt;/em&gt;) can be splited into 3 parts: &lt;em&gt;X&lt;/em&gt;, &lt;em&gt;Y&lt;/em&gt; and &lt;em&gt;Z&lt;/em&gt;.&lt;/p&gt;
-
+&lt;blockquote&gt;
 &lt;p&gt;For example, in case if:&lt;br&gt;
 &lt;em&gt;W&lt;sub&gt;p&lt;/sub&gt;&lt;/em&gt; = 11111111111  &lt;/p&gt;
 
 &lt;p&gt;One of the possible ways to split &lt;em&gt;W&lt;sub&gt;p&lt;/sub&gt;&lt;/em&gt; is:&lt;br&gt;
-&lt;em&gt;XYZ&lt;/em&gt; = 11 _ 11111 _ 1111&lt;br&gt;
-So, the parts of the word are:&lt;br&gt;
-&lt;em&gt;X&lt;/em&gt; = 11&lt;br&gt;
-&lt;em&gt;Y&lt;/em&gt; = 11111&lt;br&gt;
-&lt;em&gt;Z&lt;/em&gt; = 1111  &lt;/p&gt;
+&lt;em&gt;W&lt;sub&gt;p&lt;/sub&gt; = XYZ&lt;/em&gt; = 11111 _ 11 _ 1111&lt;br&gt;
+(underscore characters are used to display the separation between &lt;em&gt;X&lt;/em&gt;, &lt;em&gt;Y&lt;/em&gt; and &lt;em&gt;Z&lt;/em&gt;)&lt;/p&gt;
 
-&lt;p&gt;Which, just literally means:&lt;br&gt;
+&lt;p&gt;So, the parts of the word are:&lt;br&gt;
+&lt;em&gt;X&lt;/em&gt; = 11111&lt;br&gt;
+&lt;em&gt;Y&lt;/em&gt; = 11&lt;br&gt;
+&lt;em&gt;Z&lt;/em&gt; = 1111&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;so-can-we-describe-prime-numbers-using-a-regular-grammar-no&quot;&gt;&lt;a href=&quot;#proof&quot;&gt;So, can we describe prime numbers using a regular grammar? (No)&lt;/a&gt;&lt;/h2&gt;
+
+&lt;p&gt;The unary representation &lt;em&gt;W&lt;sub&gt;p&lt;/sub&gt;&lt;/em&gt; of every prime number &lt;em&gt;p&lt;/em&gt; (such that &lt;em&gt;|W&lt;sub&gt;p&lt;/sub&gt;| = p&lt;/em&gt;) can be splited into 3 parts: &lt;em&gt;X&lt;/em&gt;, &lt;em&gt;Y&lt;/em&gt; and &lt;em&gt;Z&lt;/em&gt;.  &lt;/p&gt;
+
+&lt;p&gt;Which, in general case, implies that:&lt;br&gt;
 &lt;em&gt;|W&lt;sub&gt;p&lt;/sub&gt;| = |XYZ| = |X| + |Y| + |Z|&lt;/em&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;em&gt;XY&lt;sup&gt;n&lt;/sup&gt;Z&lt;/em&gt; means, that we just should replicate &lt;em&gt;n&lt;/em&gt; times the &lt;em&gt;Y&lt;/em&gt; part of the word &lt;em&gt;W&lt;sub&gt;p&lt;/sub&gt;&lt;/em&gt;.&lt;/p&gt;
 
 &lt;p&gt;So, the amount of symbols &lt;strong&gt;&amp;#39;1&amp;#39;&lt;/strong&gt; inside the generated word can be represented as:&lt;br&gt;
-&lt;em&gt;|XY&lt;sup&gt;n&lt;/sup&gt;Z| = |X| + n|Y| + |Z| = (|X| + |Y| + |Z|) + (n - 1)x|Y| = |W&lt;sub&gt;p&lt;/sub&gt;| + (n - 1)x|Y|&lt;/em&gt;&lt;/p&gt;
+&lt;em&gt;|XY&lt;sup&gt;n&lt;/sup&gt;Z| = |X| + n×|Y| + |Z| = (|X| + |Y| + |Z|) + (n - 1)×|Y| = |W&lt;sub&gt;p&lt;/sub&gt;| + (n - 1)×|Y|&lt;/em&gt;&lt;/p&gt;
 
 &lt;p&gt;We can choose the &lt;em&gt;n = |W&lt;sub&gt;p&lt;/sub&gt;| + 1&lt;/em&gt;&lt;br&gt;
 Which implies, that:&lt;br&gt;
-&lt;em&gt;|XY&lt;sup&gt;n&lt;/sup&gt;Z| = |W&lt;sub&gt;p&lt;/sub&gt;| + (n - 1)x|Y| = |W&lt;sub&gt;p&lt;/sub&gt;| + |W&lt;sub&gt;p&lt;/sub&gt;|x|Y| = (|Y| + 1)x|W&lt;sub&gt;p&lt;/sub&gt;|&lt;/em&gt;&lt;br&gt;
+&lt;em&gt;|XY&lt;sup&gt;n&lt;/sup&gt;Z| = |W&lt;sub&gt;p&lt;/sub&gt;| + (n - 1)×|Y| = |W&lt;sub&gt;p&lt;/sub&gt;| + |W&lt;sub&gt;p&lt;/sub&gt;|×|Y| = (|Y| + 1)×|W&lt;sub&gt;p&lt;/sub&gt;|&lt;/em&gt;&lt;br&gt;
 Hence, &lt;em&gt;XY&lt;sup&gt;n&lt;/sup&gt;Z&lt;/em&gt; &lt;strong&gt;is a composite number&lt;/strong&gt;.&lt;/p&gt;
 
 &lt;p&gt;&lt;strong&gt;Hence, for any arbitrary splitting of &lt;em&gt;W&lt;sub&gt;p&lt;/sub&gt;&lt;/em&gt; (any arbitrary prime number), we can choose such &lt;em&gt;n&lt;/em&gt;, that &lt;em&gt;XY&lt;sup&gt;n&lt;/sup&gt;Z&lt;/em&gt; will be a composite number.&lt;/strong&gt;&lt;/p&gt;

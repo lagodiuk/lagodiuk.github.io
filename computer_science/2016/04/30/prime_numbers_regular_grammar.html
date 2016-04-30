@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width initial-scale=1" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-    <title>Is it possible to describe all prime numbers using a regular grammar?</title>
+    <title>Is it possible to express all prime numbers using a regular grammar?</title>
     <meta name="description" content="This is my personal blog about Algorithms, Programming Problems solving techniques and interesting Computer Science topics.   Expressed opinions are my own.
 ">
 
@@ -57,12 +57,12 @@
         <div class="post">
 
   <header class="post-header">
-    <h1 class="post-title">Is it possible to describe all prime numbers using a regular grammar?</h1>
+    <h1 class="post-title">Is it possible to express all prime numbers using a regular grammar?</h1>
     <p class="post-meta">Apr 30, 2016</p>
   </header>
 
   <article class="post-content">
-    <p>We will use the Pumping Lemma, in order to understand whether it is possible to express the prime numbers via Regular Grammar.</p>
+    <p>We will use the Pumping Lemma, in order to understand whether it is possible to describe the prime numbers using a Regular Grammar.</p>
 
 <!--more-->
 
@@ -90,42 +90,47 @@ Also, let&#39;s use the following notation: <em>|X<sub>i</sub>|</em> to express 
 
 <p>where <em>|X<sub>i</sub>|</em> is a prime number, for every <em>i</em>,</p>
 
-<p>we would like to understand, whether it is possible to describe all entities of this set using regular grammar?<br>
-In other words, is it possible construct the finite state machine, which will be able to recognize all prime numbers? (only the prime numbers)</p>
+<p>we would like to understand, whether it is possible to express all words from this set using a regular grammar?  </p>
+
+<p>In other words, is it possible construct the finite state machine, which will be able to recognize all prime numbers (only the prime numbers)?</p>
 
 <h2 id="pumping-lemma"><a href="#pumping-lemma">Pumping Lemma</a></h2>
 
 <p><a href="https://en.wikipedia.org/wiki/Pumping_lemma_for_regular_languages">The Pumping Lemma</a> states, that <em>every sufficiently long word</em> of a regular language can be expanded in a special way, such that <em>every new word (obtained after expansion of the original word) will belong to this language as well</em>.</p>
 
-<p>Formally saying, every word <em>X<sub>i</sub></em> (such, that length of the word is greater than some threshold <em>m</em>: <em>|X<sub>i</sub>| &gt; m</em>) can be splitted into 3 consecutive parts: <em>X</em>, <em>Y</em> and <em>Z</em>, and every new word (e.g. <em>XYYZ</em>, <em>XYYYZ</em>, <em>XYYYYZ</em>, ..., <em>XY<sup>n</sup>Z</em>) will belong to the same language as <em>XYZ</em>.</p>
+<p>Formally saying, every word <em>X<sub>i</sub></em> (such, that length of the word is greater than some threshold) can be splitted into 3 consecutive parts: <em>X</em>, <em>Y</em> and <em>Z</em>, and every new word (e.g. <em>XYYZ</em>, <em>XYYYZ</em>, ..., <em>XY<sup>n</sup>Z</em>) will belong to the same language as <em>XYZ</em>.</p>
 
-<p>This lemma is a very convenient tool for proving, that the language is not a regular.</p>
+<p>This lemma is a very convenient tool for proving, that the language is not regular.</p>
 
-<h2 id="so-can-we-describe-prime-numbers-using-a-regular-grammar-no"><a href="#proof">So, can we describe prime numbers using a regular grammar? (No)</a></h2>
-
-<p>The unary representation <em>W<sub>p</sub></em> of every prime number <em>p</em> (such that <em>|W<sub>p</sub>| = p</em>) can be splited into 3 parts: <em>X</em>, <em>Y</em> and <em>Z</em>.</p>
-
+<blockquote>
 <p>For example, in case if:<br>
 <em>W<sub>p</sub></em> = 11111111111  </p>
 
 <p>One of the possible ways to split <em>W<sub>p</sub></em> is:<br>
-<em>XYZ</em> = 11 _ 11111 _ 1111<br>
-So, the parts of the word are:<br>
-<em>X</em> = 11<br>
-<em>Y</em> = 11111<br>
-<em>Z</em> = 1111  </p>
+<em>W<sub>p</sub> = XYZ</em> = 11111 _ 11 _ 1111<br>
+(underscore characters are used to display the separation between <em>X</em>, <em>Y</em> and <em>Z</em>)</p>
 
-<p>Which, just literally means:<br>
+<p>So, the parts of the word are:<br>
+<em>X</em> = 11111<br>
+<em>Y</em> = 11<br>
+<em>Z</em> = 1111</p>
+</blockquote>
+
+<h2 id="so-can-we-describe-prime-numbers-using-a-regular-grammar-no"><a href="#proof">So, can we describe prime numbers using a regular grammar? (No)</a></h2>
+
+<p>The unary representation <em>W<sub>p</sub></em> of every prime number <em>p</em> (such that <em>|W<sub>p</sub>| = p</em>) can be splited into 3 parts: <em>X</em>, <em>Y</em> and <em>Z</em>.  </p>
+
+<p>Which, in general case, implies that:<br>
 <em>|W<sub>p</sub>| = |XYZ| = |X| + |Y| + |Z|</em></p>
 
 <p><em>XY<sup>n</sup>Z</em> means, that we just should replicate <em>n</em> times the <em>Y</em> part of the word <em>W<sub>p</sub></em>.</p>
 
 <p>So, the amount of symbols <strong>&#39;1&#39;</strong> inside the generated word can be represented as:<br>
-<em>|XY<sup>n</sup>Z| = |X| + n|Y| + |Z| = (|X| + |Y| + |Z|) + (n - 1)x|Y| = |W<sub>p</sub>| + (n - 1)x|Y|</em></p>
+<em>|XY<sup>n</sup>Z| = |X| + n×|Y| + |Z| = (|X| + |Y| + |Z|) + (n - 1)×|Y| = |W<sub>p</sub>| + (n - 1)×|Y|</em></p>
 
 <p>We can choose the <em>n = |W<sub>p</sub>| + 1</em><br>
 Which implies, that:<br>
-<em>|XY<sup>n</sup>Z| = |W<sub>p</sub>| + (n - 1)x|Y| = |W<sub>p</sub>| + |W<sub>p</sub>|x|Y| = (|Y| + 1)x|W<sub>p</sub>|</em><br>
+<em>|XY<sup>n</sup>Z| = |W<sub>p</sub>| + (n - 1)×|Y| = |W<sub>p</sub>| + |W<sub>p</sub>|×|Y| = (|Y| + 1)×|W<sub>p</sub>|</em><br>
 Hence, <em>XY<sup>n</sup>Z</em> <strong>is a composite number</strong>.</p>
 
 <p><strong>Hence, for any arbitrary splitting of <em>W<sub>p</sub></em> (any arbitrary prime number), we can choose such <em>n</em>, that <em>XY<sup>n</sup>Z</em> will be a composite number.</strong></p>
