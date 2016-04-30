@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Is it possible to describe all prime numbers using a regular grammar?"
+title:  "Is it possible to express all prime numbers using a regular grammar?"
 date:   2016-04-30 21:15:00
 categories: computer_science
 tags:
@@ -8,7 +8,7 @@ tags:
 comments: true
 ---
 
-We will use the Pumping Lemma, in order to understand whether it is possible to express the prime numbers via Regular Grammar.
+We will use the Pumping Lemma, in order to understand whether it is possible to describe the prime numbers using a Regular Grammar.
 
 <!--more-->
 
@@ -33,42 +33,45 @@ So, having the infinite set of words, which corresponds to prime numbers:
 
 where *|X<sub>i</sub>|* is a prime number, for every *i*,
 
-we would like to understand, whether it is possible to describe all entities of this set using regular grammar?  
-In other words, is it possible construct the finite state machine, which will be able to recognize all prime numbers? (only the prime numbers)
+we would like to understand, whether it is possible to express all words from this set using a regular grammar?  
+
+In other words, is it possible construct the finite state machine, which will be able to recognize all prime numbers (only the prime numbers)?
 
 ## [Pumping Lemma](#pumping-lemma)
 
 [The Pumping Lemma](https://en.wikipedia.org/wiki/Pumping_lemma_for_regular_languages) states, that *every sufficiently long word* of a regular language can be expanded in a special way, such that *every new word (obtained after expansion of the original word) will belong to this language as well*.
 
-Formally saying, every word *X<sub>i</sub>* (such, that length of the word is greater than some threshold *m*: *|X<sub>i</sub>| > m*) can be splitted into 3 consecutive parts: *X*, *Y* and *Z*, and every new word (e.g. *XYYZ*, *XYYYZ*, *XYYYYZ*, ..., *XY<sup>n</sup>Z*) will belong to the same language as *XYZ*.
+Formally saying, every word *X<sub>i</sub>* (such, that length of the word is greater than some threshold) can be splitted into 3 consecutive parts: *X*, *Y* and *Z*, and every new word (e.g. *XYYZ*, *XYYYZ*, ..., *XY<sup>n</sup>Z*) will belong to the same language as *XYZ*.
 
-This lemma is a very convenient tool for proving, that the language is not a regular.
+This lemma is a very convenient tool for proving, that the language is not regular.
+
+> For example, in case if:  
+> *W<sub>p</sub>* = 11111111111  
+> 
+> One of the possible ways to split *W<sub>p</sub>* is:  
+> *W<sub>p</sub> = XYZ* = 11111 _ 11 _ 1111  
+> (underscore characters are used to display the separation between *X*, *Y* and *Z*)
+> 
+> So, the parts of the word are:  
+> *X* = 11111  
+> *Y* = 11  
+> *Z* = 1111
 
 ## [So, can we describe prime numbers using a regular grammar? (No)](#proof)
 
-The unary representation *W<sub>p</sub>* of every prime number *p* (such that *|W<sub>p</sub>| = p*) can be splited into 3 parts: *X*, *Y* and *Z*.
+The unary representation *W<sub>p</sub>* of every prime number *p* (such that *|W<sub>p</sub>| = p*) can be splited into 3 parts: *X*, *Y* and *Z*.  
 
-For example, in case if:  
-*W<sub>p</sub>* = 11111111111  
-
-One of the possible ways to split *W<sub>p</sub>* is:  
-*XYZ* = 11 _ 11111 _ 1111  
-So, the parts of the word are:  
-*X* = 11  
-*Y* = 11111  
-*Z* = 1111  
-
-Which, just literally means:  
+Which, in general case, implies that:  
 *|W<sub>p</sub>| = |XYZ| = |X| + |Y| + |Z|*
 
 *XY<sup>n</sup>Z* means, that we just should replicate *n* times the *Y* part of the word *W<sub>p</sub>*.
 
 So, the amount of symbols **'1'** inside the generated word can be represented as:  
-*|XY<sup>n</sup>Z| = |X| + n|Y| + |Z| = (|X| + |Y| + |Z|) + (n - 1)x|Y| = |W<sub>p</sub>| + (n - 1)x|Y|*
+*|XY<sup>n</sup>Z| = |X| + n×|Y| + |Z| = (|X| + |Y| + |Z|) + (n - 1)×|Y| = |W<sub>p</sub>| + (n - 1)×|Y|*
 
 We can choose the *n = |W<sub>p</sub>| + 1*  
 Which implies, that:  
-*|XY<sup>n</sup>Z| = |W<sub>p</sub>| + (n - 1)x|Y| = |W<sub>p</sub>| + |W<sub>p</sub>|x|Y| = (|Y| + 1)x|W<sub>p</sub>|*  
+*|XY<sup>n</sup>Z| = |W<sub>p</sub>| + (n - 1)×|Y| = |W<sub>p</sub>| + |W<sub>p</sub>|×|Y| = (|Y| + 1)×|W<sub>p</sub>|*  
 Hence, *XY<sup>n</sup>Z* **is a composite number**.
 
 **Hence, for any arbitrary splitting of *W<sub>p</sub>* (any arbitrary prime number), we can choose such *n*, that *XY<sup>n</sup>Z* will be a composite number.**
