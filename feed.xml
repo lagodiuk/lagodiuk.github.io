@@ -6,8 +6,8 @@
 </description>
     <link>http://lagodiuk.github.io/</link>
     <atom:link href="http://lagodiuk.github.io/feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Sun, 01 May 2016 17:47:25 +0200</pubDate>
-    <lastBuildDate>Sun, 01 May 2016 17:47:25 +0200</lastBuildDate>
+    <pubDate>Sun, 01 May 2016 17:54:23 +0200</pubDate>
+    <lastBuildDate>Sun, 01 May 2016 17:54:23 +0200</lastBuildDate>
     <generator>Jekyll v2.4.0</generator>
     
       <item>
@@ -48,7 +48,7 @@ Also, let&amp;#39;s use the following notation: &lt;em&gt;|X&lt;sub&gt;i&lt;/sub
 
 &lt;p&gt;&lt;a href=&quot;https://en.wikipedia.org/wiki/Pumping_lemma_for_regular_languages&quot;&gt;The Pumping Lemma&lt;/a&gt; states, that &lt;em&gt;every sufficiently long word&lt;/em&gt; of a regular language can be infinitely many times expanded in a special way, such that &lt;em&gt;every new word (obtained after expansion of the original word) will belong to this language as well&lt;/em&gt;.&lt;/p&gt;
 
-&lt;p&gt;Formally saying, for every infinite regular language: every word &lt;em&gt;X&lt;sub&gt;i&lt;/sub&gt;&lt;/em&gt; (such, that length of the word is greater than some threshold) can be splitted into 3 consecutive parts: &lt;em&gt;X&lt;/em&gt;, &lt;em&gt;Y&lt;/em&gt; and &lt;em&gt;Z&lt;/em&gt;, and every new word (e.g. &lt;em&gt;XYYZ&lt;/em&gt;, &lt;em&gt;XYYYZ&lt;/em&gt;, ..., &lt;em&gt;XY&lt;sup&gt;n&lt;/sup&gt;Z&lt;/em&gt;) will belong to the same language as &lt;em&gt;XYZ&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;Formally saying, for every infinite regular language &lt;em&gt;L&lt;/em&gt;: every word &lt;em&gt;X&lt;sub&gt;i&lt;/sub&gt;&lt;/em&gt; (such, that length of the word is greater than some threshold) can be splitted into 3 consecutive parts: &lt;em&gt;X&lt;/em&gt;, &lt;em&gt;Y&lt;/em&gt; and &lt;em&gt;Z&lt;/em&gt;, and every new word (e.g. &lt;em&gt;XYYZ&lt;/em&gt;, &lt;em&gt;XYYYZ&lt;/em&gt;, ..., &lt;em&gt;XY&lt;sup&gt;n&lt;/sup&gt;Z&lt;/em&gt;) will belong to the language &lt;em&gt;L&lt;/em&gt; as well.&lt;/p&gt;
 
 &lt;p&gt;The lemma can be understanded in such way, that the reguar expression of every infinite regular language must contain a &lt;a href=&quot;https://en.wikipedia.org/wiki/Kleene_star&quot;&gt;Kleene operator&lt;/a&gt;.&lt;/p&gt;
 
@@ -67,13 +67,11 @@ Also, let&amp;#39;s use the following notation: &lt;em&gt;|X&lt;sub&gt;i&lt;/sub
 &lt;em&gt;Y&lt;/em&gt; = 11&lt;br&gt;
 &lt;em&gt;Z&lt;/em&gt; = 1  &lt;/p&gt;
 
-&lt;p&gt;We can infinitely many times replicate the part &lt;em&gt;Y&lt;/em&gt; (&amp;quot;pump&amp;quot; the word &lt;em&gt;W&lt;sub&gt;i&lt;/sub&gt;&lt;/em&gt;), and all generated words: &lt;em&gt;XY&lt;sup&gt;2&lt;/sup&gt;Z&lt;/em&gt;, &lt;em&gt;XY&lt;sup&gt;3&lt;/sup&gt;Z&lt;/em&gt;, ..., &lt;em&gt;XY&lt;sup&gt;n&lt;/sup&gt;Z&lt;/em&gt; will belong to the langauge &lt;em&gt;L&lt;/em&gt; as well:  &lt;/p&gt;
+&lt;p&gt;We can infinitely many times replicate the part &lt;em&gt;Y&lt;/em&gt; (&amp;quot;pump&amp;quot; the word &lt;em&gt;W&lt;sub&gt;i&lt;/sub&gt;&lt;/em&gt;), and all generated (&amp;quot;pumped&amp;quot;) words: &lt;em&gt;XY&lt;sup&gt;2&lt;/sup&gt;Z&lt;/em&gt;, &lt;em&gt;XY&lt;sup&gt;3&lt;/sup&gt;Z&lt;/em&gt;, ..., &lt;em&gt;XY&lt;sup&gt;n&lt;/sup&gt;Z&lt;/em&gt; will belong to the langauge &lt;em&gt;L&lt;/em&gt; as well:  &lt;/p&gt;
 
 &lt;p&gt;&lt;em&gt;XYZ&lt;/em&gt;  = 111111&lt;br&gt;
 &lt;em&gt;XY&lt;sup&gt;2&lt;/sup&gt;Z&lt;/em&gt; = 11111111&lt;br&gt;
 &lt;em&gt;XY&lt;sup&gt;3&lt;/sup&gt;Z&lt;/em&gt; = 1111111111  &lt;/p&gt;
-
-&lt;p&gt;All &amp;quot;pumped&amp;quot; words belongs to the language &lt;em&gt;L&lt;/em&gt;.&lt;/p&gt;
 &lt;/blockquote&gt;
 
 &lt;p&gt;The Pumping Lemma is only a necessary condition (and not a sufficient condition) for the language being a regular.  &lt;/p&gt;

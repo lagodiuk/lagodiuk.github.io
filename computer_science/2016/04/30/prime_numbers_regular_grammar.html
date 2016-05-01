@@ -98,7 +98,7 @@ Also, let&#39;s use the following notation: <em>|X<sub>i</sub>|</em> to express 
 
 <p><a href="https://en.wikipedia.org/wiki/Pumping_lemma_for_regular_languages">The Pumping Lemma</a> states, that <em>every sufficiently long word</em> of a regular language can be infinitely many times expanded in a special way, such that <em>every new word (obtained after expansion of the original word) will belong to this language as well</em>.</p>
 
-<p>Formally saying, for every infinite regular language: every word <em>X<sub>i</sub></em> (such, that length of the word is greater than some threshold) can be splitted into 3 consecutive parts: <em>X</em>, <em>Y</em> and <em>Z</em>, and every new word (e.g. <em>XYYZ</em>, <em>XYYYZ</em>, ..., <em>XY<sup>n</sup>Z</em>) will belong to the same language as <em>XYZ</em>.</p>
+<p>Formally saying, for every infinite regular language <em>L</em>: every word <em>X<sub>i</sub></em> (such, that length of the word is greater than some threshold) can be splitted into 3 consecutive parts: <em>X</em>, <em>Y</em> and <em>Z</em>, and every new word (e.g. <em>XYYZ</em>, <em>XYYYZ</em>, ..., <em>XY<sup>n</sup>Z</em>) will belong to the language <em>L</em> as well.</p>
 
 <p>The lemma can be understanded in such way, that the reguar expression of every infinite regular language must contain a <a href="https://en.wikipedia.org/wiki/Kleene_star">Kleene operator</a>.</p>
 
@@ -117,13 +117,11 @@ Also, let&#39;s use the following notation: <em>|X<sub>i</sub>|</em> to express 
 <em>Y</em> = 11<br>
 <em>Z</em> = 1  </p>
 
-<p>We can infinitely many times replicate the part <em>Y</em> (&quot;pump&quot; the word <em>W<sub>i</sub></em>), and all generated words: <em>XY<sup>2</sup>Z</em>, <em>XY<sup>3</sup>Z</em>, ..., <em>XY<sup>n</sup>Z</em> will belong to the langauge <em>L</em> as well:  </p>
+<p>We can infinitely many times replicate the part <em>Y</em> (&quot;pump&quot; the word <em>W<sub>i</sub></em>), and all generated (&quot;pumped&quot;) words: <em>XY<sup>2</sup>Z</em>, <em>XY<sup>3</sup>Z</em>, ..., <em>XY<sup>n</sup>Z</em> will belong to the langauge <em>L</em> as well:  </p>
 
 <p><em>XYZ</em>  = 111111<br>
 <em>XY<sup>2</sup>Z</em> = 11111111<br>
 <em>XY<sup>3</sup>Z</em> = 1111111111  </p>
-
-<p>All &quot;pumped&quot; words belongs to the language <em>L</em>.</p>
 </blockquote>
 
 <p>The Pumping Lemma is only a necessary condition (and not a sufficient condition) for the language being a regular.  </p>
