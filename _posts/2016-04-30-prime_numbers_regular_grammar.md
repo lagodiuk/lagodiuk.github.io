@@ -15,7 +15,7 @@ We will use the Pumping Lemma, in order to understand whether it is possible to 
 ## Table of contents
 * [Problem Statement](#problem-statement)
 * [Pumping Lemma](#pumping-lemma)
-* [So, can we describe prime numbers using a regular grammar? (No)](#proof)
+* [Regular grammar for prime numbers?](#regular-grammar-for-prime-numbers)
 
 ## [Problem Statement](#problem-analysis)
 
@@ -39,25 +39,39 @@ In other words, is it possible construct the finite state machine, which will be
 
 ## [Pumping Lemma](#pumping-lemma)
 
-[The Pumping Lemma](https://en.wikipedia.org/wiki/Pumping_lemma_for_regular_languages) states, that *every sufficiently long word* of a regular language can be expanded in a special way, such that *every new word (obtained after expansion of the original word) will belong to this language as well*.
+[The Pumping Lemma](https://en.wikipedia.org/wiki/Pumping_lemma_for_regular_languages) states, that *every sufficiently long word* of a regular language can be infinitely many times expanded in a special way, such that *every new word (obtained after expansion of the original word) will belong to this language as well*.
 
-Formally saying, every word *X<sub>i</sub>* (such, that length of the word is greater than some threshold) can be splitted into 3 consecutive parts: *X*, *Y* and *Z*, and every new word (e.g. *XYYZ*, *XYYYZ*, ..., *XY<sup>n</sup>Z*) will belong to the same language as *XYZ*.
+Formally saying, for every infinite regular language: every word *X<sub>i</sub>* (such, that length of the word is greater than some threshold) can be splitted into 3 consecutive parts: *X*, *Y* and *Z*, and every new word (e.g. *XYYZ*, *XYYYZ*, ..., *XY<sup>n</sup>Z*) will belong to the same language as *XYZ*.
 
-This lemma is a very convenient tool for proving, that the language is not regular.
+The lemma can be understanded in such way, that the reguar expression of every infinite regular language must contain a [Kleene operator](https://en.wikipedia.org/wiki/Kleene_star).
 
-> For example, in case if:  
-> *W<sub>p</sub>* = 11111111111  
+> For example, lets's consider a regular language *L*, which corresponds to the following regular expression: `( 1 | 11 | 111 | 111(1)*1 )`  
+>  
+> Let's select some sufficiently long word of this language:  
+> *W<sub>i</sub>* = 111111  
 > 
-> One of the possible ways to split *W<sub>p</sub>* is:  
-> *W<sub>p</sub> = XYZ* = 11111 _ 11 _ 1111  
-> (underscore characters are used to display the separation between *X*, *Y* and *Z*)
+> One of the possible ways to split *W<sub>i</sub>* is:  
+> *W<sub>i</sub> = XYZ* = 111 _ 11 _ 1  
+> (underscore characters are not a part of the alphabet of the language *L*, but I am using these characters just to display the separation between *X*, *Y* and *Z*)
 > 
-> So, the parts of the word are:  
-> *X* = 11111  
+> So, the parts of the word *W<sub>i</sub>* are:  
+> *X* = 111  
 > *Y* = 11  
-> *Z* = 1111
+> *Z* = 1  
+>  
+> We can infinitely many times replicate the part *Y* ("pump" the word *W<sub>i</sub>*), and all generated words: *XY<sup>2</sup>Z*, *XY<sup>3</sup>Z*, ..., *XY<sup>n</sup>Z* will belong to the langauge *L* as well:  
+>  
+> *XYZ*  = 111111  
+> *XY<sup>2</sup>Z* = 11111111  
+> *XY<sup>3</sup>Z* = 1111111111  
+> 
+> All "pumped" words belongs to the language *L*.
 
-## [So, can we describe prime numbers using a regular grammar? (No)](#proof)
+The Pumping Lemma is only a necessary condition (and not a sufficient condition) for the language being a regular.  
+
+However, this lemma is a very convenient tool for proving, that the language *is not regular*: proving that every sufficiently long word of the language can't be "pumped" - implies that the language is not regular.
+
+## [Regular grammar for prime numbers?](#regular-grammar-for-prime-numbers)
 
 The unary representation *W<sub>p</sub>* of every prime number *p* (such that *|W<sub>p</sub>| = p*) can be splited into 3 parts: *X*, *Y* and *Z*.  
 
@@ -76,7 +90,7 @@ Hence, *XY<sup>n</sup>Z* **is a composite number**.
 
 **Hence, for any arbitrary splitting of *W<sub>p</sub>* (any arbitrary prime number), we can choose such *n*, that *XY<sup>n</sup>Z* will be a composite number.**
 
-Our implication contradicts to the Pumping Lemma, which leads to a conclusion, that the language, which consists of the prime numbers can’t be expressed using a Regular Grammar.
+Our implication contradicts to the Pumping Lemma, which leads to the conclusion, that **the language, which consists of the prime numbers can’t be expressed using a Regular Grammar**.
 
 <div id="disqus_thread"></div>
 <script>
