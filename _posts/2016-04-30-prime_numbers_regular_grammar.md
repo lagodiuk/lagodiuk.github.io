@@ -41,7 +41,7 @@ In other words, is it possible construct the finite state machine, which will be
 
 [The Pumping Lemma](https://en.wikipedia.org/wiki/Pumping_lemma_for_regular_languages) states, that *every sufficiently long word* of a regular language can be infinitely many times expanded in a special way, such that *every new word (obtained after expansion of the original word) will belong to this language as well*.
 
-Formally saying, for every infinite regular language: every word *X<sub>i</sub>* (such, that length of the word is greater than some threshold) can be splitted into 3 consecutive parts: *X*, *Y* and *Z*, and every new word (e.g. *XYYZ*, *XYYYZ*, ..., *XY<sup>n</sup>Z*) will belong to the same language as *XYZ*.
+Formally saying, for every infinite regular language *L*: every word *X<sub>i</sub>* (such, that length of the word is greater than some threshold) can be splitted into 3 consecutive parts: *X*, *Y* and *Z*, and every new word (e.g. *XYYZ*, *XYYYZ*, ..., *XY<sup>n</sup>Z*) will belong to the language *L* as well.
 
 The lemma can be understanded in such way, that the reguar expression of every infinite regular language must contain a [Kleene operator](https://en.wikipedia.org/wiki/Kleene_star).
 
@@ -59,13 +59,11 @@ The lemma can be understanded in such way, that the reguar expression of every i
 > *Y* = 11  
 > *Z* = 1  
 >  
-> We can infinitely many times replicate the part *Y* ("pump" the word *W<sub>i</sub>*), and all generated words: *XY<sup>2</sup>Z*, *XY<sup>3</sup>Z*, ..., *XY<sup>n</sup>Z* will belong to the langauge *L* as well:  
+> We can infinitely many times replicate the part *Y* ("pump" the word *W<sub>i</sub>*), and all generated ("pumped") words: *XY<sup>2</sup>Z*, *XY<sup>3</sup>Z*, ..., *XY<sup>n</sup>Z* will belong to the langauge *L* as well:  
 >  
 > *XYZ*  = 111111  
 > *XY<sup>2</sup>Z* = 11111111  
 > *XY<sup>3</sup>Z* = 1111111111  
-> 
-> All "pumped" words belongs to the language *L*.
 
 The Pumping Lemma is only a necessary condition (and not a sufficient condition) for the language being a regular.  
 
