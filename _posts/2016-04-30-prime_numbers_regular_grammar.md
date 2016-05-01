@@ -59,7 +59,7 @@ The lemma can be understanded in such way, that the reguar expression of every i
 > *Y* = 11  
 > *Z* = 1  
 >  
-> We can infinitely many times replicate the part *Y* ("pump" the word *W<sub>i</sub>*), and all generated ("pumped") words: *XY<sup>2</sup>Z*, *XY<sup>3</sup>Z*, ..., *XY<sup>n</sup>Z* will belong to the langauge *L* as well:  
+> We can infinitely many times replicate the part *Y* ("pump" the word *W<sub>i</sub>*), and all generated words: *XY<sup>2</sup>Z*, *XY<sup>3</sup>Z*, ..., *XY<sup>n</sup>Z* will belong to the langauge *L* as well:  
 >  
 > *XYZ*  = 111111  
 > *XY<sup>2</sup>Z* = 11111111  
