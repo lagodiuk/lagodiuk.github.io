@@ -77,7 +77,7 @@
 <h2 id="problem-statement"><a href="#problem-analysis">Problem Statement</a></h2>
 
 <p>For simplicity let&#39;s consider the <a href="https://en.wikipedia.org/wiki/Unary_numeral_system">unary numeral system</a> (number <em>N</em> is represented by word <em>X<sub>N</sub></em>, which consists of N consecutive symbols <strong>&#39;1&#39;</strong>).<br>
-Also, let&#39;s use the following notation: <em>|X<sub>i</sub>|</em> to express an amount of <strong>&#39;1&#39;</strong> symbols inside the word <em>X<sub>i</sub></em>.</p>
+Also, let&#39;s use the following notation: <em>|X<sub>i</sub>|</em> in order to express the amount of <strong>&#39;1&#39;</strong> symbols inside the word <em>X<sub>i</sub></em>.</p>
 
 <p>So, having the infinite set of words, which corresponds to prime numbers:</p>
 
@@ -90,9 +90,9 @@ Also, let&#39;s use the following notation: <em>|X<sub>i</sub>|</em> to express 
 
 <p>where <em>|X<sub>i</sub>|</em> is a prime number, for every <em>i</em>,</p>
 
-<p>we would like to understand, whether it is possible to express all words from this set using a regular grammar?  </p>
+<p>we would like to understand, whether it is possible to express all words from this language using a regular grammar?  </p>
 
-<p>In other words, is it possible construct the finite state machine, which will be able to recognize all prime numbers (only the prime numbers)?</p>
+<p>In other words, is it possible construct the finite state machine, which will be able to recognize all prime numbers (and only the prime numbers), expressed in unary numeral system?</p>
 
 <h2 id="pumping-lemma"><a href="#pumping-lemma">Pumping Lemma</a></h2>
 
@@ -100,7 +100,7 @@ Also, let&#39;s use the following notation: <em>|X<sub>i</sub>|</em> to express 
 
 <p>Formally saying, for every infinite regular language <em>L</em>: every word <em>X<sub>i</sub></em> (such, that length of the word is greater than some threshold) can be splitted into 3 consecutive parts: <em>X</em>, <em>Y</em> and <em>Z</em>, and every new word (e.g. <em>XYYZ</em>, <em>XYYYZ</em>, ..., <em>XY<sup>n</sup>Z</em>) will belong to the language <em>L</em> as well.</p>
 
-<p>The lemma can be understanded in such way, that the reguar expression of every infinite regular language must contain a <a href="https://en.wikipedia.org/wiki/Kleene_star">Kleene operator</a>.</p>
+<p>The lemma can be understood in such way, that the reguar expression for recognizing of any <em>infinite regular language</em> must contain a <a href="https://en.wikipedia.org/wiki/Kleene_star">Kleene operator</a>.</p>
 
 <blockquote>
 <p>For example, lets&#39;s consider a regular language <em>L</em>, which corresponds to the following regular expression: <code>( 1 | 11 | 111 | 111(1)*1 )</code>  </p>

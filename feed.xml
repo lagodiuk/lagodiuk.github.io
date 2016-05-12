@@ -6,8 +6,8 @@
 </description>
     <link>http://lagodiuk.github.io/</link>
     <atom:link href="http://lagodiuk.github.io/feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Sun, 01 May 2016 17:56:11 +0200</pubDate>
-    <lastBuildDate>Sun, 01 May 2016 17:56:11 +0200</lastBuildDate>
+    <pubDate>Thu, 12 May 2016 22:15:59 +0200</pubDate>
+    <lastBuildDate>Thu, 12 May 2016 22:15:59 +0200</lastBuildDate>
     <generator>Jekyll v2.4.0</generator>
     
       <item>
@@ -27,7 +27,7 @@
 &lt;h2 id=&quot;problem-statement&quot;&gt;&lt;a href=&quot;#problem-analysis&quot;&gt;Problem Statement&lt;/a&gt;&lt;/h2&gt;
 
 &lt;p&gt;For simplicity let&amp;#39;s consider the &lt;a href=&quot;https://en.wikipedia.org/wiki/Unary_numeral_system&quot;&gt;unary numeral system&lt;/a&gt; (number &lt;em&gt;N&lt;/em&gt; is represented by word &lt;em&gt;X&lt;sub&gt;N&lt;/sub&gt;&lt;/em&gt;, which consists of N consecutive symbols &lt;strong&gt;&amp;#39;1&amp;#39;&lt;/strong&gt;).&lt;br&gt;
-Also, let&amp;#39;s use the following notation: &lt;em&gt;|X&lt;sub&gt;i&lt;/sub&gt;|&lt;/em&gt; to express an amount of &lt;strong&gt;&amp;#39;1&amp;#39;&lt;/strong&gt; symbols inside the word &lt;em&gt;X&lt;sub&gt;i&lt;/sub&gt;&lt;/em&gt;.&lt;/p&gt;
+Also, let&amp;#39;s use the following notation: &lt;em&gt;|X&lt;sub&gt;i&lt;/sub&gt;|&lt;/em&gt; in order to express the amount of &lt;strong&gt;&amp;#39;1&amp;#39;&lt;/strong&gt; symbols inside the word &lt;em&gt;X&lt;sub&gt;i&lt;/sub&gt;&lt;/em&gt;.&lt;/p&gt;
 
 &lt;p&gt;So, having the infinite set of words, which corresponds to prime numbers:&lt;/p&gt;
 
@@ -40,9 +40,9 @@ Also, let&amp;#39;s use the following notation: &lt;em&gt;|X&lt;sub&gt;i&lt;/sub
 
 &lt;p&gt;where &lt;em&gt;|X&lt;sub&gt;i&lt;/sub&gt;|&lt;/em&gt; is a prime number, for every &lt;em&gt;i&lt;/em&gt;,&lt;/p&gt;
 
-&lt;p&gt;we would like to understand, whether it is possible to express all words from this set using a regular grammar?  &lt;/p&gt;
+&lt;p&gt;we would like to understand, whether it is possible to express all words from this language using a regular grammar?  &lt;/p&gt;
 
-&lt;p&gt;In other words, is it possible construct the finite state machine, which will be able to recognize all prime numbers (only the prime numbers)?&lt;/p&gt;
+&lt;p&gt;In other words, is it possible construct the finite state machine, which will be able to recognize all prime numbers (and only the prime numbers), expressed in unary numeral system?&lt;/p&gt;
 
 &lt;h2 id=&quot;pumping-lemma&quot;&gt;&lt;a href=&quot;#pumping-lemma&quot;&gt;Pumping Lemma&lt;/a&gt;&lt;/h2&gt;
 
@@ -50,7 +50,7 @@ Also, let&amp;#39;s use the following notation: &lt;em&gt;|X&lt;sub&gt;i&lt;/sub
 
 &lt;p&gt;Formally saying, for every infinite regular language &lt;em&gt;L&lt;/em&gt;: every word &lt;em&gt;X&lt;sub&gt;i&lt;/sub&gt;&lt;/em&gt; (such, that length of the word is greater than some threshold) can be splitted into 3 consecutive parts: &lt;em&gt;X&lt;/em&gt;, &lt;em&gt;Y&lt;/em&gt; and &lt;em&gt;Z&lt;/em&gt;, and every new word (e.g. &lt;em&gt;XYYZ&lt;/em&gt;, &lt;em&gt;XYYYZ&lt;/em&gt;, ..., &lt;em&gt;XY&lt;sup&gt;n&lt;/sup&gt;Z&lt;/em&gt;) will belong to the language &lt;em&gt;L&lt;/em&gt; as well.&lt;/p&gt;
 
-&lt;p&gt;The lemma can be understanded in such way, that the reguar expression of every infinite regular language must contain a &lt;a href=&quot;https://en.wikipedia.org/wiki/Kleene_star&quot;&gt;Kleene operator&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;The lemma can be understood in such way, that the reguar expression for recognizing of any &lt;em&gt;infinite regular language&lt;/em&gt; must contain a &lt;a href=&quot;https://en.wikipedia.org/wiki/Kleene_star&quot;&gt;Kleene operator&lt;/a&gt;.&lt;/p&gt;
 
 &lt;blockquote&gt;
 &lt;p&gt;For example, lets&amp;#39;s consider a regular language &lt;em&gt;L&lt;/em&gt;, which corresponds to the following regular expression: &lt;code&gt;( 1 | 11 | 111 | 111(1)*1 )&lt;/code&gt;  &lt;/p&gt;
