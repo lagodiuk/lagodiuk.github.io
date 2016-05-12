@@ -20,7 +20,7 @@ We will use the Pumping Lemma, in order to understand whether it is possible to 
 ## [Problem Statement](#problem-analysis)
 
 For simplicity let's consider the [unary numeral system](https://en.wikipedia.org/wiki/Unary_numeral_system) (number *N* is represented by word *X<sub>N</sub>*, which consists of N consecutive symbols **'1'**).  
-Also, let's use the following notation: *|X<sub>i</sub>|* to express an amount of **'1'** symbols inside the word *X<sub>i</sub>*.
+Also, let's use the following notation: *|X<sub>i</sub>|* in order to express the amount of **'1'** symbols inside the word *X<sub>i</sub>*.
 
 So, having the infinite set of words, which corresponds to prime numbers:
 
@@ -33,9 +33,9 @@ So, having the infinite set of words, which corresponds to prime numbers:
 
 where *|X<sub>i</sub>|* is a prime number, for every *i*,
 
-we would like to understand, whether it is possible to express all words from this set using a regular grammar?  
+we would like to understand, whether it is possible to express all words from this language using a regular grammar?  
 
-In other words, is it possible construct the finite state machine, which will be able to recognize all prime numbers (only the prime numbers)?
+In other words, is it possible construct the finite state machine, which will be able to recognize all prime numbers (and only the prime numbers), expressed in unary numeral system?
 
 ## [Pumping Lemma](#pumping-lemma)
 
@@ -43,7 +43,7 @@ In other words, is it possible construct the finite state machine, which will be
 
 Formally saying, for every infinite regular language *L*: every word *X<sub>i</sub>* (such, that length of the word is greater than some threshold) can be splitted into 3 consecutive parts: *X*, *Y* and *Z*, and every new word (e.g. *XYYZ*, *XYYYZ*, ..., *XY<sup>n</sup>Z*) will belong to the language *L* as well.
 
-The lemma can be understanded in such way, that the reguar expression of every infinite regular language must contain a [Kleene operator](https://en.wikipedia.org/wiki/Kleene_star).
+The lemma can be understood in such way, that the reguar expression for recognizing of any *infinite regular language* must contain a [Kleene operator](https://en.wikipedia.org/wiki/Kleene_star).
 
 > For example, lets's consider a regular language *L*, which corresponds to the following regular expression: `( 1 | 11 | 111 | 111(1)*1 )`  
 >  
