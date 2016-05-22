@@ -56,7 +56,7 @@ I also think that systematic enumeration of grammatical rules (in the form of Co
 
 **Note:** *as far as this is just a prototype, the grammar contains very small amount of nouns and verbs (mostly related to food) and very limited subset of grammatical rules (e.g. [modal verbs](https://de.wikipedia.org/wiki/Modalverb), limited capabilities of parsing [dependent clauses](https://de.wikipedia.org/wiki/Nebensatz), standard sentences in the [present tense](https://de.wikipedia.org/wiki/Pr%C3%A4sens), etc.).*
 
-[Press here, if you would like to see for the full-screen mode demo.](/nlp/deutsch.html)
+[Press here, if you would like to see the full-screen demo.](/nlp/deutsch.html)
 
 {% include deutsch_nlp_demo/deutsch_nlp_demo.html %}
 
