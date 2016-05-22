@@ -6,8 +6,8 @@
 </description>
     <link>http://lagodiuk.github.io/</link>
     <atom:link href="http://lagodiuk.github.io/feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Mon, 23 May 2016 00:42:00 +0200</pubDate>
-    <lastBuildDate>Mon, 23 May 2016 00:42:00 +0200</lastBuildDate>
+    <pubDate>Mon, 23 May 2016 00:53:36 +0200</pubDate>
+    <lastBuildDate>Mon, 23 May 2016 00:53:36 +0200</lastBuildDate>
     <generator>Jekyll v2.4.0</generator>
     
       <item>
@@ -29,7 +29,7 @@
 
 &lt;h2 id=&quot;vorwort-deutsch&quot;&gt;&lt;a href=&quot;#vorwort-deutsch&quot;&gt;Vorwort (Deutsch)&lt;/a&gt;&lt;/h2&gt;
 
-&lt;p&gt;Circa vor vier Monaten bin ich Deutsch lernen angefangen. Zuerst war es schwierig, weil ich viel zu klein Wortschatz hatte und nur einfache grammatikalische Regeln gekannt hat.&lt;/p&gt;
+&lt;p&gt;Circa vor vier Monaten bin ich Deutsch lernen angefangen. Zuerst war es schwierig, weil ich viel zu kleiner Wortschatz hatte und nur einfache grammatikalische Regeln gekannt hat.&lt;/p&gt;
 
 &lt;p&gt;Trotzdem habe ich jetzt mehr Lust Deutsch zu lernen, weil ich den Lernprozess mit meinem Hobby kombiniert habe. Mein Hobby ist Computerlinguistik (sogenannt &amp;quot;Natural Language Processing&amp;quot; oder kurz &amp;quot;NLP&amp;quot;), und ich hatte eine Idee, um einen einfachen grammatikalischen Parser (Grammatik-Analyse-Tool) für die Teilmenge von Deutsch zu programmieren.&lt;/p&gt;
 
