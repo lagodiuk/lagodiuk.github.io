@@ -1,5 +1,7 @@
 function init() {
 
+tinynlp.logging(false);
+
 var margin = {
         top: 40, 
         right: 40, 
@@ -232,5 +234,8 @@ function redraw() {
       "translate(" + d3.event.translate + ")"
       + " scale(" + d3.event.scale + ")");
 }
+
+$('#txt').val('ich esse das Brot');
+$('#txt').trigger('input');
 
 }
