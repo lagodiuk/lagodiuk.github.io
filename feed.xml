@@ -6,9 +6,341 @@
 </description>
     <link>http://lagodiuk.github.io/</link>
     <atom:link href="http://lagodiuk.github.io/feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Wed, 18 May 2016 08:22:33 +0200</pubDate>
-    <lastBuildDate>Wed, 18 May 2016 08:22:33 +0200</lastBuildDate>
+    <pubDate>Mon, 23 May 2016 00:42:00 +0200</pubDate>
+    <lastBuildDate>Mon, 23 May 2016 00:42:00 +0200</lastBuildDate>
     <generator>Jekyll v2.4.0</generator>
+    
+      <item>
+        <title>Tiny JavaScript parser of the subset of German</title>
+        <description>&lt;p&gt;I have combined the process of learning German with my hobby, and would like to present the prototype of the parser of the subset of German language.&lt;/p&gt;
+
+&lt;!--more--&gt;
+
+&lt;h2 id=&quot;table-of-contents&quot;&gt;Table of contents&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;#vorwort-deutsch&quot;&gt;Vorwort (Deutsch)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#preface-english&quot;&gt;Preface (English)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#demo&quot;&gt;Demo&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#used-tools-and-libraries&quot;&gt;Used Tools and Libraries&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/deutsch_nlp_demo/tree.png&quot; alt=&quot;Illustration to the problem&quot;&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;vorwort-deutsch&quot;&gt;&lt;a href=&quot;#vorwort-deutsch&quot;&gt;Vorwort (Deutsch)&lt;/a&gt;&lt;/h2&gt;
+
+&lt;p&gt;Circa vor vier Monaten bin ich Deutsch lernen angefangen. Zuerst war es schwierig, weil ich viel zu klein Wortschatz hatte und nur einfache grammatikalische Regeln gekannt hat.&lt;/p&gt;
+
+&lt;p&gt;Trotzdem habe ich jetzt mehr Lust Deutsch zu lernen, weil ich den Lernprozess mit meinem Hobby kombiniert habe. Mein Hobby ist Computerlinguistik (sogenannt &amp;quot;Natural Language Processing&amp;quot; oder kurz &amp;quot;NLP&amp;quot;), und ich hatte eine Idee, um einen einfachen grammatikalischen Parser (Grammatik-Analyse-Tool) für die Teilmenge von Deutsch zu programmieren.&lt;/p&gt;
+
+&lt;p&gt;Vor einiger Zeit habe ich einen universellen Parsing Algorithm programmiert (gekannt als &lt;a href=&quot;https://de.wikipedia.org/wiki/Earley-Algorithmus&quot;&gt;&amp;quot;Earley Parser&amp;quot;&lt;/a&gt;): &lt;a href=&quot;https://github.com/lagodiuk/earley-parser-js&quot;&gt;https://github.com/lagodiuk/earley-parser-js&lt;/a&gt;, und deshalb muss ich nur grammatikalische Regeln von Deutsch als &lt;a href=&quot;https://de.wikipedia.org/wiki/Kontextfreie_Grammatik&quot;&gt;Kontextfreie Grammatik&lt;/a&gt; bestimmen.&lt;/p&gt;
+
+&lt;p&gt;Damit möchte ich &lt;a href=&quot;#demo&quot;&gt;den Prototype des grammatikalisches Parser präsentieren&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Ich auch denke, dass systematische Aufzählung der grammatikalischen Regeln mir hilft um Deutsch zu lernen.&lt;/p&gt;
+
+&lt;h2 id=&quot;preface-english&quot;&gt;&lt;a href=&quot;#preface-english&quot;&gt;Preface (English)&lt;/a&gt;&lt;/h2&gt;
+
+&lt;p&gt;Approximately four months ago I have started to learn German. At first it was difficult, because I had too small vocabulary and knew only simple grammatical rules.&lt;/p&gt;
+
+&lt;p&gt;Nevertheless, now I have more desire to learn German, because I have combined the learning process with my hobby. My hobby is Computational Linguistics (so-called &amp;quot;Natural Language Processing&amp;quot; or shortly &amp;quot;NLP&amp;quot;), and I had an idea to develop a simple grammatical parser (grammar analysis tool) for the subset of German.&lt;/p&gt;
+
+&lt;p&gt;Some time ago I have implemented a universal parsing algorithm (known as &lt;a href=&quot;https://en.wikipedia.org/wiki/Earley_parser&quot;&gt;&amp;quot;Earley parser&amp;quot;&lt;/a&gt;): &lt;a href=&quot;https://github.com/lagodiuk/earley-parser-js&quot;&gt;https://github.com/lagodiuk/earley-parser-js&lt;/a&gt;, and therefore I have to determine only grammatical rules of German as a &lt;a href=&quot;https://de.wikipedia.org/wiki/Kontextfreie_Grammatik&quot;&gt;Context Free Grammar (CFG)&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;So I would like to present &lt;a href=&quot;#demo&quot;&gt;the prototype of grammatical parser&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;I also think that systematic enumeration of grammatical rules (in the form of Context Free Grammar) helps me to learn German.&lt;/p&gt;
+
+&lt;h2 id=&quot;demo&quot;&gt;&lt;a href=&quot;#demo&quot;&gt;Demo&lt;/a&gt;&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; &lt;em&gt;as far as this is just a prototype, the grammar contains very small amount of nouns and verbs (mostly related to food) and very limited subset of grammatical rules (e.g. &lt;a href=&quot;https://de.wikipedia.org/wiki/Modalverb&quot;&gt;modal verbs&lt;/a&gt;, limited capabilities of parsing &lt;a href=&quot;https://de.wikipedia.org/wiki/Nebensatz&quot;&gt;dependent clauses&lt;/a&gt;, standard sentences in the &lt;a href=&quot;https://de.wikipedia.org/wiki/Pr%C3%A4sens&quot;&gt;present tense&lt;/a&gt;, etc.).&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/nlp/deutsch.html&quot;&gt;Press here, if you would like to see for the full-screen mode demo.&lt;/a&gt;&lt;/p&gt;
+
+&lt;h4&gt;
+Beispielsätze - klicken Sie auf den Satz, bitte (DE)
+&lt;br/&gt;
+Example sentences - click on the sentence, please (EN)
+&lt;/h4&gt;
+
+&lt;div class=&quot;txtarea&quot;&gt;
+    &lt;a href=&quot;#&quot; class=&quot;example&quot;&gt;ich esse den Apfel&lt;/a&gt; &lt;br/&gt;
+    &lt;a href=&quot;#&quot; class=&quot;example&quot;&gt;Sie essen den Apfel in der Küche&lt;/a&gt; &lt;br/&gt;
+    &lt;a href=&quot;#&quot; class=&quot;example&quot;&gt;der Mann isst den Fisch in der Küche neben dem Zimmer&lt;/a&gt; &lt;br/&gt;
+    &lt;a href=&quot;#&quot; class=&quot;example&quot;&gt;die Frau trinkt den Tee in dem Zimmer&lt;/a&gt; &lt;br/&gt;
+    &lt;br/&gt;
+    
+    &lt;a href=&quot;#&quot; class=&quot;example&quot;&gt;ich will das Bier trinken&lt;/a&gt; &lt;br/&gt;
+    &lt;a href=&quot;#&quot; class=&quot;example&quot;&gt;ich möchte das Brot und den Apfel essen&lt;/a&gt; &lt;br/&gt;
+    &lt;br/&gt;
+
+    &lt;a href=&quot;#&quot; class=&quot;example&quot;&gt;wenn ich Hunger habe, esse ich große Orangen&lt;/a&gt; &lt;br/&gt;    
+    &lt;a href=&quot;#&quot; class=&quot;example&quot;&gt;weil er schlafen will, trinkt er den Kaffee auf der Straße&lt;/a&gt; &lt;br/&gt;  
+    &lt;a href=&quot;#&quot; class=&quot;example&quot;&gt;die Frau isst den Apfel, und der Mann isst die Orange, obwohl er keinen Hunger hat&lt;/a&gt; &lt;br/&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;br/&gt;&lt;/p&gt;
+
+&lt;div class=&quot;txtarea&quot;&gt;
+    &lt;input type=&quot;text&quot; size=&quot;50&quot; id=&quot;txt&quot;/&gt;
+&lt;/div&gt;
+
+&lt;h4&gt;
+Den Abstand zwischen den Knoten des Baums vergrössern (DE)
+&lt;br/&gt;
+Increase the separation between the nodes of the tree (EN)
+&lt;/h4&gt;
+
+&lt;div id=&quot;slider-range-min&quot;&gt;&lt;/div&gt;
+
+&lt;h4&gt;
+Verwenden Sie blättern, um Zoom-in/out (DE)
+&lt;br/&gt;
+Use scroll to zoom-in/out (EN)
+&lt;/h4&gt;
+
+&lt;div id=&quot;body&quot; style=&quot;border-style: solid;&quot;&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;br/&gt;&lt;/p&gt;
+
+&lt;h4&gt;
+Die grammatikalischen Regeln (Context Free Grammatik) (DE)
+&lt;br/&gt;
+The grammar rules (Context Free Grammar) (EN)
+&lt;/h4&gt;
+
+&lt;div class=&quot;grammar_div&quot;&gt;
+&lt;textarea name=&quot;Text1&quot; rows=&quot;40&quot; id=&quot;grm&quot; class=&quot;txtarea&quot;&gt;
+Root -&gt; Satz
+
+Satz -&gt; Hauptsatz
+Satz -&gt; Nebensatz
+Satz -&gt; Satz , Satz_Konj Satz
+Satz -&gt; Hauptsatz , Nebensatz
+Satz -&gt; Nebensatz , Hauptsatz_Nach
+
+Satz_Konj -&gt; und | aber
+
+Hauptsatz -&gt; Verb_Pharse
+Hauptsatz -&gt; Verb_Pharse  Object_Akk
+Hauptsatz -&gt; Verb_Pharse  Object_Akk  Preposition_Pharse
+Hauptsatz -&gt; Verb_Pharse_Modal  Verb_t_inf
+Hauptsatz -&gt; Verb_Pharse_Modal  Object_Akk  Verb_t_inf
+Hauptsatz -&gt; Verb_Pharse_Modal  Object_Akk  Preposition_Pharse  Verb_t_inf
+
+Hauptsatz_Nach -&gt; Verb_Pharse_Rev
+Hauptsatz_Nach -&gt; Verb_Pharse_Rev  Object_Akk
+Hauptsatz_Nach -&gt; Verb_Pharse_Rev  Object_Akk  Preposition_Pharse
+Hauptsatz_Nach -&gt; Verb_Pharse_Rev_Modal  Verb_t_inf
+Hauptsatz_Nach -&gt; Verb_Pharse_Modal_Rev  Object_Akk  Verb_t_inf
+Hauptsatz_Nach -&gt; Verb_Pharse_Modal_Rev  Object_Akk  Preposition_Pharse  Verb_t_inf
+
+Verb_Pharse -&gt; Subject_I_sn    Verb_t_I_sn
+Verb_Pharse -&gt; Subject_II_sn   Verb_t_II_sn
+Verb_Pharse -&gt; Subject_III_sn  Verb_t_III_sn
+Verb_Pharse -&gt; Subject_I_pl    Verb_t_I_pl
+Verb_Pharse -&gt; Subject_II_pl   Verb_t_II_pl
+Verb_Pharse -&gt; Subject_III_pl  Verb_t_III_pl
+
+Verb_Pharse_Rev -&gt; Verb_t_I_sn    Subject_I_sn
+Verb_Pharse_Rev -&gt; Verb_t_II_sn   Subject_II_sn
+Verb_Pharse_Rev -&gt; Verb_t_III_sn  Subject_III_sn
+Verb_Pharse_Rev -&gt; Verb_t_I_pl    Subject_I_pl
+Verb_Pharse_Rev -&gt; Verb_t_II_pl   Subject_II_pl
+Verb_Pharse_Rev -&gt; Verb_t_III_pl  Subject_III_pl
+
+Verb_Pharse_Modal -&gt; Subject_I_sn    Verb_modal_I_sn
+Verb_Pharse_Modal -&gt; Subject_II_sn   Verb_modal_II_sn
+Verb_Pharse_Modal -&gt; Subject_III_sn  Verb_modal_III_sn
+Verb_Pharse_Modal -&gt; Subject_I_pl    Verb_modal_I_pl
+Verb_Pharse_Modal -&gt; Subject_II_pl   Verb_modal_II_pl
+Verb_Pharse_Modal -&gt; Subject_III_pl  Verb_modal_III_pl
+
+Verb_Pharse_Modal_Rev -&gt; Verb_modal_I_sn    Subject_I_sn
+Verb_Pharse_Modal_Rev -&gt; Verb_modal_II_sn   Subject_II_sn
+Verb_Pharse_Modal_Rev -&gt; Verb_modal_III_sn  Subject_III_sn
+Verb_Pharse_Modal_Rev -&gt; Verb_modal_I_pl    Subject_I_pl
+Verb_Pharse_Modal_Rev -&gt; Verb_modal_II_pl   Subject_II_pl
+Verb_Pharse_Modal_Rev -&gt; Verb_modal_III_pl  Subject_III_pl
+
+Nebensatz -&gt; Konjunktion  Subject_I_sn    Object_Akk  Verb_t_I_sn
+Nebensatz -&gt; Konjunktion  Subject_II_sn   Object_Akk  Verb_t_II_sn
+Nebensatz -&gt; Konjunktion  Subject_III_sn  Object_Akk  Verb_t_III_sn
+Nebensatz -&gt; Konjunktion  Subject_I_pl    Object_Akk  Verb_t_I_pl
+Nebensatz -&gt; Konjunktion  Subject_II_pl   Object_Akk  Verb_t_II_pl
+Nebensatz -&gt; Konjunktion  Subject_III_pl  Object_Akk  Verb_t_III_pl
+
+Nebensatz -&gt; Konjunktion  Subject_I_sn    Object_Akk  Verb_t_inf  Verb_modal_I_sn
+Nebensatz -&gt; Konjunktion  Subject_II_sn   Object_Akk  Verb_t_inf  Verb_modal_II_sn
+Nebensatz -&gt; Konjunktion  Subject_III_sn  Object_Akk  Verb_t_inf  Verb_modal_III_sn
+Nebensatz -&gt; Konjunktion  Subject_I_pl    Object_Akk  Verb_t_inf  Verb_modal_I_pl
+Nebensatz -&gt; Konjunktion  Subject_II_pl   Object_Akk  Verb_t_inf  Verb_modal_II_pl
+Nebensatz -&gt; Konjunktion  Subject_III_pl  Object_Akk  Verb_t_inf  Verb_modal_III_pl
+
+Nebensatz -&gt; Konjunktion  Subject_I_sn    Verb_t_I_sn
+Nebensatz -&gt; Konjunktion  Subject_II_sn   Verb_t_II_sn
+Nebensatz -&gt; Konjunktion  Subject_III_sn  Verb_t_III_sn
+Nebensatz -&gt; Konjunktion  Subject_I_pl    Verb_t_I_pl
+Nebensatz -&gt; Konjunktion  Subject_II_pl   Verb_t_II_pl
+Nebensatz -&gt; Konjunktion  Subject_III_pl  Verb_t_III_pl
+
+Nebensatz -&gt; Konjunktion  Subject_I_sn    Verb_t_inf  Verb_modal_I_sn
+Nebensatz -&gt; Konjunktion  Subject_II_sn   Verb_t_inf  Verb_modal_II_sn
+Nebensatz -&gt; Konjunktion  Subject_III_sn  Verb_t_inf  Verb_modal_III_sn
+Nebensatz -&gt; Konjunktion  Subject_I_pl    Verb_t_inf  Verb_modal_I_pl
+Nebensatz -&gt; Konjunktion  Subject_II_pl   Verb_t_inf  Verb_modal_II_pl
+Nebensatz -&gt; Konjunktion  Subject_III_pl  Verb_t_inf  Verb_modal_III_pl
+
+Konjunktion -&gt; weil | obwohl | wenn | dass
+
+Subject_I_sn   -&gt; Pers_Pron_Nom_I_sn
+Subject_II_sn  -&gt; Pers_Pron_Nom_II_sn
+Subject_III_sn -&gt; Pers_Pron_Nom_III_sn
+Subject_I_pl   -&gt; Pers_Pron_Nom_I_pl
+Subject_II_pl  -&gt; Pers_Pron_Nom_II_pl
+Subject_III_pl -&gt; Pers_Pron_Nom_III_pl
+Subject_III_sn -&gt; man
+Subject_III_sn -&gt; Artikel_Nom_M   Nomen_M
+Subject_III_sn -&gt; Artikel_Nom_F   Nomen_F
+Subject_III_sn -&gt; Artikel_Nom_N   Nomen_N
+Subject_III_sn -&gt; Artikel_Nom_Pl  Nomen_Pl
+Subject_III_sn -&gt; Nomen_Pl
+Subject_III_sn -&gt; Artikel_Nom_M   Adj_Nom_M   Nomen_M
+Subject_III_sn -&gt; Artikel_Nom_F   Adj_Nom_F   Nomen_F
+Subject_III_sn -&gt; Artikel_Nom_N   Adj_Nom_N   Nomen_N
+Subject_III_sn -&gt; Artikel_Nom_Pl  Adj_Nom_Pl  Nomen_Pl
+Subject_III_sn -&gt; Adj_Nom_Pl  Nomen_Pl
+
+Object_Akk -&gt; Artikel_Akk_M   Nomen_M
+Object_Akk -&gt; Artikel_Akk_F   Nomen_F
+Object_Akk -&gt; Artikel_Akk_N   Nomen_N
+Object_Akk -&gt; Artikel_Akk_Pl  Nomen_Pl
+Object_Akk -&gt; Nomen_Pl
+Object_Akk -&gt; Artikel_Akk_M   Adj_Akk_M   Nomen_M
+Object_Akk -&gt; Artikel_Akk_F   Adj_Akk_F   Nomen_F
+Object_Akk -&gt; Artikel_Akk_N   Adj_Akk_N   Nomen_N
+Object_Akk -&gt; Artikel_Akk_Pl  Adj_Akk_Pl  Nomen_Pl
+Object_Akk -&gt; Adj_Akk_Pl  Nomen_Pl
+Object_Akk -&gt; Object_Akk und Object_Akk
+Object_Akk -&gt; Object_Akk oder Object_Akk
+
+Preposition_Pharse -&gt; Prep  Object_Dat
+Preposition_Pharse -&gt; Preposition_Pharse Preposition_Pharse
+
+Object_Dat -&gt; Artikel_Dat_M   Nomen_M
+Object_Dat -&gt; Artikel_Dat_F   Nomen_F
+Object_Dat -&gt; Artikel_Dat_N   Nomen_N
+Object_Dat -&gt; Artikel_Dat_Pl  Nomen_Pl
+Object_Dat -&gt; Artikel_Dat_M   Adj_Dat_M   Nomen_M
+Object_Dat -&gt; Artikel_Dat_F   Adj_Dat_F   Nomen_F
+Object_Dat -&gt; Artikel_Dat_N   Adj_Dat_N   Nomen_N
+Object_Dat -&gt; Artikel_Dat_Pl  Adj_Dat_Pl  Nomen_Pl
+Object_Dat -&gt; Object_Dat und Object_Dat
+Object_Dat -&gt; Object_Dat oder Object_Dat
+
+Prep -&gt; auf | an | neben | hinten | vor | von | unten | in | mit
+
+Artikel_Nom_M  -&gt; der | ein  | kein
+Artikel_Nom_F  -&gt; die | eine | keine
+Artikel_Nom_N  -&gt; das | ein  | kein
+Artikel_Nom_Pl -&gt; die | keine
+
+Artikel_Akk_M  -&gt; den | einen | keinen
+Artikel_Akk_F  -&gt; die | eine  | keine
+Artikel_Akk_N  -&gt; das | ein   | kein
+Artikel_Akk_Pl -&gt; die | keine
+
+Artikel_Dat_M  -&gt; dem | einem | keinem
+Artikel_Dat_F  -&gt; der | einer | keiner
+Artikel_Dat_N  -&gt; dem | einem | keinem
+Artikel_Dat_Pl -&gt; den | keinen
+
+Pers_Pron_Nom_I_sn   -&gt; ich
+Pers_Pron_Nom_I_pl   -&gt; wir
+Pers_Pron_Nom_II_sn  -&gt; du
+Pers_Pron_Nom_II_pl  -&gt; ihr
+Pers_Pron_Nom_III_sn -&gt; sie | er | es
+Pers_Pron_Nom_III_pl -&gt; sie | Sie
+
+Adj_Nom_M  -&gt; kleiner | leckerer | großer
+Adj_Nom_F  -&gt; kleine  | leckere  | große
+Adj_Nom_N  -&gt; klein   | lecker   | groß
+Adj_Nom_Pl -&gt; kleine  | leckere  | große
+
+Adj_Akk_M  -&gt; kleinen | leckeren | großen
+Adj_Akk_F  -&gt; kleine  | leckere  | große
+Adj_Akk_N  -&gt; klein   | lecker   | groß
+Adj_Akk_Pl -&gt; kleine  | leckere  | große
+
+Adj_Dat_M  -&gt; kleinen | leckeren | großen
+Adj_Dat_F  -&gt; kleinen | leckeren | großen
+Adj_Dat_N  -&gt; kleinen | leckeren | großen
+Adj_Dat_Pl -&gt; kleinen | leckeren | großen
+
+Verb_t_inf    -&gt; essen | brauchen | haben | geben | legen | trinken | nehmen | kaufen  | schlafen
+Verb_t_I_sn   -&gt; esse  | brauche  | habe  | gebe  | lege  | trinke  | nehme  | kaufe   | schlafe
+Verb_t_II_sn  -&gt; isst  | brauchst | hast  | gibst | legst | trinkst | nimmst | kaufst  | schläfst
+Verb_t_III_sn -&gt; isst  | braucht  | hat   | gibt  | legt  | trinkt  | nimmt  | kauft   | schläft
+Verb_t_I_pl   -&gt; essen | brauchen | haben | geben | legen | trinken | nehmen | kaufen  | schlafen
+Verb_t_II_pl  -&gt; esst  | braucht  | habt  | gibt  | legt  | trinkt  | nehmt  | kauft   | schlaft
+Verb_t_III_pl -&gt; essen | brauchen | haben | geben | legen | trinken | nehmen | kaufen  | schlafen
+
+Verb_modal_inf    -&gt; wollen | sollen | können | dürfen | mögen | müssen | möchten
+Verb_modal_I_sn   -&gt; will   | soll   | kann   | darf   | mag   | muss   | möchte
+Verb_modal_II_sn  -&gt; willst | sollst | kannst | darfst | magst | musst  | möchtest
+Verb_modal_III_sn -&gt; will   | soll   | kann   | darf   | mag   | muss   | möchte
+Verb_modal_I_pl   -&gt; wollen | sollen | können | dürfen | mögen | müssen | möchten
+Verb_modal_II_pl  -&gt; wollt  | sollt  | könnt  | dürft  | mögt  | müsst  | möchtet
+Verb_modal_III_pl -&gt; wollen | sollen | können | dürfen | mögen | müssen | möchten
+
+Nomen_M  -&gt; Hund | Mann | Junge | Apfel | Zug | Tisch | Fisch | Saft | Hunger | Tee | Kaffee | Wein | Löffel | Teller
+Nomen_F  -&gt; Orange | Tasche | Frau | Wohnung | Gabel | Wand | Milch | Karte | Küche | Gabel | Tasse | Suppe | Schüssel | Straße
+Nomen_N  -&gt; Fenster | Brot | Mädchen | Zimmer | Badezimmer | Schlafzimmer | Bild | Wasser | Bier | Obst | Gemüse | Geld | Kind | Auto | Computer | Messer
+Nomen_Pl -&gt; Orangen | Hunger | Wasser | Kinder
+
+&lt;/textarea&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;used-tools-and-libraries&quot;&gt;&lt;a href=&quot;#used-tools-and-libraries&quot;&gt;Used Tools and Libraries&lt;/a&gt;&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;My implementation of the Earley Parser: &lt;a href=&quot;https://github.com/lagodiuk/earley-parser-js&quot;&gt;https://github.com/lagodiuk/earley-parser-js&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Minimized variant of the Earley Parser was produced by &lt;a href=&quot;https://closure-compiler.appspot.com/home&quot;&gt;Google Closure Compiler Service&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://jquery.com/&quot;&gt;jQuery&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://d3js.org/&quot;&gt;D3.js&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div id=&quot;disqus_thread&quot;&gt;&lt;/div&gt;
+
+&lt;script&gt;
+
+var disqus_config = function () {
+this.page.url = &quot;http://lagodiuk.github.io/nlp/2016/05/23/deutsch_nlp_demo&quot;;
+this.page.identifier = &quot;deutsch_nlp_demo&quot;;
+};
+
+(function() { // DON&#39;T EDIT BELOW THIS LINE
+var d = document, s = d.createElement(&#39;script&#39;);
+
+s.src = &#39;//lahodiuk.disqus.com/embed.js&#39;;
+
+s.setAttribute(&#39;data-timestamp&#39;, +new Date());
+(d.head || d.body).appendChild(s);
+})();
+&lt;/script&gt;
+
+&lt;noscript&gt;Please enable JavaScript to view the &lt;a href=&quot;https://disqus.com/?ref_noscript&quot; rel=&quot;nofollow&quot;&gt;comments powered by Disqus.&lt;/a&gt;&lt;/noscript&gt;
+</description>
+        <pubDate>Mon, 23 May 2016 00:07:00 +0200</pubDate>
+        <link>http://lagodiuk.github.io/nlp/2016/05/23/deutsch_nlp.html</link>
+        <guid isPermaLink="true">http://lagodiuk.github.io/nlp/2016/05/23/deutsch_nlp.html</guid>
+        
+        <category>nlp</category>
+        
+        
+        <category>nlp</category>
+        
+      </item>
     
       <item>
         <title>Is it possible to express all prime numbers using a regular grammar?</title>
