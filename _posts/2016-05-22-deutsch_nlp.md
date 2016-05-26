@@ -31,7 +31,8 @@ I have combined the process of learning German with my hobby, and would like to 
 ![Illustration to the problem](/images/deutsch_nlp_demo/tree.png)
 
 ## [Vorwort (Deutsch)](#vorwort-deutsch)
-Circa vor vier Monaten bin ich Deutsch lernen angefangen. Zuerst war es schwierig, weil ich viel zu kleiner Wortschatz hatte und nur einfache grammatikalische Regeln gekannt hat.
+Circa vor vier Monaten habe ich angefangen Deutsch zu lernen. Zuerst war es schwierig, weil ich viel zu kleiner Wortschatz
+hatte und nur einfache grammatikalische Regeln gekannt habe.
 
 Trotzdem habe ich jetzt mehr Lust Deutsch zu lernen, weil ich den Lernprozess mit meinem Hobby kombiniert habe. Mein Hobby ist Computerlinguistik (sogenannt "Natural Language Processing" oder kurz "NLP"), und ich hatte eine Idee, um einen einfachen grammatikalischen Parser (Grammatik-Analyse-Tool) für die Teilmenge von Deutsch zu programmieren.
 
@@ -39,7 +40,7 @@ Vor einiger Zeit habe ich einen universellen Parsing Algorithm programmiert (gek
 
 Damit möchte ich [den Prototype des grammatikalisches Parser präsentieren](#demo).
 
-Ich auch denke, dass systematische Aufzählung der grammatikalischen Regeln mir hilft um Deutsch zu lernen.
+Ich auch denke, dass systematische Aufzählung der grammatikalischen Regeln mir hilft Deutsch zu lernen.
 
 ## [Preface (English)](#preface-english)
 Approximately four months ago I have started to learn German. At first it was difficult, because I had too small vocabulary and knew only simple grammatical rules.
