@@ -4,9 +4,9 @@ title: About me
 permalink: /about/
 ---
 
-I have experience of solving the different kinds of technical problems: systems design, scalability of backend services, performance optimization.
+I have experience of solving various technical problems (systems design, scalability, performance optimization).
 
-I prefer algorithmic approach for solving problems. Additionally, I make use of data-driven approach and domain-specific insights about the nature of problems.
+For solving of problems I apply an algorithmic approach, based on analysis of existing data and domain-specific knowledge.
 
 Currently I am working in company [HERE](https://company.here.com/here/).
 
