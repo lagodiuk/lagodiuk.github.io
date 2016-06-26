@@ -10,12 +10,12 @@ comments: true
 
 We will use the Pumping Lemma, in order to understand whether it is possible to describe the prime numbers using a Regular Grammar.
 
-<!--more-->
-
 ## Table of contents
-* [Problem Statement](#problem-statement)
-* [Pumping Lemma](#pumping-lemma)
-* [Regular grammar for prime numbers?](#regular-grammar-for-prime-numbers)
+* [Problem Statement]({{page.url}}#problem-statement)
+* [Pumping Lemma]({{page.url}}#pumping-lemma)
+* [Regular grammar for prime numbers?]({{page.url}}#regular-grammar-for-prime-numbers)
+
+<!--more-->
 
 ## [Problem Statement](#problem-analysis)
 

@@ -8,16 +8,14 @@ tags:
 comments: true
 ---
 
-We will consider two algorithms for getting of decimal representation of rational numbers together with [recurring decimal](https://en.wikipedia.org/wiki/Repeating_decimal) (e.g. `1/3 = 0.(3)`, `3227/555 = 5.8(144)`, etc.):
-* with *O(N)* runtime complexity and *O(N)* memory consumption
-* with *O(N)* runtime complexity and *O(1)* memory consumption (using *Floyd's Cycle Detection Algorithm*)
-
-<!--more-->
+I will describe two algorithms for calculation of decimal representation of rational numbers together with [recurring decimal](https://en.wikipedia.org/wiki/Repeating_decimal) (e.g. `1/3 = 0.(3)`, `3227/555 = 5.8(144)`, etc.).
 
 ## Table of contents
-* [Problem analysis](#problem-analysis)
-* [Solution with *O(N)* runtime complexity and *O(N)* memory consumption](#solution-with-o-n-runtime-complexity-and-o-n-memory-consumption)
-* [Solution with *O(N)* runtime complexity and *O(1)* memory consumption (using *Floyd's Cycle Detection Algorithm*)](#solution-with-o-n-runtime-complexity-and-o-1-memory-consumption)
+* [Problem analysis]({{page.url}}#problem-analysis)
+* [Solution with *O(N)* runtime complexity and *O(N)* memory consumption]({{page.url}}#solution-with-o-n-runtime-complexity-and-o-n-memory-consumption)
+* [Solution with *O(N)* runtime complexity and *O(1)* memory consumption (using *Floyd's Cycle Detection Algorithm*)]({{page.url}}#solution-with-o-n-runtime-complexity-and-o-1-memory-consumption)
+
+<!--more-->
 
 ## [Problem analysis](#problem-analysis)
 

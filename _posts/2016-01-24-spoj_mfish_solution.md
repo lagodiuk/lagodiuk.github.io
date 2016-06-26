@@ -12,21 +12,21 @@ comments: true
 
 Analysis and solution of the problem: http://www.spoj.com/problems/MFISH/
 
-<!--more-->
-
 ## Table of contents
 
-* <a href="#description-of-the-problem"> Description of the problem </a>
-* <a href="#understanding-the-problem"> Understanding the problem </a>
-* <a href="#modelling-the-problem"> Modelling the problem </a>
-* <a href="#brute-force-solution"> Brute Force solution </a>
-* <a href="#dynamic-programming-solution-with-o-n-m-complexity"> Dynamic Programming solution with O(N * M) complexity </a>
-* <a href="#dynamic-programming-solution-with-o-n-complexity"> Dynamic Programming solution with O(N) complexity </a>
-  * <a href="#additional-analysis-of-the-problem"> Additional analysis of the problem </a>
-  * <a href="#o-n-algorithm"> O(N) algorithm </a>
-* <a href="#other-optimizations"> Other optimizations </a>
-  * <a href="#counting-boat-coverage-with-o-1-complexity"> Counting boat coverage with O(1) complexity </a>
-  * <a href="#sorting-boats-with-o-n-complexity"> Sorting boats with O(N) complexity </a>
+* <a href="{{page.url}}#description-of-the-problem"> Description of the problem </a>
+* <a href="{{page.url}}#understanding-the-problem"> Understanding the problem </a>
+* <a href="{{page.url}}#modelling-the-problem"> Modelling the problem </a>
+* <a href="{{page.url}}#brute-force-solution"> Brute Force solution </a>
+* <a href="{{page.url}}#dynamic-programming-solution-with-o-n-m-complexity"> Dynamic Programming solution with O(N * M) complexity </a>
+* <a href="{{page.url}}#dynamic-programming-solution-with-o-n-complexity"> Dynamic Programming solution with O(N) complexity </a>
+  * <a href="{{page.url}}#additional-analysis-of-the-problem"> Additional analysis of the problem </a>
+  * <a href="{{page.url}}#o-n-algorithm"> O(N) algorithm </a>
+* <a href="{{page.url}}#other-optimizations"> Other optimizations </a>
+  * <a href="{{page.url}}#counting-boat-coverage-with-o-1-complexity"> Counting boat coverage with O(1) complexity </a>
+  * <a href="{{page.url}}#sorting-boats-with-o-n-complexity"> Sorting boats with O(N) complexity </a>
+  
+<!--more-->
 
 ## [Description of the problem](#description-of-the-problem)
 

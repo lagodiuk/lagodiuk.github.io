@@ -20,15 +20,15 @@ body_onload: onload="init()"
 
 I have combined the process of learning German with my hobby, and would like to present the prototype of the parser of the subset of German language.
 
-<!--more-->
-
 ## Table of contents
-* [Vorwort (Deutsch)](#vorwort-deutsch)
-* [Preface (English)](#preface-english)
-* [Demo](#demo)
-* [Used Tools and Libraries](#used-tools-and-libraries)
+* [Vorwort (Deutsch)]({{page.url}}#vorwort-deutsch)
+* [Preface (English)]({{page.url}}#preface-english)
+* [Demo]({{page.url}}#demo)
+* [Used Tools and Libraries]({{page.url}}#used-tools-and-libraries)
 
 ![Illustration to the problem](/images/deutsch_nlp_demo/tree.png)
+
+<!--more-->
 
 ## [Vorwort (Deutsch)](#vorwort-deutsch)
 Circa vor vier Monaten habe ich angefangen Deutsch zu lernen. Zuerst war es schwierig, weil ich viel zu kleiner Wortschatz
