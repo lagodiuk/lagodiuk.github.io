@@ -6,26 +6,26 @@
 </description>
     <link>http://lagodiuk.github.io/</link>
     <atom:link href="http://lagodiuk.github.io/feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Thu, 26 May 2016 15:41:29 +0200</pubDate>
-    <lastBuildDate>Thu, 26 May 2016 15:41:29 +0200</lastBuildDate>
+    <pubDate>Sun, 26 Jun 2016 15:18:24 +0200</pubDate>
+    <lastBuildDate>Sun, 26 Jun 2016 15:18:24 +0200</lastBuildDate>
     <generator>Jekyll v2.4.0</generator>
     
       <item>
         <title>Tiny JavaScript parser of the subset of German</title>
         <description>&lt;p&gt;I have combined the process of learning German with my hobby, and would like to present the prototype of the parser of the subset of German language.&lt;/p&gt;
 
-&lt;!--more--&gt;
-
 &lt;h2 id=&quot;table-of-contents&quot;&gt;Table of contents&lt;/h2&gt;
 
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&quot;#vorwort-deutsch&quot;&gt;Vorwort (Deutsch)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;#preface-english&quot;&gt;Preface (English)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;#demo&quot;&gt;Demo&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;#used-tools-and-libraries&quot;&gt;Used Tools and Libraries&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;/nlp/2016/05/23/deutsch_nlp.html#vorwort-deutsch&quot;&gt;Vorwort (Deutsch)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;/nlp/2016/05/23/deutsch_nlp.html#preface-english&quot;&gt;Preface (English)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;/nlp/2016/05/23/deutsch_nlp.html#demo&quot;&gt;Demo&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;/nlp/2016/05/23/deutsch_nlp.html#used-tools-and-libraries&quot;&gt;Used Tools and Libraries&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;p&gt;&lt;img src=&quot;/images/deutsch_nlp_demo/tree.png&quot; alt=&quot;Illustration to the problem&quot;&gt;&lt;/p&gt;
+
+&lt;!--more--&gt;
 
 &lt;h2 id=&quot;vorwort-deutsch&quot;&gt;&lt;a href=&quot;#vorwort-deutsch&quot;&gt;Vorwort (Deutsch)&lt;/a&gt;&lt;/h2&gt;
 
@@ -347,15 +347,15 @@ s.setAttribute(&#39;data-timestamp&#39;, +new Date());
         <title>Is it possible to express all prime numbers using a regular grammar?</title>
         <description>&lt;p&gt;We will use the Pumping Lemma, in order to understand whether it is possible to describe the prime numbers using a Regular Grammar.&lt;/p&gt;
 
-&lt;!--more--&gt;
-
 &lt;h2 id=&quot;table-of-contents&quot;&gt;Table of contents&lt;/h2&gt;
 
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&quot;#problem-statement&quot;&gt;Problem Statement&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;#pumping-lemma&quot;&gt;Pumping Lemma&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;#regular-grammar-for-prime-numbers&quot;&gt;Regular grammar for prime numbers?&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;/computer_science/2016/04/30/prime_numbers_regular_grammar.html#problem-statement&quot;&gt;Problem Statement&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;/computer_science/2016/04/30/prime_numbers_regular_grammar.html#pumping-lemma&quot;&gt;Pumping Lemma&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;/computer_science/2016/04/30/prime_numbers_regular_grammar.html#regular-grammar-for-prime-numbers&quot;&gt;Regular grammar for prime numbers?&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
+
+&lt;!--more--&gt;
 
 &lt;h2 id=&quot;problem-statement&quot;&gt;&lt;a href=&quot;#problem-analysis&quot;&gt;Problem Statement&lt;/a&gt;&lt;/h2&gt;
 
@@ -466,22 +466,17 @@ s.setAttribute(&#39;data-timestamp&#39;, +new Date());
     
       <item>
         <title>Recurring decimal of a rational number</title>
-        <description>&lt;p&gt;We will consider two algorithms for getting of decimal representation of rational numbers together with &lt;a href=&quot;https://en.wikipedia.org/wiki/Repeating_decimal&quot;&gt;recurring decimal&lt;/a&gt; (e.g. &lt;code&gt;1/3 = 0.(3)&lt;/code&gt;, &lt;code&gt;3227/555 = 5.8(144)&lt;/code&gt;, etc.):&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;with &lt;em&gt;O(N)&lt;/em&gt; runtime complexity and &lt;em&gt;O(N)&lt;/em&gt; memory consumption&lt;/li&gt;
-&lt;li&gt;with &lt;em&gt;O(N)&lt;/em&gt; runtime complexity and &lt;em&gt;O(1)&lt;/em&gt; memory consumption (using &lt;em&gt;Floyd&amp;#39;s Cycle Detection Algorithm&lt;/em&gt;)&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;!--more--&gt;
+        <description>&lt;p&gt;I will describe two algorithms for calculation of decimal representation of rational numbers together with &lt;a href=&quot;https://en.wikipedia.org/wiki/Repeating_decimal&quot;&gt;recurring decimal&lt;/a&gt; (e.g. &lt;code&gt;1/3 = 0.(3)&lt;/code&gt;, &lt;code&gt;3227/555 = 5.8(144)&lt;/code&gt;, etc.).&lt;/p&gt;
 
 &lt;h2 id=&quot;table-of-contents&quot;&gt;Table of contents&lt;/h2&gt;
 
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&quot;#problem-analysis&quot;&gt;Problem analysis&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;#solution-with-o-n-runtime-complexity-and-o-n-memory-consumption&quot;&gt;Solution with &lt;em&gt;O(N)&lt;/em&gt; runtime complexity and &lt;em&gt;O(N)&lt;/em&gt; memory consumption&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;#solution-with-o-n-runtime-complexity-and-o-1-memory-consumption&quot;&gt;Solution with &lt;em&gt;O(N)&lt;/em&gt; runtime complexity and &lt;em&gt;O(1)&lt;/em&gt; memory consumption (using &lt;em&gt;Floyd&amp;#39;s Cycle Detection Algorithm&lt;/em&gt;)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;/programming_puzzles/2016/01/31/puzzles_repeating_decimal.html#problem-analysis&quot;&gt;Problem analysis&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;/programming_puzzles/2016/01/31/puzzles_repeating_decimal.html#solution-with-o-n-runtime-complexity-and-o-n-memory-consumption&quot;&gt;Solution with &lt;em&gt;O(N)&lt;/em&gt; runtime complexity and &lt;em&gt;O(N)&lt;/em&gt; memory consumption&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;/programming_puzzles/2016/01/31/puzzles_repeating_decimal.html#solution-with-o-n-runtime-complexity-and-o-1-memory-consumption&quot;&gt;Solution with &lt;em&gt;O(N)&lt;/em&gt; runtime complexity and &lt;em&gt;O(1)&lt;/em&gt; memory consumption (using &lt;em&gt;Floyd&amp;#39;s Cycle Detection Algorithm&lt;/em&gt;)&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
+
+&lt;!--more--&gt;
 
 &lt;h2 id=&quot;problem-analysis&quot;&gt;&lt;a href=&quot;#problem-analysis&quot;&gt;Problem analysis&lt;/a&gt;&lt;/h2&gt;
 
@@ -896,29 +891,29 @@ s.setAttribute(&#39;data-timestamp&#39;, +new Date());
         <title>Catch Fish problem from SPOJ: MFISH</title>
         <description>&lt;p&gt;Analysis and solution of the problem: &lt;a href=&quot;http://www.spoj.com/problems/MFISH/&quot;&gt;http://www.spoj.com/problems/MFISH/&lt;/a&gt;&lt;/p&gt;
 
-&lt;!--more--&gt;
-
 &lt;h2 id=&quot;table-of-contents&quot;&gt;Table of contents&lt;/h2&gt;
 
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&quot;#description-of-the-problem&quot;&gt; Description of the problem &lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;#understanding-the-problem&quot;&gt; Understanding the problem &lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;#modelling-the-problem&quot;&gt; Modelling the problem &lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;#brute-force-solution&quot;&gt; Brute Force solution &lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;#dynamic-programming-solution-with-o-n-m-complexity&quot;&gt; Dynamic Programming solution with O(N * M) complexity &lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;#dynamic-programming-solution-with-o-n-complexity&quot;&gt; Dynamic Programming solution with O(N) complexity &lt;/a&gt;
+&lt;li&gt;&lt;a href=&quot;/spoj/dynamic_programming/2016/01/23/spoj_mfish_solution.html#description-of-the-problem&quot;&gt; Description of the problem &lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;/spoj/dynamic_programming/2016/01/23/spoj_mfish_solution.html#understanding-the-problem&quot;&gt; Understanding the problem &lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;/spoj/dynamic_programming/2016/01/23/spoj_mfish_solution.html#modelling-the-problem&quot;&gt; Modelling the problem &lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;/spoj/dynamic_programming/2016/01/23/spoj_mfish_solution.html#brute-force-solution&quot;&gt; Brute Force solution &lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;/spoj/dynamic_programming/2016/01/23/spoj_mfish_solution.html#dynamic-programming-solution-with-o-n-m-complexity&quot;&gt; Dynamic Programming solution with O(N * M) complexity &lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;/spoj/dynamic_programming/2016/01/23/spoj_mfish_solution.html#dynamic-programming-solution-with-o-n-complexity&quot;&gt; Dynamic Programming solution with O(N) complexity &lt;/a&gt;
 
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&quot;#additional-analysis-of-the-problem&quot;&gt; Additional analysis of the problem &lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;#o-n-algorithm&quot;&gt; O(N) algorithm &lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;/spoj/dynamic_programming/2016/01/23/spoj_mfish_solution.html#additional-analysis-of-the-problem&quot;&gt; Additional analysis of the problem &lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;/spoj/dynamic_programming/2016/01/23/spoj_mfish_solution.html#o-n-algorithm&quot;&gt; O(N) algorithm &lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;#other-optimizations&quot;&gt; Other optimizations &lt;/a&gt;
+&lt;li&gt;&lt;a href=&quot;/spoj/dynamic_programming/2016/01/23/spoj_mfish_solution.html#other-optimizations&quot;&gt; Other optimizations &lt;/a&gt;
 
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&quot;#counting-boat-coverage-with-o-1-complexity&quot;&gt; Counting boat coverage with O(1) complexity &lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;#sorting-boats-with-o-n-complexity&quot;&gt; Sorting boats with O(N) complexity &lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;/spoj/dynamic_programming/2016/01/23/spoj_mfish_solution.html#counting-boat-coverage-with-o-1-complexity&quot;&gt; Counting boat coverage with O(1) complexity &lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;/spoj/dynamic_programming/2016/01/23/spoj_mfish_solution.html#sorting-boats-with-o-n-complexity&quot;&gt; Sorting boats with O(N) complexity &lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;&lt;/li&gt;
 &lt;/ul&gt;
+
+&lt;!--more--&gt;
 
 &lt;h2 id=&quot;description-of-the-problem&quot;&gt;&lt;a href=&quot;#description-of-the-problem&quot;&gt;Description of the problem&lt;/a&gt;&lt;/h2&gt;
 
