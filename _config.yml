@@ -24,6 +24,7 @@ footer-links:
   pinterest:
   rss: true
   twitter: ylahodiuk
+  spoj: stemm
   googleplus: # anything in your profile username that comes after plus.google.com/
 
 highlighter: pygments
