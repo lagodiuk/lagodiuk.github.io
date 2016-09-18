@@ -4,6 +4,8 @@ title: About me
 permalink: /about/
 ---
 
+Hello, my name is Yurii Lahodiuk.
+
 I have experience of solving various technical problems (systems design, scalability, performance optimization).
 For solving of problems I apply an algorithmic approach, based on analysis of existing data and domain-specific knowledge.
 
