@@ -6,12 +6,12 @@
     <meta name="viewport" content="width=device-width initial-scale=1" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-    <title>Is it possible to express all prime numbers using a regular grammar?</title>
+    <title>Yurii Lahodiuk</title>
     <meta name="description" content="This is my personal blog about Algorithms, Programming Problems solving techniques and interesting Computer Science topics.   Expressed opinions are my own.
 ">
 
     <link rel="stylesheet" href="/css/main.css">
-    <link rel="canonical" href="http://lagodiuk.github.io/computer_science/2016/04/30/prime_numbers_regular_grammar.html">
+    <link rel="canonical" href="http://lagodiuk.github.io/archive.html">
     
     
 
@@ -62,126 +62,40 @@
 
     <div class="page-content">
       <div class="wrapper">
-        <div class="post">
+        
 
-  <header class="post-header">
-    <h1 class="post-title">Is it possible to express all prime numbers using a regular grammar?</h1>
-    <p class="post-meta">Apr 30, 2016</p>
-  </header>
+<section id="archive">
+  <h2>All blog posts</h2>
 
-  <article class="post-content">
-    <p>We will use the Pumping Lemma, in order to understand whether it is possible to describe the prime numbers using a Regular Grammar.</p>
+  
+  <h3>2016</h3>
+  <ul class="this">
+  
+    <li><time>23 May</time><a href="/nlp/2016/05/23/deutsch_nlp.html">Tiny JavaScript parser of the subset of German</a></li>
 
-<h2 id="table-of-contents">Table of contents</h2>
+  
+  
+  
+  
+  
+    <li><time>30 Apr</time><a href="/computer_science/2016/04/30/prime_numbers_regular_grammar.html">Is it possible to express all prime numbers using a regular grammar?</a></li>
 
-<ul>
-<li><a href="/computer_science/2016/04/30/prime_numbers_regular_grammar.html#problem-statement">Problem Statement</a></li>
-<li><a href="/computer_science/2016/04/30/prime_numbers_regular_grammar.html#pumping-lemma">Pumping Lemma</a></li>
-<li><a href="/computer_science/2016/04/30/prime_numbers_regular_grammar.html#regular-grammar-for-prime-numbers">Regular grammar for prime numbers?</a></li>
-</ul>
+  
+  
+  
+  
+  
+    <li><time>31 Jan</time><a href="/programming_puzzles/2016/01/31/puzzles_repeating_decimal.html">Recurring decimal of a rational number</a></li>
 
-<!--more-->
+  
+  
+  
+  
+  
+    <li><time>23 Jan</time><a href="/spoj/dynamic_programming/2016/01/23/spoj_mfish_solution.html">Catch Fish problem from SPOJ: MFISH</a></li>
 
-<h2 id="problem-statement"><a href="#problem-analysis">Problem Statement</a></h2>
-
-<p>For simplicity let&#39;s consider the <a href="https://en.wikipedia.org/wiki/Unary_numeral_system">unary numeral system</a> (number <em>N</em> is represented by word <em>X<sub>N</sub></em>, which consists of N consecutive symbols <strong>&#39;1&#39;</strong>).<br>
-Also, let&#39;s use the following notation: <em>|X<sub>i</sub>|</em> in order to express the amount of <strong>&#39;1&#39;</strong> symbols inside the word <em>X<sub>i</sub></em>.</p>
-
-<p>So, having the infinite set of words, which corresponds to prime numbers:</p>
-
-<p><em>X<sub>1</sub></em> = 11<br>
-<em>X<sub>2</sub></em> = 111<br>
-<em>X<sub>3</sub></em> = 11111<br>
-<em>X<sub>4</sub></em> = 1111111<br>
-<em>X<sub>5</sub></em> = 11111111111<br>
-...</p>
-
-<p>where <em>|X<sub>i</sub>|</em> is a prime number, for every <em>i</em>,</p>
-
-<p>we would like to understand, whether it is possible to express all words from this language using a regular grammar?  </p>
-
-<p>In other words, is it possible construct the finite state machine, which will be able to recognize all prime numbers (and only the prime numbers), expressed in unary numeral system?</p>
-
-<h2 id="pumping-lemma"><a href="#pumping-lemma">Pumping Lemma</a></h2>
-
-<p><a href="https://en.wikipedia.org/wiki/Pumping_lemma_for_regular_languages">The Pumping Lemma</a> states, that <em>every sufficiently long word</em> of a regular language can be infinitely many times expanded in a special way, such that <em>every new word (obtained after expansion of the original word) will belong to this language as well</em>.</p>
-
-<p>Formally saying, for every infinite regular language <em>L</em>: every word <em>X<sub>i</sub></em> (such, that length of the word is greater than some threshold) can be splitted into 3 consecutive parts: <em>X</em>, <em>Y</em> and <em>Z</em>, and every new word (e.g. <em>XYYZ</em>, <em>XYYYZ</em>, ..., <em>XY<sup>n</sup>Z</em>) will belong to the language <em>L</em> as well.</p>
-
-<p>The lemma can be understood in such way, that the reguar expression for recognizing of any <em>infinite regular language</em> must contain a <a href="https://en.wikipedia.org/wiki/Kleene_star">Kleene operator</a>.</p>
-
-<blockquote>
-<p>For example, lets&#39;s consider a regular language <em>L</em>, which corresponds to the following regular expression: <code>( 1 | 11 | 111 | 111(1)*1 )</code>  </p>
-
-<p>Let&#39;s select some sufficiently long word of this language:<br>
-<em>W<sub>i</sub></em> = 111111  </p>
-
-<p>One of the possible ways to split <em>W<sub>i</sub></em> is:<br>
-<em>W<sub>i</sub> = XYZ</em> = 111 _ 11 _ 1<br>
-(underscore characters are not a part of the alphabet of the language <em>L</em>, but I am using these characters just to display the separation between <em>X</em>, <em>Y</em> and <em>Z</em>)</p>
-
-<p>So, the parts of the word <em>W<sub>i</sub></em> are:<br>
-<em>X</em> = 111<br>
-<em>Y</em> = 11<br>
-<em>Z</em> = 1  </p>
-
-<p>We can infinitely many times replicate the part <em>Y</em> (&quot;pump&quot; the word <em>W<sub>i</sub></em>), and all generated words: <em>XY<sup>2</sup>Z</em>, <em>XY<sup>3</sup>Z</em>, ..., <em>XY<sup>n</sup>Z</em> will belong to the langauge <em>L</em> as well:  </p>
-
-<p><em>XYZ</em>  = 111111<br>
-<em>XY<sup>2</sup>Z</em> = 11111111<br>
-<em>XY<sup>3</sup>Z</em> = 1111111111  </p>
-</blockquote>
-
-<p>The Pumping Lemma is only a necessary condition (and not a sufficient condition) for the language being a regular.  </p>
-
-<p>However, this lemma is a very convenient tool for proving, that the language <em>is not regular</em>: proving that every sufficiently long word of the language can&#39;t be &quot;pumped&quot; - implies that the language is not regular.</p>
-
-<h2 id="regular-grammar-for-prime-numbers"><a href="#regular-grammar-for-prime-numbers">Regular grammar for prime numbers?</a></h2>
-
-<p>The unary representation <em>W<sub>p</sub></em> of every prime number <em>p</em> (such that <em>|W<sub>p</sub>| = p</em>) can be splited into 3 parts: <em>X</em>, <em>Y</em> and <em>Z</em>.  </p>
-
-<p>Which, in general case, implies that:<br>
-<em>|W<sub>p</sub>| = |XYZ| = |X| + |Y| + |Z|</em></p>
-
-<p><em>XY<sup>n</sup>Z</em> means, that we just should replicate <em>n</em> times the <em>Y</em> part of the word <em>W<sub>p</sub></em>.</p>
-
-<p>So, the amount of symbols <strong>&#39;1&#39;</strong> inside the generated word can be represented as:<br>
-<em>|XY<sup>n</sup>Z| = |X| + n×|Y| + |Z| = (|X| + |Y| + |Z|) + (n - 1)×|Y| = |W<sub>p</sub>| + (n - 1)×|Y|</em></p>
-
-<p>We can choose the <em>n = |W<sub>p</sub>| + 1</em><br>
-Which implies, that:<br>
-<em>|XY<sup>n</sup>Z| = |W<sub>p</sub>| + (n - 1)×|Y| = |W<sub>p</sub>| + |W<sub>p</sub>|×|Y| = (|Y| + 1)×|W<sub>p</sub>|</em><br>
-Hence, <em>XY<sup>n</sup>Z</em> <strong>is a composite number</strong>.</p>
-
-<p><strong>Hence, for any arbitrary splitting of <em>W<sub>p</sub></em> (any arbitrary prime number), we can choose such <em>n</em>, that <em>XY<sup>n</sup>Z</em> will be a composite number.</strong></p>
-
-<p>Our implication contradicts to the Pumping Lemma, which leads to the conclusion, that <strong>the language, which consists of the prime numbers can’t be expressed using a Regular Grammar</strong>.</p>
-
-<div id="disqus_thread"></div>
-
-<script>
-
-var disqus_config = function () {
-this.page.url = "http://lagodiuk.github.io/computer_science/2016/04/30/prime_numbers_regular_grammar.html";
-this.page.identifier = "prime_numbers_regular_grammar";
-};
-
-(function() { // DON'T EDIT BELOW THIS LINE
-var d = document, s = d.createElement('script');
-
-s.src = '//lahodiuk.disqus.com/embed.js';
-
-s.setAttribute('data-timestamp', +new Date());
-(d.head || d.body).appendChild(s);
-})();
-</script>
-
-<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
-
-  </article>
-
-</div>
-
+  </ul>
+</section>
       </div>
     </div>
 
