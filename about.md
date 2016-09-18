@@ -7,7 +7,10 @@ permalink: /about/
 I have experience of solving various technical problems (systems design, scalability, performance optimization).
 For solving of problems I apply an algorithmic approach, based on analysis of existing data and domain-specific knowledge.
 
-Currently I am working in company [HERE](https://company.here.com/here/).
+I enjoy to solve difficult problems, especially when they are related to the aspects of Machine Learning, Natural
+Language Processing and Information Retrieval.
+
+I work as a Senior Software Engineer in the company [HERE](https://company.here.com/here/).
 
 Activities, which I like to do in my free time: 
 - Develop Open-source hobby projects: [link to my GitHub profile](https://github.com/lagodiuk)
