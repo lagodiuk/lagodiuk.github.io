@@ -77,13 +77,14 @@
 <h2 id="table-of-contents">Table of contents</h2>
 
 <ul>
-<li><a href="/computer_science/2016/10/31/entropy.html#combinatorial-entropy">Combinatorial entropy</a></li>
-<li><a href="/computer_science/2016/10/31/entropy.html#shannon-entropy">Shannon entropy</a></li>
+<li><a href="/computer_science/2016/10/31/entropy.html#counting-permutations">Counting permutations</a></li>
+<li><a href="/computer_science/2016/10/31/entropy.html#from-permutations-to-combinatorial-entropy">From permutations to combinatorial entropy</a></li>
+<li><a href="/computer_science/2016/10/31/entropy.html#from-combinatorial-to-shannon-entropy">From combinatorial to Shannon entropy</a></li>
 </ul>
 
 <!--more-->
 
-<h2 id="combinatorial-entropy"><a href="#combinatorial-entropy">Combinatorial entropy</a></h2>
+<h2 id="counting-permutations"><a href="/computer_science/2016/10/31/entropy.html#counting-permutations">Counting permutations</a></h2>
 
 <p>Let&#39;s consider the set of balls of different colours: 2 red, 5 green and 3 yellow. Let&#39;s consider the pair of the arbitrary alignments of the balls into a line (so-called <em>permutations</em>):</p>
 
@@ -100,6 +101,8 @@
 
 <p>where <em>N</em> is a total amount of balls, and <em>N<sub>i</sub></em> is a total amount of the balls of the <em>i-th</em> colour.</p>
 
+<h2 id="from-permutations-to-combinatorial-entropy"><a href="/computer_science/2016/10/31/entropy.html#from-permutations-to-combinatorial-entropy">From permutations to combinatorial entropy</a></h2>
+
 <p>All permutations can be enumerated and assigned with a number from <em>0</em> to <em>(W - 1)</em>. Hence, the string of <em>log<sub>2</sub>(W)</em> bits can be used to encode each permutation.</p>
 
 <p>As far as each permutation consists of <em>N</em> balls, let&#39;s express <em>the average amount of bits per item of the permutation</em>: <img src="/images/entropy/bits_per_ball.png" alt="amount of bits per ball"></p>
@@ -109,7 +112,7 @@
 
 <p>The more uniform set is (the more balls of same colour are there) - the smaller Combinatorial Entropy is, and vice-versa: the more balls of different colours are there - the higher Combinatorial Entropy is.</p>
 
-<h2 id="shannon-entropy"><a href="#shannon-entropy">Shannon entropy</a></h2>
+<h2 id="from-combinatorial-to-shannon-entropy"><a href="/computer_science/2016/10/31/entropy.html#from-combinatorial-to-shannon-entropy">From combinatorial to Shannon entropy</a></h2>
 
 <p>Let&#39;s take a closer look at the expression of the Combinatorial Entropy: <img src="/images/entropy/combinatorial_entropy_2.png" alt="Combinatorial Entropy"></p>
 

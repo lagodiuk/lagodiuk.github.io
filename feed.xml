@@ -6,8 +6,8 @@
 </description>
     <link>http://lagodiuk.github.io/</link>
     <atom:link href="http://lagodiuk.github.io/feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Mon, 31 Oct 2016 02:23:05 +0100</pubDate>
-    <lastBuildDate>Mon, 31 Oct 2016 02:23:05 +0100</lastBuildDate>
+    <pubDate>Mon, 31 Oct 2016 09:22:36 +0100</pubDate>
+    <lastBuildDate>Mon, 31 Oct 2016 09:22:36 +0100</lastBuildDate>
     <generator>Jekyll v2.4.0</generator>
     
       <item>
@@ -19,13 +19,14 @@
 &lt;h2 id=&quot;table-of-contents&quot;&gt;Table of contents&lt;/h2&gt;
 
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&quot;/computer_science/2016/10/31/entropy.html#combinatorial-entropy&quot;&gt;Combinatorial entropy&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;/computer_science/2016/10/31/entropy.html#shannon-entropy&quot;&gt;Shannon entropy&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;/computer_science/2016/10/31/entropy.html#counting-permutations&quot;&gt;Counting permutations&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;/computer_science/2016/10/31/entropy.html#from-permutations-to-combinatorial-entropy&quot;&gt;From permutations to combinatorial entropy&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;/computer_science/2016/10/31/entropy.html#from-combinatorial-to-shannon-entropy&quot;&gt;From combinatorial to Shannon entropy&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;!--more--&gt;
 
-&lt;h2 id=&quot;combinatorial-entropy&quot;&gt;&lt;a href=&quot;#combinatorial-entropy&quot;&gt;Combinatorial entropy&lt;/a&gt;&lt;/h2&gt;
+&lt;h2 id=&quot;counting-permutations&quot;&gt;&lt;a href=&quot;/computer_science/2016/10/31/entropy.html#counting-permutations&quot;&gt;Counting permutations&lt;/a&gt;&lt;/h2&gt;
 
 &lt;p&gt;Let&amp;#39;s consider the set of balls of different colours: 2 red, 5 green and 3 yellow. Let&amp;#39;s consider the pair of the arbitrary alignments of the balls into a line (so-called &lt;em&gt;permutations&lt;/em&gt;):&lt;/p&gt;
 
@@ -42,6 +43,8 @@
 
 &lt;p&gt;where &lt;em&gt;N&lt;/em&gt; is a total amount of balls, and &lt;em&gt;N&lt;sub&gt;i&lt;/sub&gt;&lt;/em&gt; is a total amount of the balls of the &lt;em&gt;i-th&lt;/em&gt; colour.&lt;/p&gt;
 
+&lt;h2 id=&quot;from-permutations-to-combinatorial-entropy&quot;&gt;&lt;a href=&quot;/computer_science/2016/10/31/entropy.html#from-permutations-to-combinatorial-entropy&quot;&gt;From permutations to combinatorial entropy&lt;/a&gt;&lt;/h2&gt;
+
 &lt;p&gt;All permutations can be enumerated and assigned with a number from &lt;em&gt;0&lt;/em&gt; to &lt;em&gt;(W - 1)&lt;/em&gt;. Hence, the string of &lt;em&gt;log&lt;sub&gt;2&lt;/sub&gt;(W)&lt;/em&gt; bits can be used to encode each permutation.&lt;/p&gt;
 
 &lt;p&gt;As far as each permutation consists of &lt;em&gt;N&lt;/em&gt; balls, let&amp;#39;s express &lt;em&gt;the average amount of bits per item of the permutation&lt;/em&gt;: &lt;img src=&quot;/images/entropy/bits_per_ball.png&quot; alt=&quot;amount of bits per ball&quot;&gt;&lt;/p&gt;
@@ -51,7 +54,7 @@
 
 &lt;p&gt;The more uniform set is (the more balls of same colour are there) - the smaller Combinatorial Entropy is, and vice-versa: the more balls of different colours are there - the higher Combinatorial Entropy is.&lt;/p&gt;
 
-&lt;h2 id=&quot;shannon-entropy&quot;&gt;&lt;a href=&quot;#shannon-entropy&quot;&gt;Shannon entropy&lt;/a&gt;&lt;/h2&gt;
+&lt;h2 id=&quot;from-combinatorial-to-shannon-entropy&quot;&gt;&lt;a href=&quot;/computer_science/2016/10/31/entropy.html#from-combinatorial-to-shannon-entropy&quot;&gt;From combinatorial to Shannon entropy&lt;/a&gt;&lt;/h2&gt;
 
 &lt;p&gt;Let&amp;#39;s take a closer look at the expression of the Combinatorial Entropy: &lt;img src=&quot;/images/entropy/combinatorial_entropy_2.png&quot; alt=&quot;Combinatorial Entropy&quot;&gt;&lt;/p&gt;
 
