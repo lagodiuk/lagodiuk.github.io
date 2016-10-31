@@ -7,6 +7,7 @@ permalink: /about/
 Hello, my name is Yurii Lahodiuk.
 
 I have experience of solving various technical problems (systems design, scalability, performance optimization) and enjoy to solve difficult problems (especially the ones, which are related to the Combinatorial Optimization, Machine Learning, Natural Language Processing or Information Retrieval).
+
 For solving of problems I apply an algorithmic approach in combination with the tidy analysis of existing data and domain-specific knowledge.
 
 I work as a Senior Software Engineer in the company [HERE](https://company.here.com/here/).
