@@ -6,12 +6,12 @@
     <meta name="viewport" content="width=device-width initial-scale=1" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-    <title>Yurii Lahodiuk</title>
+    <title>Shannon entropy</title>
     <meta name="description" content="This is my personal blog about Algorithms, Programming Problems solving techniques and interesting Computer Science topics.   Expressed opinions are my own.
 ">
 
     <link rel="stylesheet" href="/css/main.css">
-    <link rel="canonical" href="http://lagodiuk.github.io/archive.html">
+    <link rel="canonical" href="http://lagodiuk.github.io/computer_science/2016/10/31/entropy.html">
     
     
 
@@ -62,47 +62,105 @@
 
     <div class="page-content">
       <div class="wrapper">
-        
+        <div class="post">
 
-<section id="archive">
-  <h2>All blog posts</h2>
+  <header class="post-header">
+    <h1 class="post-title">Shannon entropy</h1>
+    <p class="post-meta">Oct 31, 2016</p>
+  </header>
 
-  
-  <h3>2016</h3>
-  <ul class="this">
-  
-    <li><time>31 Oct</time><a href="/computer_science/2016/10/31/entropy.html">Shannon entropy</a></li>
+  <article class="post-content">
+    <p>I would like to present the derivation of the Shannon entropy, which is widely used in the <a href="https://en.wikipedia.org/wiki/Information_theory">Information Theory</a>, based on the concepts of Combinatorics:</p>
 
-  
-  
-  
-  
-  
-    <li><time>23 May</time><a href="/nlp/2016/05/23/deutsch_nlp.html">Tiny JavaScript parser of the subset of German</a></li>
+<p><img src="/images/entropy/shannon_entropy.png" alt="Illustration to the problem"></p>
 
-  
-  
-  
-  
-  
-    <li><time>30 Apr</time><a href="/computer_science/2016/04/30/prime_numbers_regular_grammar.html">Is it possible to express all prime numbers using a regular grammar?</a></li>
+<h2 id="table-of-contents">Table of contents</h2>
 
-  
-  
-  
-  
-  
-    <li><time>31 Jan</time><a href="/programming_puzzles/2016/01/31/puzzles_repeating_decimal.html">Recurring decimal of a rational number</a></li>
+<ul>
+<li><a href="/computer_science/2016/10/31/entropy.html#combinatorial-entropy">Combinatorial entropy</a></li>
+<li><a href="/computer_science/2016/10/31/entropy.html#shannon-entropy">Shannon entropy</a></li>
+</ul>
 
-  
-  
-  
-  
-  
-    <li><time>23 Jan</time><a href="/spoj/dynamic_programming/2016/01/23/spoj_mfish_solution.html">Catch Fish problem from SPOJ: MFISH</a></li>
+<!--more-->
 
-  </ul>
-</section>
+<h2 id="combinatorial-entropy"><a href="#combinatorial-entropy">Combinatorial entropy</a></h2>
+
+<p>Let&#39;s consider the set of balls of different colours: 2 red, 5 green and 3 yellow. Let&#39;s consider the pair of the arbitrary alignments of the balls into a line (so-called <em>permutations</em>):</p>
+
+<p><img src="/images/entropy/colour_balls_set.png" alt="permutations of the colour balls"></p>
+
+<p>The question is: <em>how many unique permutations are possible, taking into account that the balls of the same colour are non-distinguishable?</em></p>
+
+<p>If every ball would have it&#39;s own unique colour, then the amount of permutations would be <em>10!</em>, however if there are balls of the same colour - it is possible to mutually exchange them without obtaining of the new permutation.</p>
+
+<p>Hence, in our example we should exclude <em>5!</em> mutual permutations of the green balls, <em>3!</em> mutual permutations of the yellow balls and <em>2!</em> mutual permutations of red ones. So, the amount of the <em>unique</em> permutations in our example would be: <img src="/images/entropy/colour_balls_permutations.png" alt="amount of permutations in example"></p>
+
+<p>The <a href="https://en.wikipedia.org/wiki/Multinomial_theorem#Multinomial_coefficients">Multinomial Coefficient</a> is a solution of the general case of described problem:
+<img src="/images/entropy/multinomial_coefficient.png" alt="multinomial coefficient">,</p>
+
+<p>where <em>N</em> is a total amount of balls, and <em>N<sub>i</sub></em> is a total amount of the balls of the <em>i-th</em> colour.</p>
+
+<p>All permutations can be enumerated and assigned with a number from <em>0</em> to <em>(W - 1)</em>. Hence, the string of <em>log<sub>2</sub>(W)</em> bits can be used to encode each permutation.</p>
+
+<p>As far as each permutation consists of <em>N</em> balls, let&#39;s express <em>the average amount of bits per item of the permutation</em>: <img src="/images/entropy/bits_per_ball.png" alt="amount of bits per ball"></p>
+
+<p>The average amount of bits per item of the permutation is called <em>Combinatorial Entropy</em>:
+<img src="/images/entropy/combinatorial_entropy.png" alt="Combinatorial Entropy"></p>
+
+<p>The more uniform set is (the more balls of same colour are there) - the smaller Combinatorial Entropy is, and vice-versa: the more balls of different colours are there - the higher Combinatorial Entropy is.</p>
+
+<h2 id="shannon-entropy"><a href="#shannon-entropy">Shannon entropy</a></h2>
+
+<p>Let&#39;s take a closer look at the expression of the Combinatorial Entropy: <img src="/images/entropy/combinatorial_entropy_2.png" alt="Combinatorial Entropy"></p>
+
+<p>Taking into account the properties of the logarithms, we can transform the expression in the following way:
+<img src="/images/entropy/combinatorial_entropy_3.png" alt="Combinatorial Entropy"></p>
+
+<p>Let&#39;s assume that the amount of the items is sufficiently large, so we could make use of the <a href="https://en.wikipedia.org/wiki/Stirling%27s_approximation">Stirling&#39;s formula</a>: <img src="/images/entropy/stirlings_formula.png" alt="Stirling&#39;s Formula"></p>
+
+<p>Hence, after application of the Stirling&#39;s Formula we get: <img src="/images/entropy/combinatorial_entropy_strilings.png" alt="Combinatorial Entropy after application of the Stirling&#39;s Formula">,</p>
+
+<p>where <em>k</em> - is the transformation coefficient to the natural logarithms.</p>
+
+<p>Taking into account, that <img src="/images/entropy/sum_ni_n.png" alt="Sum Ni is N"> we can make the further transformations:
+<img src="/images/entropy/combinatorial_entropy_strilings_transformed.png" alt="Combinatorial Entropy after application of the Stirling&#39;s Formula and further transformations"></p>
+
+<p>As far as the total amount of balls in a set is <em>N</em> and the amount of balls of <em>i-th</em> colour is <em>N<sub>i</sub></em> - the probability of the random selection of the ball with <em>i-th</em> colour is: <img src="/images/entropy/random_ball_prob.png" alt="Probability of the random selection of the ball of i-th colour"></p>
+
+<p>Hence, the entropy can be expressed as: <img src="/images/entropy/shannon_entropy.png" alt="Shannon Entropy"></p>
+
+<p>Derived expression is well known as a <em>Shannon Entropy</em>.</p>
+
+<p>The more tidy derivation could also show that the Shannon entropy is an upper bound of the Combinatorial entropy, hence its value will be always slightly greater than the value of the latter.</p>
+
+<p>Below presented the graph with the comparison of the Shannon and Combinatorial entropies, calculated for the two-item sets (<em>A</em> and <em>B</em>), with a total amount of items <em>N = 100</em>:
+<img src="/images/entropy/shannon_vs_combinatorial_entropy.png" alt="Shannon vs Combinatorial entropies when N = 100"></p>
+
+<div id="disqus_thread"></div>
+
+<script>
+
+var disqus_config = function () {
+this.page.url = "http://lagodiuk.github.io/computer_science/2016/10/31/entropy.html";
+this.page.identifier = "shannon_entropy";
+};
+
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+
+s.src = '//lahodiuk.disqus.com/embed.js';
+
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+  </article>
+
+</div>
+
       </div>
     </div>
 

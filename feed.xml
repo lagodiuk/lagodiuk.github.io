@@ -6,9 +6,109 @@
 </description>
     <link>http://lagodiuk.github.io/</link>
     <atom:link href="http://lagodiuk.github.io/feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Sun, 18 Sep 2016 19:12:48 +0200</pubDate>
-    <lastBuildDate>Sun, 18 Sep 2016 19:12:48 +0200</lastBuildDate>
+    <pubDate>Mon, 31 Oct 2016 02:23:05 +0100</pubDate>
+    <lastBuildDate>Mon, 31 Oct 2016 02:23:05 +0100</lastBuildDate>
     <generator>Jekyll v2.4.0</generator>
+    
+      <item>
+        <title>Shannon entropy</title>
+        <description>&lt;p&gt;I would like to present the derivation of the Shannon entropy, which is widely used in the &lt;a href=&quot;https://en.wikipedia.org/wiki/Information_theory&quot;&gt;Information Theory&lt;/a&gt;, based on the concepts of Combinatorics:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/entropy/shannon_entropy.png&quot; alt=&quot;Illustration to the problem&quot;&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;table-of-contents&quot;&gt;Table of contents&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;/computer_science/2016/10/31/entropy.html#combinatorial-entropy&quot;&gt;Combinatorial entropy&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;/computer_science/2016/10/31/entropy.html#shannon-entropy&quot;&gt;Shannon entropy&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;!--more--&gt;
+
+&lt;h2 id=&quot;combinatorial-entropy&quot;&gt;&lt;a href=&quot;#combinatorial-entropy&quot;&gt;Combinatorial entropy&lt;/a&gt;&lt;/h2&gt;
+
+&lt;p&gt;Let&amp;#39;s consider the set of balls of different colours: 2 red, 5 green and 3 yellow. Let&amp;#39;s consider the pair of the arbitrary alignments of the balls into a line (so-called &lt;em&gt;permutations&lt;/em&gt;):&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/entropy/colour_balls_set.png&quot; alt=&quot;permutations of the colour balls&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;The question is: &lt;em&gt;how many unique permutations are possible, taking into account that the balls of the same colour are non-distinguishable?&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;If every ball would have it&amp;#39;s own unique colour, then the amount of permutations would be &lt;em&gt;10!&lt;/em&gt;, however if there are balls of the same colour - it is possible to mutually exchange them without obtaining of the new permutation.&lt;/p&gt;
+
+&lt;p&gt;Hence, in our example we should exclude &lt;em&gt;5!&lt;/em&gt; mutual permutations of the green balls, &lt;em&gt;3!&lt;/em&gt; mutual permutations of the yellow balls and &lt;em&gt;2!&lt;/em&gt; mutual permutations of red ones. So, the amount of the &lt;em&gt;unique&lt;/em&gt; permutations in our example would be: &lt;img src=&quot;/images/entropy/colour_balls_permutations.png&quot; alt=&quot;amount of permutations in example&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;The &lt;a href=&quot;https://en.wikipedia.org/wiki/Multinomial_theorem#Multinomial_coefficients&quot;&gt;Multinomial Coefficient&lt;/a&gt; is a solution of the general case of described problem:
+&lt;img src=&quot;/images/entropy/multinomial_coefficient.png&quot; alt=&quot;multinomial coefficient&quot;&gt;,&lt;/p&gt;
+
+&lt;p&gt;where &lt;em&gt;N&lt;/em&gt; is a total amount of balls, and &lt;em&gt;N&lt;sub&gt;i&lt;/sub&gt;&lt;/em&gt; is a total amount of the balls of the &lt;em&gt;i-th&lt;/em&gt; colour.&lt;/p&gt;
+
+&lt;p&gt;All permutations can be enumerated and assigned with a number from &lt;em&gt;0&lt;/em&gt; to &lt;em&gt;(W - 1)&lt;/em&gt;. Hence, the string of &lt;em&gt;log&lt;sub&gt;2&lt;/sub&gt;(W)&lt;/em&gt; bits can be used to encode each permutation.&lt;/p&gt;
+
+&lt;p&gt;As far as each permutation consists of &lt;em&gt;N&lt;/em&gt; balls, let&amp;#39;s express &lt;em&gt;the average amount of bits per item of the permutation&lt;/em&gt;: &lt;img src=&quot;/images/entropy/bits_per_ball.png&quot; alt=&quot;amount of bits per ball&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;The average amount of bits per item of the permutation is called &lt;em&gt;Combinatorial Entropy&lt;/em&gt;:
+&lt;img src=&quot;/images/entropy/combinatorial_entropy.png&quot; alt=&quot;Combinatorial Entropy&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;The more uniform set is (the more balls of same colour are there) - the smaller Combinatorial Entropy is, and vice-versa: the more balls of different colours are there - the higher Combinatorial Entropy is.&lt;/p&gt;
+
+&lt;h2 id=&quot;shannon-entropy&quot;&gt;&lt;a href=&quot;#shannon-entropy&quot;&gt;Shannon entropy&lt;/a&gt;&lt;/h2&gt;
+
+&lt;p&gt;Let&amp;#39;s take a closer look at the expression of the Combinatorial Entropy: &lt;img src=&quot;/images/entropy/combinatorial_entropy_2.png&quot; alt=&quot;Combinatorial Entropy&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;Taking into account the properties of the logarithms, we can transform the expression in the following way:
+&lt;img src=&quot;/images/entropy/combinatorial_entropy_3.png&quot; alt=&quot;Combinatorial Entropy&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;Let&amp;#39;s assume that the amount of the items is sufficiently large, so we could make use of the &lt;a href=&quot;https://en.wikipedia.org/wiki/Stirling%27s_approximation&quot;&gt;Stirling&amp;#39;s formula&lt;/a&gt;: &lt;img src=&quot;/images/entropy/stirlings_formula.png&quot; alt=&quot;Stirling&amp;#39;s Formula&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;Hence, after application of the Stirling&amp;#39;s Formula we get: &lt;img src=&quot;/images/entropy/combinatorial_entropy_strilings.png&quot; alt=&quot;Combinatorial Entropy after application of the Stirling&amp;#39;s Formula&quot;&gt;,&lt;/p&gt;
+
+&lt;p&gt;where &lt;em&gt;k&lt;/em&gt; - is the transformation coefficient to the natural logarithms.&lt;/p&gt;
+
+&lt;p&gt;Taking into account, that &lt;img src=&quot;/images/entropy/sum_ni_n.png&quot; alt=&quot;Sum Ni is N&quot;&gt; we can make the further transformations:
+&lt;img src=&quot;/images/entropy/combinatorial_entropy_strilings_transformed.png&quot; alt=&quot;Combinatorial Entropy after application of the Stirling&amp;#39;s Formula and further transformations&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;As far as the total amount of balls in a set is &lt;em&gt;N&lt;/em&gt; and the amount of balls of &lt;em&gt;i-th&lt;/em&gt; colour is &lt;em&gt;N&lt;sub&gt;i&lt;/sub&gt;&lt;/em&gt; - the probability of the random selection of the ball with &lt;em&gt;i-th&lt;/em&gt; colour is: &lt;img src=&quot;/images/entropy/random_ball_prob.png&quot; alt=&quot;Probability of the random selection of the ball of i-th colour&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;Hence, the entropy can be expressed as: &lt;img src=&quot;/images/entropy/shannon_entropy.png&quot; alt=&quot;Shannon Entropy&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;Derived expression is well known as a &lt;em&gt;Shannon Entropy&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;The more tidy derivation could also show that the Shannon entropy is an upper bound of the Combinatorial entropy, hence its value will be always slightly greater than the value of the latter.&lt;/p&gt;
+
+&lt;p&gt;Below presented the graph with the comparison of the Shannon and Combinatorial entropies, calculated for the two-item sets (&lt;em&gt;A&lt;/em&gt; and &lt;em&gt;B&lt;/em&gt;), with a total amount of items &lt;em&gt;N = 100&lt;/em&gt;:
+&lt;img src=&quot;/images/entropy/shannon_vs_combinatorial_entropy.png&quot; alt=&quot;Shannon vs Combinatorial entropies when N = 100&quot;&gt;&lt;/p&gt;
+
+&lt;div id=&quot;disqus_thread&quot;&gt;&lt;/div&gt;
+
+&lt;script&gt;
+
+var disqus_config = function () {
+this.page.url = &quot;http://lagodiuk.github.io/computer_science/2016/10/31/entropy.html&quot;;
+this.page.identifier = &quot;shannon_entropy&quot;;
+};
+
+(function() { // DON&#39;T EDIT BELOW THIS LINE
+var d = document, s = d.createElement(&#39;script&#39;);
+
+s.src = &#39;//lahodiuk.disqus.com/embed.js&#39;;
+
+s.setAttribute(&#39;data-timestamp&#39;, +new Date());
+(d.head || d.body).appendChild(s);
+})();
+&lt;/script&gt;
+
+&lt;noscript&gt;Please enable JavaScript to view the &lt;a href=&quot;https://disqus.com/?ref_noscript&quot; rel=&quot;nofollow&quot;&gt;comments powered by Disqus.&lt;/a&gt;&lt;/noscript&gt;
+</description>
+        <pubDate>Mon, 31 Oct 2016 01:47:00 +0100</pubDate>
+        <link>http://lagodiuk.github.io/computer_science/2016/10/31/entropy.html</link>
+        <guid isPermaLink="true">http://lagodiuk.github.io/computer_science/2016/10/31/entropy.html</guid>
+        
+        <category>computer_science</category>
+        
+        
+        <category>computer_science</category>
+        
+      </item>
     
       <item>
         <title>Tiny JavaScript parser of the subset of German</title>
@@ -316,7 +416,7 @@ Nomen_Pl -&gt; Orangen | Hunger | Wasser | Kinder
 &lt;script&gt;
 
 var disqus_config = function () {
-this.page.url = &quot;http://lagodiuk.github.io/nlp/2016/05/23/deutsch_nlp_demo&quot;;
+this.page.url = &quot;http://lagodiuk.github.io/nlp/2016/05/23/deutsch_nlp_demo.html&quot;;
 this.page.identifier = &quot;deutsch_nlp_demo&quot;;
 };
 
