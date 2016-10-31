@@ -71,7 +71,7 @@ I also think that systematic enumeration of grammatical rules (in the form of Co
 <script>
 
 var disqus_config = function () {
-this.page.url = "http://lagodiuk.github.io/nlp/2016/05/23/deutsch_nlp_demo";
+this.page.url = "http://lagodiuk.github.io/nlp/2016/05/23/deutsch_nlp_demo.html";
 this.page.identifier = "deutsch_nlp_demo";
 };
 
