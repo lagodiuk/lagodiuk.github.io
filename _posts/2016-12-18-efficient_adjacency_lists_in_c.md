@@ -11,11 +11,19 @@ comments: true
 
 While I was solving various problems, which can be reduced to computation on graphs (e.g.: ["VOCV - Con-Junctions"](http://www.spoj.com/problems/VOCV/), ["NAJKRACI - Najkraci"](http://www.spoj.com/problems/NAJKRACI/), ["MTREE - Another Tree Problem"](http://www.spoj.com/problems/MTREE/)), I have discovered a very convenient pattern of implementation of adjacency lists, which I would like to describe in this post. 
 
+![Memory efficient adjacency list implementation illustration](/images/adj_lists/img_1.png)
+
+## Table of contents ##
+- [Motivation]({{page.url}}#motivation)
+- [The commonly used approaches]({{page.url}}#the-commonly-used-approaches)
+- [The proposed approach]({{page.url}}#the-proposed-approach)
+- [Example of usage: Breadth-first search]({{page.url}}#example-of-usage-breadth-first-search)
+
 <!--more-->
 
 *Small remark: usually for solving of competitive programming problems I use programming language C. So, the further snippets of code will be in C, however they can be easily translated to any other programming language.*
 
-## Motivation ##
+## [Motivation](#motivation) ##
 
 Many graph problems have special limitations, which are known in advance:
 - graph is sparse
@@ -33,9 +41,9 @@ The need of efficient implementation usually leads to additional limitations, su
 
 Actually, the similar requirements and limitations are relevant for some real life problems, which occur in the fields of embedded systems and real-time systems development, etc.
 
-## The commonly used approaches ##
+## [The commonly used approaches](#the-commonly-used-approaches) ##
 
-The quick analysis of various sources (e.g.: [Wikipedia](https://en.wikipedia.org/wiki/Adjacency_list#Implementation_details), [Stackoverflow](http://stackoverflow.com/questions/5324914/adjacency-list-graph-implementation-in-c-any-libraries)) showed, that it is usually advised to use the linked list based implementation of adjacency lists. And usually, the most straightforward implementation involves the usage of pointers, like this:
+The quick analysis of various sources (e.g.: [Wikipedia](https://en.wikipedia.org/wiki/Adjacency_list#Implementation_details), [Stackoverflow](http://stackoverflow.com/questions/5324914/adjacency-list-graph-implementation-in-c-any-libraries), [CLRS (the book of: Cormen, Leiserson, Rivest, Stein)](https://www.quora.com/How-do-I-represent-a-graph-using-an-adjacency-list-based-on-CLRSs-pseudo-code-on-chapter-22-in-Java)) showed, that it is usually advised to use the linked list based implementation of adjacency lists. And usually, the most straightforward implementation involves the usage of pointers, like this:
 
 {% highlight c %}
 typedef 
@@ -52,11 +60,13 @@ struct {
 } Vertex;
 {% endhighlight %}
 
+![Adjacency list implementation, based on linked lists](/images/adj_lists/img_2.png)
+
 Sometimes, the standard libraries of programming languages provide more convenient data structures, which can be used for implementation of adjacency lists (e.g.: [vector in C++](http://stackoverflow.com/questions/22120639/making-an-adjacency-list-in-c-for-a-directed-graph?rq=1), [adjacency_list in Boost](http://www.boost.org/doc/libs/1_55_0/libs/graph/doc/using_adjacency_list.html)).
 
 Nevertheless, the described approaches rely on dynamic memory manipulations (allocation of new nodes of the linked list, reallocation of the underlying array of vector).
 
-## The proposed approach ##
+## [The proposed approach](#the-proposed-approach) ##
 
 Without loss of generality let's assume that each vertex is associated with some unique integer identifier from the interval: [0, *|V|* - 1].
 
@@ -71,7 +81,7 @@ struct {
 } Edge;
 {% endhighlight %}
 
-As far as it is known in advance, that the maximal amount of edges is *|E|* - at the startup of the program we can allocate an array of size *|E|*, which can handle all edges of the graph:
+As far as it is known in advance, that the maximal amount of edges is *|E|* - at the start up of the program we can allocate an array of size *|E|*, which can handle all edges of the graph:
 
 {% highlight c %}
 #define MAX_EDGES ...
@@ -87,7 +97,7 @@ int edges_cnt;
 Let's assume, that array `edges` is already populated with edges, and the variable `edges_cnt` indicates an amount of edges of the current instance of the problem. Now, **we can sort an array of edges by identifier of a source vertex.** It is possible to sort an array with *O(E + V)* runtime complexity using the **Counting Sort**:
 
 {% highlight c %}
-// auxiliary arrays, allocated at the startup of the program
+// auxiliary arrays, allocated at the start up of the program
 int vertex_cnt[MAX_VERTICES]; // needed for Counting Sort
 Edge edges_sorted[MAX_EDGES]; // sorted edges will be here
 
@@ -124,7 +134,7 @@ void sort_edges_by_source() {
 }
 {% endhighlight %}
 
-Given the sorted array of edges we can notice, that **all outgoing edges of each vertex are grouped together**. Hence, using the linear scan over the array of sorted edges - each vertex can be associated with the corresponding position of its outgoing edges:
+Given the sorted array of edges we can notice, that **all outgoing edges of each vertex are grouped together**. Hence, using *the linear scan* over the array of sorted edges - each vertex can be associated with the corresponding position of its outgoing edges:
 
 {% highlight c %}
 #define MAX_VERTICES ...
@@ -166,58 +176,64 @@ void initialize_vertices() {
 }
 {% endhighlight %}
 
-## Example of usage: Breadth-first search ##
+Complete graphic illustration of the proposed approach:
+![Complete illustration of the proposed approach](/images/adj_lists/img_3.png)
 
-Below presented the example of usage of described approach, for implementation of [Breadth-first search](https://en.wikipedia.org/wiki/Breadth-first_search).
-As far as the FIFO queue, used in BFS, can't contain more than *|V|* items - it can be also preallocated at the start up of the program (note, that the structure Vertex is augmented with an additional field `enqueued`):
+**Therefore, the described approach can be used for processing of many different graphs by reusing the same arrays which been allocated only once - at the start of the program.** Hence, we can be sure that the program operates within the constant amount of allocated memory.
 
-{% highlight c %}
-typedef
-struct {
-	int enqueued;  // indicates, if vertex already been enqueued into FIFO queue
-	int edges_idx; // index of the first outgoing edge
-} Vertex;
+Additional observation: each bucket of outgoing edges, which belong to the same vertex, can be sorted by identifier of the destination vertex. In this case, we will be able to check the presence of an edge between any pair of vertices with *O(log(E))* runtime complexity (using *Binary Search*).
 
-#define FALSE 0
+Of course, described approach is well suitable for problems, which require the computations on static graphs, because the addition of new edges to the packed array of sorted edges is costly.
+
+## [Example of usage: Breadth-first search](#example-of-usage-breadth-first-search) ##
+
+Now, I would like to show the example of usage of given approach, in application to the one of very common graph problems: [Breadth-first search](https://en.wikipedia.org/wiki/Breadth-first_search) (BFS).
+
+As far as **the FIFO queue, used in BFS, can't contain more than *|V|* items** - it can be also preallocated at the start up of the program:
+
+{% highlight c hl_lines="38 40 41 42 43 46 48 49 60 61" %}
 #define TRUE 1
+#define FALSE 0
 
 // This array represents the FIFO queue 
-// of unvisited vertices, which can't be larger 
+// of unvisited vertices, and can't be larger 
 // than the total amount of vertices
 int queue[MAX_VERTICES];
 
+// indicates, if vertex already been enqueued into the FIFO queue
+int enqueued[MAX_VERTICES];
+
 void bfs(int start_vertex_idx) {
-	// mark all vertices as not enqueued yet
-	int i;
-	for(i = 0; i < vertices_cnt; ++i) {
-		vertices[i].enqueued = FALSE;
-	}
-	
-	int head;            // head of the FIFO queue
-	int tail;            // tail of the FIFO queue
-	int vertex_idx;      // index of dequeued vertex
-	int edge_idx;        // used for iteration over the outgoing edges
-	int new_vertex_idx;  // index of the vertex, which should be visited
-	
-	// enqueue the index of the start vertex
-	head = 0;
-	tail = 1;
-	queue[head] = start_vertex_idx;
-	vertices[start_vertex_idx].enqueued = TRUE;
-	
-	// while queue is not empty
-	while(head < tail) {
+    // mark all vertices as not enqueued yet
+    memset(enqueued, FALSE, sizeof enqueued);
+    
+    int head;            // head of the FIFO queue
+    int tail;            // tail of the FIFO queue
+    int vertex_idx;      // index of dequeued vertex
+    int edge_idx;        // used for iteration over the outgoing edges
+    int new_vertex_idx;  // index of the vertex, which should be visited
+    
+    // enqueue the index of the start vertex
+    head = 0;
+    queue[head] = start_vertex_idx;
+    enqueued[start_vertex_idx] = TRUE;
+    tail = 1;
+    
+    // while queue is not empty
+    while(head < tail) {
         
         // dequeue the next vertex
         vertex_idx = queue[head];
         head++;
         
+        printf("Visiting vertex: %d\n", vertex_idx);
+        
         // process the outgoing edges
         edge_idx = vertices[vertex_idx].edges_idx;
         
         if(edge_idx == NO_OUTGOING_EDGES) {
-        	// vertex doesn't have outgoing edges
-        	continue;
+            // vertex doesn't have outgoing edges
+            continue;
         }
             
         // iterate over the outgoing edges
@@ -227,12 +243,12 @@ void bfs(int start_vertex_idx) {
             new_vertex_idx = edges_sorted[edge_idx].to;
             
             // if the destination vertex is not yet enqueued
-            if(!vertices[new_vertex_idx].enqueued) {
+            if(!enqueued[new_vertex_idx]) {
                 
                 // add the destination vertex to the queue 
                 queue[tail] = new_vertex_idx;
                 tail++;
-                vertices[new_vertex_idx].enqueued = TRUE;
+                enqueued[new_vertex_idx] = TRUE;
             }
             
             edge_idx++;
@@ -247,6 +263,9 @@ All together:
 #include <stdio.h>
 #include <memory.h>
 
+#define TRUE 1
+#define FALSE 0
+
 #define MAX_EDGES 100
 #define MAX_VERTICES 100
 #define NO_OUTGOING_EDGES -1
@@ -259,7 +278,6 @@ struct {
 
 typedef
 struct {
-	int enqueued;  // indicates, if vertex already been enqueued into FIFO queue
     int edges_idx; // index of the first outgoing edge
 } Vertex;
 
@@ -277,12 +295,20 @@ Vertex vertices[MAX_VERTICES];
 // of the current instance of the graph:
 int vertices_cnt;
 
-// auxiliary arrays, allocated at the startup of the program
+// auxiliary arrays, allocated at the start up of the program
 int vertex_cnt[MAX_VERTICES]; // needed for Counting Sort
 
-// auxiliary arrays, allocated at the startup of the program
+// auxiliary arrays, allocated at the start up of the program
 int vertex_cnt[MAX_VERTICES]; // needed for Counting Sort
 Edge edges_sorted[MAX_EDGES]; // sorted edges will be here
+
+// This array represents the FIFO queue 
+// of unvisited vertices, and can't be larger 
+// than the total amount of vertices
+int queue[MAX_VERTICES];
+
+// indicates, if vertex already been enqueued into the FIFO queue
+int enqueued[MAX_VERTICES];
 
 // Order edges by id of a source vertex, 
 // using the Counting Sort
@@ -339,20 +365,9 @@ void initialize_vertices() {
     }
 }
 
-#define FALSE 0
-#define TRUE 1
-
-// This array represents the FIFO queue 
-// of unvisited vertices, which can't be larger 
-// than the total amount of vertices
-int queue[MAX_VERTICES];
-
 void bfs(int start_vertex_idx) {
     // mark all vertices as not enqueued yet
-    int i;
-    for(i = 0; i < vertices_cnt; ++i) {
-        vertices[i].enqueued = FALSE;
-    }
+    memset(enqueued, FALSE, sizeof enqueued);
     
     int head;            // head of the FIFO queue
     int tail;            // tail of the FIFO queue
@@ -362,9 +377,9 @@ void bfs(int start_vertex_idx) {
     
     // enqueue the index of the start vertex
     head = 0;
-    tail = 1;
     queue[head] = start_vertex_idx;
-    vertices[start_vertex_idx].enqueued = TRUE;
+    enqueued[start_vertex_idx] = TRUE;
+    tail = 1;
     
     // while queue is not empty
     while(head < tail) {
@@ -373,7 +388,7 @@ void bfs(int start_vertex_idx) {
         vertex_idx = queue[head];
         head++;
         
-        printf("%d\n", vertex_idx);
+        printf("Visiting vertex: %d\n", vertex_idx);
         
         // process the outgoing edges
         edge_idx = vertices[vertex_idx].edges_idx;
@@ -390,12 +405,12 @@ void bfs(int start_vertex_idx) {
             new_vertex_idx = edges_sorted[edge_idx].to;
             
             // if the destination vertex is not yet enqueued
-            if(!vertices[new_vertex_idx].enqueued) {
+            if(!enqueued[new_vertex_idx]) {
                 
                 // add the destination vertex to the queue 
                 queue[tail] = new_vertex_idx;
                 tail++;
-                vertices[new_vertex_idx].enqueued = TRUE;
+                enqueued[new_vertex_idx] = TRUE;
             }
             
             edge_idx++;
@@ -403,37 +418,48 @@ void bfs(int start_vertex_idx) {
     }
 }
 
+// Reads the graph in the following format:
+// V E
+// F1 T1
+// F2 T2
+// ...
+// Fn Tn
+//
+// Where:
+// V - the amount of vertices
+// E - the amount of edges
+// Fi, Ti - the i-th edge from the vertex Fi to the vertex Ti
 void read_graph() {
-	scanf("%d %d", &vertices_cnt, &edges_cnt);
-	int i;
-	for(i = 0; i < MAX_EDGES; i++) {
-		edges[i].from = vertices_cnt + 1;
-		edges[i].to = vertices_cnt + 1;
-	}
-	for(i = 0; i < edges_cnt; ++i) {
-		scanf("%d %d", &edges[i].from, &edges[i].to);	
-	}
+    scanf("%d %d", &vertices_cnt, &edges_cnt);
+    int i;
+    for(i = 0; i < edges_cnt; ++i) {
+        scanf("%d %d", &edges[i].from, &edges[i].to);   
+    }
 }
 
 int main(void) {
-	int tests_num;
-	scanf("%d", &tests_num);
-	
-	int start_vertex_idx;
-	
-	while(tests_num--) {
-		
-		read_graph();
-		scanf("%d", &start_vertex_idx);
-		
-		sort_edges_by_source();
-		initialize_vertices();
-		bfs(start_vertex_idx);
-		
-		printf("\n");
-	}
-	
-	return 0;
+
+    // Read the amount of graphs, 
+    // which have to be processed
+    int tests_num;
+    scanf("%d", &tests_num);
+    
+    int start_vertex_idx;
+    
+    while(tests_num--) {
+        
+        read_graph();
+        // read the id of the start vertex for BFS
+        scanf("%d", &start_vertex_idx);
+        
+        sort_edges_by_source();
+        initialize_vertices();
+
+        bfs(start_vertex_idx);        
+        printf("\n");
+    }
+    
+    return 0;
 }
 {% endhighlight %}
 
