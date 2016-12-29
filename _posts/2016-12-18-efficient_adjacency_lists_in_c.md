@@ -18,10 +18,11 @@ While I was solving various problems, which can be reduced to computation on gra
 - [The commonly used approaches]({{page.url}}#the-commonly-used-approaches)
 - [The proposed approach]({{page.url}}#the-proposed-approach)
 - [Example of usage: Breadth-first search]({{page.url}}#example-of-usage-breadth-first-search)
+- [The full code of the example BFS program]({{page.url}}#the-full-code-of-the-example-bfs-program)
 
 <!--more-->
 
-*Small remark: usually for solving of competitive programming problems I use programming language C. So, the further snippets of code will be in C, however they can be easily translated to any other programming language.*
+*Small remark: usually for solving of programming problems I use programming language C (). So, the further snippets of code will be in C, however they can be easily translated to any other programming language.*
 
 ## [Motivation](#motivation) ##
 
@@ -189,7 +190,11 @@ Of course, described approach is well suitable for problems, which require the c
 
 Now, I would like to show the example of usage of given approach, in application to the one of very common graph problems: [Breadth-first search](https://en.wikipedia.org/wiki/Breadth-first_search) (BFS).
 
-As far as **the FIFO queue, used in BFS, can't contain more than *|V|* items** - it can be also preallocated at the start up of the program:
+As far as **the FIFO queue, used in BFS, can't contain more than *|V|* items** - it can be also preallocated at the start up of the program. Below provided a visual explanation of the array based queue:
+
+![Visualisation of the array-based FIFO queue](/images/adj_lists/img_4.png)
+
+Below provided a code of the BFS, based on the described adjacency list implementation technique and a constant size FIFO queue (the pieces of code, which contain the logic of iteration over the outgoing edges of a vertex are highlighted):
 
 {% highlight c hl_lines="38 40 41 42 43 46 48 49 60 61" %}
 #define TRUE 1
@@ -257,7 +262,54 @@ void bfs(int start_vertex_idx) {
 }
 {% endhighlight %}
 
-All together:
+## [The full code of the example BFS program](#the-full-code-of-the-example-bfs-program) ##
+
+### Description of the input data ###
+First line contains the number T, which represents the amount of test cases (amount of different graphs, which are needed to process). Afterwards, follow T blocks with descriptions of the graphs and the source vertices for BFS:
+- two numbers V and E, which represent amount of vertices and edges of the current graph
+- then, E lines with numbers F and T, which represent the indices of a source and a target vertex
+- then, follows a single number, which represents a source vertex for BFS
+
+### Example of input data ###
+> 4
+> 
+> 2 1   
+> 0 1      
+> 0    
+> 
+> 2 1   
+> 0 1   
+> 1      
+> 
+> 12 11   
+> 0 1   
+> 0 2   
+> 0 3   
+> 1 4   
+> 1 5   
+> 4 8   
+> 4 9   
+> 3 6   
+> 3 7   
+> 6 10   
+> 6 11   
+> 0   
+>
+> 12 11   
+> 0 1   
+> 0 2   
+> 0 3   
+> 1 4   
+> 1 5   
+> 4 8   
+> 4 9   
+> 3 6   
+> 3 7   
+> 6 10   
+> 6 11   
+> 3    
+
+### Full code of the solution ###
 
 {% highlight c %}
 #include <stdio.h>
@@ -463,69 +515,44 @@ int main(void) {
 }
 {% endhighlight %}
 
-Input:
-> 6
-> 
-> 2 1   
-> 0 1      
-> 0    
-> 
-> 2 1   
-> 0 1   
-> 0   
-> 
-> 2 1   
-> 0 1   
-> 0   
-> 
-> 12 11   
-> 0 1   
-> 0 2   
-> 0 3   
-> 1 4   
-> 1 5   
-> 4 8   
-> 4 9   
-> 3 6   
-> 3 7   
-> 6 10   
-> 6 11   
-> 0   
->
-> 12 11   
-> 0 1   
-> 0 2   
-> 0 3   
-> 1 4   
-> 1 5   
-> 4 8   
-> 4 9   
-> 3 6   
-> 3 7   
-> 6 10   
-> 6 11   
-> 3   
-> 
-> 12 11   
-> 0 1   
-> 0 2   
-> 0 3   
-> 1 4   
-> 1 5   
-> 4 8   
-> 4 9   
-> 3 6   
-> 3 7   
-> 6 10   
-> 6 11   
-> 3   
+### Expected output ###
+
+> Visiting vertex: 0  
+> Visiting vertex: 1  
+>   
+> Visiting vertex: 1  
+>   
+> Visiting vertex: 0  
+> Visiting vertex: 1  
+> Visiting vertex: 2  
+> Visiting vertex: 3  
+> Visiting vertex: 4  
+> Visiting vertex: 5  
+> Visiting vertex: 6  
+> Visiting vertex: 7  
+> Visiting vertex: 8  
+> Visiting vertex: 9  
+> Visiting vertex: 10  
+> Visiting vertex: 11  
+>   
+> Visiting vertex: 3  
+> Visiting vertex: 6  
+> Visiting vertex: 7  
+> Visiting vertex: 10  
+> Visiting vertex: 11  
+
+**P.S. just in case, the proof of my solutions of the mentioned problems:**
+- http://www.spoj.com/status/VOCV,stemm/
+- http://www.spoj.com/status/NAJKRACI,stemm/
+- http://www.spoj.com/status/MTREE,stemm/
+
 
 <div id="disqus_thread"></div>
 <script>
 
 var disqus_config = function () {
-this.page.url = "http://lagodiuk.github.io/computer_science/2016/10/31/entropy.html";
-this.page.identifier = "shannon_entropy";
+this.page.url = "http://lagodiuk.github.io/computer_science/2016/12/19/efficient_adjacency_lists_in_c.html";
+this.page.identifier = "efficient_adjacency_list_implementation";
 };
 
 (function() { // DON'T EDIT BELOW THIS LINE
