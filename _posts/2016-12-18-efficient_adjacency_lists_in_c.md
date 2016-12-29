@@ -22,7 +22,7 @@ While I was solving various problems, which can be reduced to computation on gra
 
 <!--more-->
 
-*Small remark: usually for solving of programming problems I use programming language C (). So, the further snippets of code will be in C, however they can be easily translated to any other programming language.*
+*Small remark: sometimes for solving of programming problems I use programming language C (which helps to stay fit in terms of accurate analysis of the problem conditions, tidy memory management, etc.). So, the further snippets of code will be in C, however they can be easily translated to any other programming language.*
 
 ## [Motivation](#motivation) ##
 
