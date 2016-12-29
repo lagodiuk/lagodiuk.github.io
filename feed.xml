@@ -6,8 +6,8 @@
 </description>
     <link>http://lagodiuk.github.io/</link>
     <atom:link href="http://lagodiuk.github.io/feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Thu, 29 Dec 2016 01:39:57 +0100</pubDate>
-    <lastBuildDate>Thu, 29 Dec 2016 01:39:57 +0100</lastBuildDate>
+    <pubDate>Thu, 29 Dec 2016 01:48:47 +0100</pubDate>
+    <lastBuildDate>Thu, 29 Dec 2016 01:48:47 +0100</lastBuildDate>
     <generator>Jekyll v2.4.0</generator>
     
       <item>
@@ -28,7 +28,7 @@
 
 &lt;!--more--&gt;
 
-&lt;p&gt;&lt;em&gt;Small remark: usually for solving of programming problems I use programming language C (). So, the further snippets of code will be in C, however they can be easily translated to any other programming language.&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Small remark: sometimes for solving of programming problems I use programming language C (which helps to stay fit in terms of accurate analysis of the problem conditions, tidy memory management, etc.). So, the further snippets of code will be in C, however they can be easily translated to any other programming language.&lt;/em&gt;&lt;/p&gt;
 
 &lt;h2 id=&quot;motivation&quot;&gt;&lt;a href=&quot;#motivation&quot;&gt;Motivation&lt;/a&gt;&lt;/h2&gt;
 
