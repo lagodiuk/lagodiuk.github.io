@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Memory efficient adjacency list implementation technique"
+title:  "Memory-efficient adjacency list implementation technique"
 date:   2016-12-18 23:26:00
 categories: computer_science
 tags:
