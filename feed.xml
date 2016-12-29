@@ -6,12 +6,12 @@
 </description>
     <link>http://lagodiuk.github.io/</link>
     <atom:link href="http://lagodiuk.github.io/feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Thu, 29 Dec 2016 01:48:47 +0100</pubDate>
-    <lastBuildDate>Thu, 29 Dec 2016 01:48:47 +0100</lastBuildDate>
+    <pubDate>Thu, 29 Dec 2016 14:21:54 +0100</pubDate>
+    <lastBuildDate>Thu, 29 Dec 2016 14:21:54 +0100</lastBuildDate>
     <generator>Jekyll v2.4.0</generator>
     
       <item>
-        <title>Memory efficient adjacency list implementation technique</title>
+        <title>Memory-efficient adjacency list implementation technique</title>
         <description>&lt;p&gt;While I was solving various problems, which can be reduced to computation on graphs (e.g.: &lt;a href=&quot;http://www.spoj.com/problems/VOCV/&quot;&gt;&amp;quot;VOCV - Con-Junctions&amp;quot;&lt;/a&gt;, &lt;a href=&quot;http://www.spoj.com/problems/NAJKRACI/&quot;&gt;&amp;quot;NAJKRACI - Najkraci&amp;quot;&lt;/a&gt;, &lt;a href=&quot;http://www.spoj.com/problems/MTREE/&quot;&gt;&amp;quot;MTREE - Another Tree Problem&amp;quot;&lt;/a&gt;), I have discovered a very convenient pattern of implementation of adjacency lists, which I would like to describe in this post. &lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;/images/adj_lists/img_1.png&quot; alt=&quot;Memory efficient adjacency list implementation illustration&quot;&gt;&lt;/p&gt;
