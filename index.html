@@ -71,6 +71,33 @@
       <li>
         <div class="post-item">
             <div class="post-item-header">
+                <span class="post-meta">Dec 19, 2016</span>
+                <h2>
+                  <a class="post-link" href="/computer_science/2016/12/19/efficient_adjacency_lists_in_c.html">Memory efficient adjacency list implementation technique</a>
+                </h2>
+            </div>
+            <div class="post-summary">
+                <p>While I was solving various problems, which can be reduced to computation on graphs (e.g.: <a href="http://www.spoj.com/problems/VOCV/">&quot;VOCV - Con-Junctions&quot;</a>, <a href="http://www.spoj.com/problems/NAJKRACI/">&quot;NAJKRACI - Najkraci&quot;</a>, <a href="http://www.spoj.com/problems/MTREE/">&quot;MTREE - Another Tree Problem&quot;</a>), I have discovered a very convenient pattern of implementation of adjacency lists, which I would like to describe in this post. </p>
+
+<p><img src="/images/adj_lists/img_1.png" alt="Memory efficient adjacency list implementation illustration"></p>
+
+<h2 id="table-of-contents">Table of contents</h2>
+
+<ul>
+<li><a href="/computer_science/2016/12/19/efficient_adjacency_lists_in_c.html#motivation">Motivation</a></li>
+<li><a href="/computer_science/2016/12/19/efficient_adjacency_lists_in_c.html#the-commonly-used-approaches">The commonly used approaches</a></li>
+<li><a href="/computer_science/2016/12/19/efficient_adjacency_lists_in_c.html#the-proposed-approach">The proposed approach</a></li>
+<li><a href="/computer_science/2016/12/19/efficient_adjacency_lists_in_c.html#example-of-usage-breadth-first-search">Example of usage: Breadth-first search</a></li>
+<li><a href="/computer_science/2016/12/19/efficient_adjacency_lists_in_c.html#the-full-code-of-the-example-bfs-program">The full code of the example BFS program</a></li>
+</ul>
+
+            </div>
+        <div>
+      </li>
+    
+      <li>
+        <div class="post-item">
+            <div class="post-item-header">
                 <span class="post-meta">Oct 31, 2016</span>
                 <h2>
                   <a class="post-link" href="/computer_science/2016/10/31/entropy.html">Shannon entropy</a>

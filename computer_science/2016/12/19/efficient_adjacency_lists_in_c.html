@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width initial-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>Memory efficient adjacency list implementation technique</title>
+    <meta name="description" content="This is my personal blog about Algorithms, Programming Problems solving techniques and interesting Computer Science topics.   Expressed opinions are my own.
+">
+
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="canonical" href="http://lagodiuk.github.io/computer_science/2016/12/19/efficient_adjacency_lists_in_c.html">
+    
+    
+
+    
+</head>
+
+
+  <body >
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="/">Home</a>
+
+    <a class="site-archive" href="/archive.html">Archive</a>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+
+      <div class="trigger">
+        
+          
+          <a class="page-link" href="/about/">About</a>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrapper">
+        <div class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Memory efficient adjacency list implementation technique</h1>
+    <p class="post-meta">Dec 19, 2016</p>
+  </header>
+
+  <article class="post-content">
+    <p>While I was solving various problems, which can be reduced to computation on graphs (e.g.: <a href="http://www.spoj.com/problems/VOCV/">&quot;VOCV - Con-Junctions&quot;</a>, <a href="http://www.spoj.com/problems/NAJKRACI/">&quot;NAJKRACI - Najkraci&quot;</a>, <a href="http://www.spoj.com/problems/MTREE/">&quot;MTREE - Another Tree Problem&quot;</a>), I have discovered a very convenient pattern of implementation of adjacency lists, which I would like to describe in this post. </p>
+
+<p><img src="/images/adj_lists/img_1.png" alt="Memory efficient adjacency list implementation illustration"></p>
+
+<h2 id="table-of-contents">Table of contents</h2>
+
+<ul>
+<li><a href="/computer_science/2016/12/19/efficient_adjacency_lists_in_c.html#motivation">Motivation</a></li>
+<li><a href="/computer_science/2016/12/19/efficient_adjacency_lists_in_c.html#the-commonly-used-approaches">The commonly used approaches</a></li>
+<li><a href="/computer_science/2016/12/19/efficient_adjacency_lists_in_c.html#the-proposed-approach">The proposed approach</a></li>
+<li><a href="/computer_science/2016/12/19/efficient_adjacency_lists_in_c.html#example-of-usage-breadth-first-search">Example of usage: Breadth-first search</a></li>
+<li><a href="/computer_science/2016/12/19/efficient_adjacency_lists_in_c.html#the-full-code-of-the-example-bfs-program">The full code of the example BFS program</a></li>
+</ul>
+
+<!--more-->
+
+<p><em>Small remark: usually for solving of programming problems I use programming language C (). So, the further snippets of code will be in C, however they can be easily translated to any other programming language.</em></p>
+
+<h2 id="motivation"><a href="#motivation">Motivation</a></h2>
+
+<p>Many graph problems have special limitations, which are known in advance:</p>
+
+<ul>
+<li>graph is sparse</li>
+<li>amount of vertices does not exceed <em>|V|</em></li>
+<li>amount of edges does not exceed <em>|E|</em></li>
+<li>graph is static (consists of a fixed sequence of nodes and edges)</li>
+</ul>
+
+<p>Apart from that, many competitive programming problems have additional requirements:</p>
+
+<ul>
+<li>execution time limitations</li>
+<li>often it is needed to solve multiple instances of the problem within one run</li>
+</ul>
+
+<p>The need of efficient implementation usually leads to additional limitations, such as:</p>
+
+<ul>
+<li>the need of avoiding dynamic memory manipulations</li>
+<li>allocation of all required memory at once (on start up of the program)</li>
+</ul>
+
+<p>Actually, the similar requirements and limitations are relevant for some real life problems, which occur in the fields of embedded systems and real-time systems development, etc.</p>
+
+<h2 id="the-commonly-used-approaches"><a href="#the-commonly-used-approaches">The commonly used approaches</a></h2>
+
+<p>The quick analysis of various sources (e.g.: <a href="https://en.wikipedia.org/wiki/Adjacency_list#Implementation_details">Wikipedia</a>, <a href="http://stackoverflow.com/questions/5324914/adjacency-list-graph-implementation-in-c-any-libraries">Stackoverflow</a>, <a href="https://www.quora.com/How-do-I-represent-a-graph-using-an-adjacency-list-based-on-CLRSs-pseudo-code-on-chapter-22-in-Java">CLRS (the book of: Cormen, Leiserson, Rivest, Stein)</a>) showed, that it is usually advised to use the linked list based implementation of adjacency lists. And usually, the most straightforward implementation involves the usage of pointers, like this:</p>
+
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span class="k">typedef</span> 
+<span class="k">struct</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">dest</span><span class="p">;</span>           <span class="c1">// id of a destination vertex</span>
+    <span class="kt">int</span> <span class="n">weight</span><span class="p">;</span>         <span class="c1">// weight of an edge</span>
+    <span class="k">struct</span> <span class="n">Edge</span> <span class="o">*</span> <span class="n">next</span><span class="p">;</span> <span class="c1">// pointer to the next entry of adjacency list</span>
+<span class="p">}</span> <span class="n">Edge</span><span class="p">;</span>
+
+<span class="k">typedef</span> 
+<span class="k">struct</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">id</span><span class="p">;</span>             <span class="c1">// identifier of a vertex</span>
+    <span class="k">struct</span> <span class="n">Edge</span> <span class="o">*</span> <span class="n">next</span><span class="p">;</span> <span class="c1">// pointer to the first entry of adjacency list</span>
+<span class="p">}</span> <span class="n">Vertex</span><span class="p">;</span></code></pre></div>
+
+<p><img src="/images/adj_lists/img_2.png" alt="Adjacency list implementation, based on linked lists"></p>
+
+<p>Sometimes, the standard libraries of programming languages provide more convenient data structures, which can be used for implementation of adjacency lists (e.g.: <a href="http://stackoverflow.com/questions/22120639/making-an-adjacency-list-in-c-for-a-directed-graph?rq=1">vector in C++</a>, <a href="http://www.boost.org/doc/libs/1_55_0/libs/graph/doc/using_adjacency_list.html">adjacency_list in Boost</a>).</p>
+
+<p>Nevertheless, the described approaches rely on dynamic memory manipulations (allocation of new nodes of the linked list, reallocation of the underlying array of vector).</p>
+
+<h2 id="the-proposed-approach"><a href="#the-proposed-approach">The proposed approach</a></h2>
+
+<p>Without loss of generality let&#39;s assume that each vertex is associated with some unique integer identifier from the interval: [0, <em>|V|</em> - 1].</p>
+
+<p>Let&#39;s define a structure, which represents edges of the graph:</p>
+
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span class="k">typedef</span>
+<span class="k">struct</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">from</span><span class="p">;</span>   <span class="c1">// id of a source vertex</span>
+    <span class="kt">int</span> <span class="n">to</span><span class="p">;</span>     <span class="c1">// id of a destination vertex</span>
+    <span class="kt">int</span> <span class="n">weight</span><span class="p">;</span> <span class="c1">// weight of an edge</span>
+<span class="p">}</span> <span class="n">Edge</span><span class="p">;</span></code></pre></div>
+
+<p>As far as it is known in advance, that the maximal amount of edges is <em>|E|</em> - at the start up of the program we can allocate an array of size <em>|E|</em>, which can handle all edges of the graph:</p>
+
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span class="cp">#define MAX_EDGES ...</span>
+
+<span class="n">Edge</span> <span class="n">edges</span><span class="p">[</span><span class="n">MAX_EDGES</span><span class="p">];</span>
+
+<span class="c1">// amount of edges </span>
+<span class="c1">// of the current instance of the graph:</span>
+<span class="kt">int</span> <span class="n">edges_cnt</span><span class="p">;</span></code></pre></div>
+
+<p>Let&#39;s assume, that array <code>edges</code> is already populated with edges, and the variable <code>edges_cnt</code> indicates an amount of edges of the current instance of the problem. Now, <strong>we can sort an array of edges by identifier of a source vertex.</strong> It is possible to sort an array with <em>O(E + V)</em> runtime complexity using the <strong>Counting Sort</strong>:</p>
+
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span class="c1">// auxiliary arrays, allocated at the start up of the program</span>
+<span class="kt">int</span> <span class="n">vertex_cnt</span><span class="p">[</span><span class="n">MAX_VERTICES</span><span class="p">];</span> <span class="c1">// needed for Counting Sort</span>
+<span class="n">Edge</span> <span class="n">edges_sorted</span><span class="p">[</span><span class="n">MAX_EDGES</span><span class="p">];</span> <span class="c1">// sorted edges will be here</span>
+
+<span class="c1">// Order edges by id of a source vertex, </span>
+<span class="c1">// using the Counting Sort</span>
+<span class="c1">// Complexity: O(E + V)</span>
+<span class="kt">void</span> <span class="nf">sort_edges_by_source</span><span class="p">()</span> <span class="p">{</span>
+
+    <span class="c1">// reset the auxiliary data structure</span>
+    <span class="n">memset</span><span class="p">(</span><span class="n">vertex_cnt</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="k">sizeof</span> <span class="n">vertex_cnt</span><span class="p">);</span>
+
+    <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">key</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">pos</span><span class="p">;</span>
+
+    <span class="c1">// count occurrence of key: id of a source vertex</span>
+    <span class="k">for</span><span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">edges_cnt</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="n">edges</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">from</span><span class="p">;</span>
+        <span class="n">vertex_cnt</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">++</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="c1">// transform to cumulative sum</span>
+    <span class="k">for</span><span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">MAX_VERTICES</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">vertex_cnt</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="n">vertex_cnt</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">];</span>
+    <span class="p">}</span>
+
+    <span class="c1">// fill-in the sorted array of edges</span>
+    <span class="k">for</span><span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="n">edges_cnt</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">;</span> <span class="o">--</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="n">edges</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">from</span><span class="p">;</span>
+        <span class="n">pos</span> <span class="o">=</span> <span class="n">vertex_cnt</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="n">edges_sorted</span><span class="p">[</span><span class="n">pos</span><span class="p">]</span> <span class="o">=</span> <span class="n">edges</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+        <span class="n">vertex_cnt</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">--</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
+
+<p>Given the sorted array of edges we can notice, that <strong>all outgoing edges of each vertex are grouped together</strong>. Hence, using <em>the linear scan</em> over the array of sorted edges - each vertex can be associated with the corresponding position of its outgoing edges:</p>
+
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span class="cp">#define MAX_VERTICES ...</span>
+<span class="cp">#define NO_OUTGOING_EDGES -1</span>
+
+<span class="k">typedef</span>
+<span class="k">struct</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">edges_idx</span><span class="p">;</span> <span class="c1">// index of the first outgoing edge</span>
+<span class="p">}</span> <span class="n">Vertex</span><span class="p">;</span>
+
+<span class="c1">// array, indexed by identifier of the vertex</span>
+<span class="n">Vertex</span> <span class="n">vertices</span><span class="p">[</span><span class="n">MAX_VERTICES</span><span class="p">];</span>
+
+<span class="c1">// amount of vertices</span>
+<span class="c1">// of the current instance of the graph:</span>
+<span class="kt">int</span> <span class="n">vertices_cnt</span><span class="p">;</span>
+
+<span class="c1">// Populate each vertex with the corresponding position </span>
+<span class="c1">// of its outgoing edges. </span>
+<span class="c1">// Complexity: O(E)</span>
+<span class="kt">void</span> <span class="nf">initialize_vertices</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">vertex_id</span><span class="p">;</span>
+    <span class="k">for</span><span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">vertices_cnt</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">vertices</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">edges_idx</span> <span class="o">=</span> <span class="n">NO_OUTGOING_EDGES</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="c1">// first vertex, which has outgoing edges</span>
+    <span class="n">vertex_id</span> <span class="o">=</span> <span class="n">edges_sorted</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">from</span><span class="p">;</span>
+    <span class="n">vertices</span><span class="p">[</span><span class="n">vertex_id</span><span class="p">].</span><span class="n">edges_idx</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="c1">// process the other vertices</span>
+    <span class="k">for</span><span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">edges_cnt</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">edges_sorted</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">from</span> <span class="o">!=</span> <span class="n">edges_sorted</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">].</span><span class="n">from</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">vertex_id</span> <span class="o">=</span> <span class="n">edges_sorted</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">from</span><span class="p">;</span>
+            <span class="n">vertices</span><span class="p">[</span><span class="n">vertex_id</span><span class="p">].</span><span class="n">edges_idx</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
+
+<p>Complete graphic illustration of the proposed approach:
+<img src="/images/adj_lists/img_3.png" alt="Complete illustration of the proposed approach"></p>
+
+<p><strong>Therefore, the described approach can be used for processing of many different graphs by reusing the same arrays which been allocated only once - at the start of the program.</strong> Hence, we can be sure that the program operates within the constant amount of allocated memory.</p>
+
+<p>Additional observation: each bucket of outgoing edges, which belong to the same vertex, can be sorted by identifier of the destination vertex. In this case, we will be able to check the presence of an edge between any pair of vertices with <em>O(log(E))</em> runtime complexity (using <em>Binary Search</em>).</p>
+
+<p>Of course, described approach is well suitable for problems, which require the computations on static graphs, because the addition of new edges to the packed array of sorted edges is costly.</p>
+
+<h2 id="example-of-usage-breadth-first-search"><a href="#example-of-usage-breadth-first-search">Example of usage: Breadth-first search</a></h2>
+
+<p>Now, I would like to show the example of usage of given approach, in application to the one of very common graph problems: <a href="https://en.wikipedia.org/wiki/Breadth-first_search">Breadth-first search</a> (BFS).</p>
+
+<p>As far as <strong>the FIFO queue, used in BFS, can&#39;t contain more than <em>|V|</em> items</strong> - it can be also preallocated at the start up of the program. Below provided a visual explanation of the array based queue:</p>
+
+<p><img src="/images/adj_lists/img_4.png" alt="Visualisation of the array-based FIFO queue"></p>
+
+<p>Below provided a code of the BFS, based on the described adjacency list implementation technique and a constant size FIFO queue (the pieces of code, which contain the logic of iteration over the outgoing edges of a vertex are highlighted):</p>
+
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span class="cp">#define TRUE 1</span>
+<span class="cp">#define FALSE 0</span>
+
+<span class="c1">// This array represents the FIFO queue </span>
+<span class="c1">// of unvisited vertices, and can&#39;t be larger </span>
+<span class="c1">// than the total amount of vertices</span>
+<span class="kt">int</span> <span class="n">queue</span><span class="p">[</span><span class="n">MAX_VERTICES</span><span class="p">];</span>
+
+<span class="c1">// indicates, if vertex already been enqueued into the FIFO queue</span>
+<span class="kt">int</span> <span class="n">enqueued</span><span class="p">[</span><span class="n">MAX_VERTICES</span><span class="p">];</span>
+
+<span class="kt">void</span> <span class="nf">bfs</span><span class="p">(</span><span class="kt">int</span> <span class="n">start_vertex_idx</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// mark all vertices as not enqueued yet</span>
+    <span class="n">memset</span><span class="p">(</span><span class="n">enqueued</span><span class="p">,</span> <span class="n">FALSE</span><span class="p">,</span> <span class="k">sizeof</span> <span class="n">enqueued</span><span class="p">);</span>
+    
+    <span class="kt">int</span> <span class="n">head</span><span class="p">;</span>            <span class="c1">// head of the FIFO queue</span>
+    <span class="kt">int</span> <span class="n">tail</span><span class="p">;</span>            <span class="c1">// tail of the FIFO queue</span>
+    <span class="kt">int</span> <span class="n">vertex_idx</span><span class="p">;</span>      <span class="c1">// index of dequeued vertex</span>
+    <span class="kt">int</span> <span class="n">edge_idx</span><span class="p">;</span>        <span class="c1">// used for iteration over the outgoing edges</span>
+    <span class="kt">int</span> <span class="n">new_vertex_idx</span><span class="p">;</span>  <span class="c1">// index of the vertex, which should be visited</span>
+    
+    <span class="c1">// enqueue the index of the start vertex</span>
+    <span class="n">head</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">queue</span><span class="p">[</span><span class="n">head</span><span class="p">]</span> <span class="o">=</span> <span class="n">start_vertex_idx</span><span class="p">;</span>
+    <span class="n">enqueued</span><span class="p">[</span><span class="n">start_vertex_idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">TRUE</span><span class="p">;</span>
+    <span class="n">tail</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    
+    <span class="c1">// while queue is not empty</span>
+    <span class="k">while</span><span class="p">(</span><span class="n">head</span> <span class="o">&lt;</span> <span class="n">tail</span><span class="p">)</span> <span class="p">{</span>
+        
+        <span class="c1">// dequeue the next vertex</span>
+        <span class="n">vertex_idx</span> <span class="o">=</span> <span class="n">queue</span><span class="p">[</span><span class="n">head</span><span class="p">];</span>
+        <span class="n">head</span><span class="o">++</span><span class="p">;</span>
+        
+        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Visiting vertex: %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">vertex_idx</span><span class="p">);</span>
+        
+        <span class="c1">// process the outgoing edges</span>
+<span class="hll">        <span class="n">edge_idx</span> <span class="o">=</span> <span class="n">vertices</span><span class="p">[</span><span class="n">vertex_idx</span><span class="p">].</span><span class="n">edges_idx</span><span class="p">;</span>
+</span>        
+<span class="hll">        <span class="k">if</span><span class="p">(</span><span class="n">edge_idx</span> <span class="o">==</span> <span class="n">NO_OUTGOING_EDGES</span><span class="p">)</span> <span class="p">{</span>
+</span><span class="hll">            <span class="c1">// vertex doesn&#39;t have outgoing edges</span>
+</span><span class="hll">            <span class="k">continue</span><span class="p">;</span>
+</span><span class="hll">        <span class="p">}</span>
+</span>            
+        <span class="c1">// iterate over the outgoing edges</span>
+<span class="hll">        <span class="k">while</span><span class="p">(</span><span class="n">edges_sorted</span><span class="p">[</span><span class="n">edge_idx</span><span class="p">].</span><span class="n">from</span> <span class="o">==</span> <span class="n">vertex_idx</span><span class="p">)</span> <span class="p">{</span>
+</span>            
+<span class="hll">            <span class="c1">// destination vertex id</span>
+</span><span class="hll">            <span class="n">new_vertex_idx</span> <span class="o">=</span> <span class="n">edges_sorted</span><span class="p">[</span><span class="n">edge_idx</span><span class="p">].</span><span class="n">to</span><span class="p">;</span>
+</span>            
+            <span class="c1">// if the destination vertex is not yet enqueued</span>
+            <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">enqueued</span><span class="p">[</span><span class="n">new_vertex_idx</span><span class="p">])</span> <span class="p">{</span>
+                
+                <span class="c1">// add the destination vertex to the queue </span>
+                <span class="n">queue</span><span class="p">[</span><span class="n">tail</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_vertex_idx</span><span class="p">;</span>
+                <span class="n">tail</span><span class="o">++</span><span class="p">;</span>
+                <span class="n">enqueued</span><span class="p">[</span><span class="n">new_vertex_idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">TRUE</span><span class="p">;</span>
+            <span class="p">}</span>
+            
+<span class="hll">            <span class="n">edge_idx</span><span class="o">++</span><span class="p">;</span>
+</span><span class="hll">        <span class="p">}</span>
+</span>    <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
+
+<h2 id="the-full-code-of-the-example-bfs-program"><a href="#the-full-code-of-the-example-bfs-program">The full code of the example BFS program</a></h2>
+
+<h3 id="description-of-the-input-data">Description of the input data</h3>
+
+<p>First line contains the number T, which represents the amount of test cases (amount of different graphs, which are needed to process). Afterwards, follow T blocks with descriptions of the graphs and the source vertices for BFS:</p>
+
+<ul>
+<li>two numbers V and E, which represent amount of vertices and edges of the current graph</li>
+<li>then, E lines with numbers F and T, which represent the indices of a source and a target vertex</li>
+<li>then, follows a single number, which represents a source vertex for BFS</li>
+</ul>
+
+<h3 id="example-of-input-data">Example of input data</h3>
+
+<blockquote>
+<p>4</p>
+
+<p>2 1<br>
+0 1<br>
+0    </p>
+
+<p>2 1<br>
+0 1<br>
+1      </p>
+
+<p>12 11<br>
+0 1<br>
+0 2<br>
+0 3<br>
+1 4<br>
+1 5<br>
+4 8<br>
+4 9<br>
+3 6<br>
+3 7<br>
+6 10<br>
+6 11<br>
+0   </p>
+
+<p>12 11<br>
+0 1<br>
+0 2<br>
+0 3<br>
+1 4<br>
+1 5<br>
+4 8<br>
+4 9<br>
+3 6<br>
+3 7<br>
+6 10<br>
+6 11<br>
+3    </p>
+</blockquote>
+
+<h3 id="full-code-of-the-solution">Full code of the solution</h3>
+
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span class="cp">#include &lt;stdio.h&gt;</span>
+<span class="cp">#include &lt;memory.h&gt;</span>
+
+<span class="cp">#define TRUE 1</span>
+<span class="cp">#define FALSE 0</span>
+
+<span class="cp">#define MAX_EDGES 100</span>
+<span class="cp">#define MAX_VERTICES 100</span>
+<span class="cp">#define NO_OUTGOING_EDGES -1</span>
+
+<span class="k">typedef</span>
+<span class="k">struct</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">from</span><span class="p">;</span>   <span class="c1">// id of a source vertex</span>
+    <span class="kt">int</span> <span class="n">to</span><span class="p">;</span>     <span class="c1">// id of a destination vertex</span>
+<span class="p">}</span> <span class="n">Edge</span><span class="p">;</span>
+
+<span class="k">typedef</span>
+<span class="k">struct</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">edges_idx</span><span class="p">;</span> <span class="c1">// index of the first outgoing edge</span>
+<span class="p">}</span> <span class="n">Vertex</span><span class="p">;</span>
+
+<span class="n">Edge</span> <span class="n">edges</span><span class="p">[</span><span class="n">MAX_EDGES</span><span class="p">];</span>
+<span class="n">Edge</span> <span class="n">edges_sorted</span><span class="p">[</span><span class="n">MAX_EDGES</span><span class="p">];</span> <span class="c1">// sorted edges will be here</span>
+
+<span class="c1">// amount of edges </span>
+<span class="c1">// of the current instance of the graph:</span>
+<span class="kt">int</span> <span class="n">edges_cnt</span><span class="p">;</span>
+
+<span class="c1">// array, indexed by identifier of the vertex</span>
+<span class="n">Vertex</span> <span class="n">vertices</span><span class="p">[</span><span class="n">MAX_VERTICES</span><span class="p">];</span>
+
+<span class="c1">// amount of vertices</span>
+<span class="c1">// of the current instance of the graph:</span>
+<span class="kt">int</span> <span class="n">vertices_cnt</span><span class="p">;</span>
+
+<span class="c1">// auxiliary arrays, allocated at the start up of the program</span>
+<span class="kt">int</span> <span class="n">vertex_cnt</span><span class="p">[</span><span class="n">MAX_VERTICES</span><span class="p">];</span> <span class="c1">// needed for Counting Sort</span>
+
+<span class="c1">// auxiliary arrays, allocated at the start up of the program</span>
+<span class="kt">int</span> <span class="n">vertex_cnt</span><span class="p">[</span><span class="n">MAX_VERTICES</span><span class="p">];</span> <span class="c1">// needed for Counting Sort</span>
+<span class="n">Edge</span> <span class="n">edges_sorted</span><span class="p">[</span><span class="n">MAX_EDGES</span><span class="p">];</span> <span class="c1">// sorted edges will be here</span>
+
+<span class="c1">// This array represents the FIFO queue </span>
+<span class="c1">// of unvisited vertices, and can&#39;t be larger </span>
+<span class="c1">// than the total amount of vertices</span>
+<span class="kt">int</span> <span class="n">queue</span><span class="p">[</span><span class="n">MAX_VERTICES</span><span class="p">];</span>
+
+<span class="c1">// indicates, if vertex already been enqueued into the FIFO queue</span>
+<span class="kt">int</span> <span class="n">enqueued</span><span class="p">[</span><span class="n">MAX_VERTICES</span><span class="p">];</span>
+
+<span class="c1">// Order edges by id of a source vertex, </span>
+<span class="c1">// using the Counting Sort</span>
+<span class="c1">// Complexity: O(E + V)</span>
+<span class="kt">void</span> <span class="nf">sort_edges_by_source</span><span class="p">()</span> <span class="p">{</span>
+
+    <span class="c1">// reset the auxiliary data structure</span>
+    <span class="n">memset</span><span class="p">(</span><span class="n">vertex_cnt</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="k">sizeof</span> <span class="n">vertex_cnt</span><span class="p">);</span>
+
+    <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">key</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">pos</span><span class="p">;</span>
+
+    <span class="c1">// count occurrence of key: id of a source vertex</span>
+    <span class="k">for</span><span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">edges_cnt</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="n">edges</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">from</span><span class="p">;</span>
+        <span class="n">vertex_cnt</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">++</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="c1">// transform to cumulative sum</span>
+    <span class="k">for</span><span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">MAX_VERTICES</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">vertex_cnt</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="n">vertex_cnt</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">];</span>
+    <span class="p">}</span>
+
+    <span class="c1">// fill-in the sorted array of edges</span>
+    <span class="k">for</span><span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="n">edges_cnt</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">;</span> <span class="o">--</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="n">edges</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">from</span><span class="p">;</span>
+        <span class="n">pos</span> <span class="o">=</span> <span class="n">vertex_cnt</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="n">edges_sorted</span><span class="p">[</span><span class="n">pos</span><span class="p">]</span> <span class="o">=</span> <span class="n">edges</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+        <span class="n">vertex_cnt</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">--</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// Populate each vertex with the corresponding position </span>
+<span class="c1">// of its outgoing edges. </span>
+<span class="c1">// Complexity: O(E)</span>
+<span class="kt">void</span> <span class="nf">initialize_vertices</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">vertex_id</span><span class="p">;</span>
+    <span class="k">for</span><span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">vertices_cnt</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">vertices</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">edges_idx</span> <span class="o">=</span> <span class="n">NO_OUTGOING_EDGES</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="c1">// first vertex, which has outgoing edges</span>
+    <span class="n">vertex_id</span> <span class="o">=</span> <span class="n">edges_sorted</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">from</span><span class="p">;</span>
+    <span class="n">vertices</span><span class="p">[</span><span class="n">vertex_id</span><span class="p">].</span><span class="n">edges_idx</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="c1">// process the other vertices</span>
+    <span class="k">for</span><span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">edges_cnt</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">edges_sorted</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">from</span> <span class="o">!=</span> <span class="n">edges_sorted</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">].</span><span class="n">from</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">vertex_id</span> <span class="o">=</span> <span class="n">edges_sorted</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">from</span><span class="p">;</span>
+            <span class="n">vertices</span><span class="p">[</span><span class="n">vertex_id</span><span class="p">].</span><span class="n">edges_idx</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="nf">bfs</span><span class="p">(</span><span class="kt">int</span> <span class="n">start_vertex_idx</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// mark all vertices as not enqueued yet</span>
+    <span class="n">memset</span><span class="p">(</span><span class="n">enqueued</span><span class="p">,</span> <span class="n">FALSE</span><span class="p">,</span> <span class="k">sizeof</span> <span class="n">enqueued</span><span class="p">);</span>
+    
+    <span class="kt">int</span> <span class="n">head</span><span class="p">;</span>            <span class="c1">// head of the FIFO queue</span>
+    <span class="kt">int</span> <span class="n">tail</span><span class="p">;</span>            <span class="c1">// tail of the FIFO queue</span>
+    <span class="kt">int</span> <span class="n">vertex_idx</span><span class="p">;</span>      <span class="c1">// index of dequeued vertex</span>
+    <span class="kt">int</span> <span class="n">edge_idx</span><span class="p">;</span>        <span class="c1">// used for iteration over the outgoing edges</span>
+    <span class="kt">int</span> <span class="n">new_vertex_idx</span><span class="p">;</span>  <span class="c1">// index of the vertex, which should be visited</span>
+    
+    <span class="c1">// enqueue the index of the start vertex</span>
+    <span class="n">head</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">queue</span><span class="p">[</span><span class="n">head</span><span class="p">]</span> <span class="o">=</span> <span class="n">start_vertex_idx</span><span class="p">;</span>
+    <span class="n">enqueued</span><span class="p">[</span><span class="n">start_vertex_idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">TRUE</span><span class="p">;</span>
+    <span class="n">tail</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    
+    <span class="c1">// while queue is not empty</span>
+    <span class="k">while</span><span class="p">(</span><span class="n">head</span> <span class="o">&lt;</span> <span class="n">tail</span><span class="p">)</span> <span class="p">{</span>
+        
+        <span class="c1">// dequeue the next vertex</span>
+        <span class="n">vertex_idx</span> <span class="o">=</span> <span class="n">queue</span><span class="p">[</span><span class="n">head</span><span class="p">];</span>
+        <span class="n">head</span><span class="o">++</span><span class="p">;</span>
+        
+        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Visiting vertex: %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">vertex_idx</span><span class="p">);</span>
+        
+        <span class="c1">// process the outgoing edges</span>
+        <span class="n">edge_idx</span> <span class="o">=</span> <span class="n">vertices</span><span class="p">[</span><span class="n">vertex_idx</span><span class="p">].</span><span class="n">edges_idx</span><span class="p">;</span>
+        
+        <span class="k">if</span><span class="p">(</span><span class="n">edge_idx</span> <span class="o">==</span> <span class="n">NO_OUTGOING_EDGES</span><span class="p">)</span> <span class="p">{</span>
+            <span class="c1">// vertex doesn&#39;t have outgoing edges</span>
+            <span class="k">continue</span><span class="p">;</span>
+        <span class="p">}</span>
+            
+        <span class="c1">// iterate over the outgoing edges</span>
+        <span class="k">while</span><span class="p">(</span><span class="n">edges_sorted</span><span class="p">[</span><span class="n">edge_idx</span><span class="p">].</span><span class="n">from</span> <span class="o">==</span> <span class="n">vertex_idx</span><span class="p">)</span> <span class="p">{</span>
+            
+            <span class="c1">// destination vertex id</span>
+            <span class="n">new_vertex_idx</span> <span class="o">=</span> <span class="n">edges_sorted</span><span class="p">[</span><span class="n">edge_idx</span><span class="p">].</span><span class="n">to</span><span class="p">;</span>
+            
+            <span class="c1">// if the destination vertex is not yet enqueued</span>
+            <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">enqueued</span><span class="p">[</span><span class="n">new_vertex_idx</span><span class="p">])</span> <span class="p">{</span>
+                
+                <span class="c1">// add the destination vertex to the queue </span>
+                <span class="n">queue</span><span class="p">[</span><span class="n">tail</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_vertex_idx</span><span class="p">;</span>
+                <span class="n">tail</span><span class="o">++</span><span class="p">;</span>
+                <span class="n">enqueued</span><span class="p">[</span><span class="n">new_vertex_idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">TRUE</span><span class="p">;</span>
+            <span class="p">}</span>
+            
+            <span class="n">edge_idx</span><span class="o">++</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// Reads the graph in the following format:</span>
+<span class="c1">// V E</span>
+<span class="c1">// F1 T1</span>
+<span class="c1">// F2 T2</span>
+<span class="c1">// ...</span>
+<span class="c1">// Fn Tn</span>
+<span class="c1">//</span>
+<span class="c1">// Where:</span>
+<span class="c1">// V - the amount of vertices</span>
+<span class="c1">// E - the amount of edges</span>
+<span class="c1">// Fi, Ti - the i-th edge from the vertex Fi to the vertex Ti</span>
+<span class="kt">void</span> <span class="nf">read_graph</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%d %d&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">vertices_cnt</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">edges_cnt</span><span class="p">);</span>
+    <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+    <span class="k">for</span><span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">edges_cnt</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%d %d&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">edges</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">from</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">edges</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">to</span><span class="p">);</span>   
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="p">{</span>
+
+    <span class="c1">// Read the amount of graphs, </span>
+    <span class="c1">// which have to be processed</span>
+    <span class="kt">int</span> <span class="n">tests_num</span><span class="p">;</span>
+    <span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%d&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">tests_num</span><span class="p">);</span>
+    
+    <span class="kt">int</span> <span class="n">start_vertex_idx</span><span class="p">;</span>
+    
+    <span class="k">while</span><span class="p">(</span><span class="n">tests_num</span><span class="o">--</span><span class="p">)</span> <span class="p">{</span>
+        
+        <span class="n">read_graph</span><span class="p">();</span>
+        <span class="c1">// read the id of the start vertex for BFS</span>
+        <span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%d&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">start_vertex_idx</span><span class="p">);</span>
+        
+        <span class="n">sort_edges_by_source</span><span class="p">();</span>
+        <span class="n">initialize_vertices</span><span class="p">();</span>
+
+        <span class="n">bfs</span><span class="p">(</span><span class="n">start_vertex_idx</span><span class="p">);</span>        
+        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+    
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span></code></pre></div>
+
+<h3 id="expected-output">Expected output</h3>
+
+<blockquote>
+<p>Visiting vertex: 0<br>
+Visiting vertex: 1  </p>
+
+<p>Visiting vertex: 1  </p>
+
+<p>Visiting vertex: 0<br>
+Visiting vertex: 1<br>
+Visiting vertex: 2<br>
+Visiting vertex: 3<br>
+Visiting vertex: 4<br>
+Visiting vertex: 5<br>
+Visiting vertex: 6<br>
+Visiting vertex: 7<br>
+Visiting vertex: 8<br>
+Visiting vertex: 9<br>
+Visiting vertex: 10<br>
+Visiting vertex: 11  </p>
+
+<p>Visiting vertex: 3<br>
+Visiting vertex: 6<br>
+Visiting vertex: 7<br>
+Visiting vertex: 10<br>
+Visiting vertex: 11  </p>
+</blockquote>
+
+<p><strong>P.S. just in case, the proof of my solutions of the mentioned problems:</strong></p>
+
+<ul>
+<li><a href="http://www.spoj.com/status/VOCV,stemm/">http://www.spoj.com/status/VOCV,stemm/</a></li>
+<li><a href="http://www.spoj.com/status/NAJKRACI,stemm/">http://www.spoj.com/status/NAJKRACI,stemm/</a></li>
+<li><a href="http://www.spoj.com/status/MTREE,stemm/">http://www.spoj.com/status/MTREE,stemm/</a></li>
+</ul>
+
+<div id="disqus_thread"></div>
+
+<script>
+
+var disqus_config = function () {
+this.page.url = "http://lagodiuk.github.io/computer_science/2016/12/19/efficient_adjacency_lists_in_c.html";
+this.page.identifier = "efficient_adjacency_list_implementation";
+};
+
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+
+s.src = '//lahodiuk.disqus.com/embed.js';
+
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+  </article>
+
+</div>
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+  <div class="wrapper">
+  
+    <div class="footer-col-wrapper">
+        <div class="footer-col  footer-col-50-percent">
+            <h2 class="footer-heading">Yurii Lahodiuk</h2>
+            <p class="text center-justified">This is my personal blog about Algorithms, Programming Problems solving techniques and interesting Computer Science topics.   Expressed opinions are my own.
+</p>
+        </div>
+      
+        <div class="footer-col-right">
+	    
+
+                      <a href="/feed.xml"><svg width="40px" height="40px" viewBox="0 0 60 60" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <path d="M0.112290344,30 C0.112290344,13.4314567 13.3426506,0 29.663129,0 C45.9836073,0 59.2139676,13.4314567 59.2139676,30 C59.2139676,46.5685433 45.9836073,60 29.663129,60 C13.3426506,60 0.112290344,46.5685433 0.112290344,30 Z M0.112290344,30" fill="#E18F00" sketch:type="MSShapeGroup"></path>
+    <path d="M26.5147755,38.7571296 C26.5147755,36.8192934 24.9575021,35.2291656 23.0297047,35.2291656 C21.1094331,35.2291656 19.5492775,36.8192934 19.5492775,38.7571296 C19.5492775,40.7052068 21.1094331,42.277616 23.0297047,42.277616 C24.957422,42.277616 26.5146954,40.7052881 26.5147755,38.7571296 Z M36.8075433,42.2700571 C36.8075433,32.6055847 29.062648,24.7442705 19.5492775,24.7442705 L19.5492775,29.8318017 C22.8128986,29.8318017 25.8817303,31.1272145 28.1920609,33.4740429 C30.4999895,35.8159133 31.7732853,38.9454513 31.7732853,42.2701384 L36.8075433,42.2700571 Z M45.6871482,42.2675375 C45.6871482,27.6346878 33.9604014,15.722384 19.5492775,15.722384 L19.5492775,20.8123535 C31.186916,20.8123535 40.660496,30.438869 40.660496,42.2673749 L45.6871482,42.2675375 Z M45.6871482,42.2675375" id="Path" fill="#FFFFFF" sketch:type="MSShapeGroup"></path>
+    <path d="M59.2139676,30 C59.2139676,46.5685433 45.9836073,60 29.663129,60 C23.6102502,60 17.9824147,58.1525134 13.2970341,54.9827754 L47.1572554,5.81941103 C54.4691534,11.2806503 59.2139676,20.0777973 59.2139676,30 Z M59.2139676,30" id="reflec" fill-opacity="0.08" fill="#000000" sketch:type="MSShapeGroup"></path>
+</svg></a>
+          
+          
+          
+          
+          
+          
+          <a href="http://twitter.com/ylahodiuk"><svg width="40px" height="40px" viewBox="0 0 60 60" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <path d="M0,30 C0,13.4314567 13.4508663,0 30.0433526,0 C46.6358389,0 60.0867052,13.4314567 60.0867052,30 C60.0867052,46.5685433 46.6358389,60 30.0433526,60 C13.4508663,60 0,46.5685433 0,30 Z M0,30" fill="#4099FF" sketch:type="MSShapeGroup"></path>
+    <path d="M29.2997675,23.8879776 L29.3627206,24.9260453 L28.3135016,24.798935 C24.4943445,24.3116787 21.1578281,22.6592444 18.3249368,19.8840023 L16.9399677,18.5069737 L16.5832333,19.5238563 C15.8277956,21.7906572 16.3104363,24.1845684 17.8842648,25.7946325 C18.72364,26.6844048 18.5347806,26.8115152 17.0868584,26.2818888 C16.5832333,26.1124083 16.1425613,25.985298 16.1005925,26.0488532 C15.9537019,26.1971486 16.457327,28.1249885 16.8560302,28.8876505 C17.4016241,29.9469033 18.5137962,30.9849709 19.7308902,31.5993375 L20.7591248,32.0865938 L19.5420308,32.1077788 C18.3669055,32.1077788 18.3249368,32.1289639 18.4508431,32.57385 C18.8705307,33.9508786 20.5282967,35.4126474 22.3749221,36.048199 L23.6759536,36.4930852 L22.5427971,37.1710069 C20.8640467,38.1455194 18.891515,38.6963309 16.9189833,38.738701 C15.9746862,38.759886 15.1982642,38.8446262 15.1982642,38.9081814 C15.1982642,39.1200319 17.7583585,40.306395 19.2482495,40.7724662 C23.7179224,42.1494948 29.0269705,41.5563132 33.0140027,39.2047722 C35.846894,37.5311528 38.6797853,34.2050993 40.0018012,30.9849709 C40.7152701,29.2689815 41.428739,26.1335934 41.428739,24.6294545 C41.428739,23.654942 41.4916922,23.5278317 42.6668174,22.3626537 C43.359302,21.6847319 44.0098178,20.943255 44.135724,20.7314044 C44.3455678,20.3288884 44.3245835,20.3288884 43.2543801,20.6890343 C41.4707078,21.324586 41.2188952,21.2398458 42.1002392,20.2865183 C42.750755,19.6085965 43.527177,18.3798634 43.527177,18.0197174 C43.527177,17.9561623 43.2124113,18.0620876 42.8556769,18.252753 C42.477958,18.4646036 41.6385828,18.7823794 41.0090514,18.9730449 L39.8758949,19.3331908 L38.8476603,18.634084 C38.281082,18.252753 37.4836756,17.829052 37.063988,17.7019416 C35.9937846,17.4053509 34.357003,17.447721 33.3917215,17.7866818 C30.768674,18.7400093 29.110908,21.1974757 29.2997675,23.8879776 Z M29.2997675,23.8879776" id="Path" fill="#FFFFFF" sketch:type="MSShapeGroup"></path>
+    <path d="M60.0867052,30 C60.0867052,46.5685433 46.6358389,60 30.0433526,60 C23.8895925,60 18.1679598,58.1525134 13.4044895,54.9827754 L47.8290478,5.81941103 C55.2628108,11.2806503 60.0867052,20.0777973 60.0867052,30 Z M60.0867052,30" id="reflec" fill-opacity="0.08" fill="#000000" sketch:type="MSShapeGroup"></path>
+</svg></a>
+          <a href="http://linkedin.com/in/ylahodiuk"><svg width="40px" height="40px" viewBox="0 0 60 60" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <path d="M0.449161376,30 C0.449161376,13.4314567 13.6795217,0 30,0 C46.3204783,0 59.5508386,13.4314567 59.5508386,30 C59.5508386,46.5685433 46.3204783,60 30,60 C13.6795217,60 0.449161376,46.5685433 0.449161376,30 Z M0.449161376,30" fill="#007BB6" sketch:type="MSShapeGroup"></path>
+    <path d="M22.4680392,23.7098144 L15.7808366,23.7098144 L15.7808366,44.1369537 L22.4680392,44.1369537 L22.4680392,23.7098144 Z M22.4680392,23.7098144" id="Path" fill="#FFFFFF" sketch:type="MSShapeGroup"></path>
+    <path d="M22.9084753,17.3908761 C22.8650727,15.3880081 21.4562917,13.862504 19.1686418,13.862504 C16.8809918,13.862504 15.3854057,15.3880081 15.3854057,17.3908761 C15.3854057,19.3522579 16.836788,20.9216886 19.0818366,20.9216886 L19.1245714,20.9216886 C21.4562917,20.9216886 22.9084753,19.3522579 22.9084753,17.3908761 Z M22.9084753,17.3908761" id="Path" fill="#FFFFFF" sketch:type="MSShapeGroup"></path>
+    <path d="M46.5846502,32.4246563 C46.5846502,26.1503226 43.2856534,23.2301456 38.8851658,23.2301456 C35.3347011,23.2301456 33.7450983,25.2128128 32.8575489,26.6036896 L32.8575489,23.7103567 L26.1695449,23.7103567 C26.2576856,25.6271338 26.1695449,44.137496 26.1695449,44.137496 L32.8575489,44.137496 L32.8575489,32.7292961 C32.8575489,32.1187963 32.9009514,31.5097877 33.0777669,31.0726898 C33.5610713,29.8530458 34.6614937,28.5902885 36.5089747,28.5902885 C38.9297703,28.5902885 39.8974476,30.4634101 39.8974476,33.2084226 L39.8974476,44.1369537 L46.5843832,44.1369537 L46.5846502,32.4246563 Z M46.5846502,32.4246563" id="Path" fill="#FFFFFF" sketch:type="MSShapeGroup"></path>
+    <path d="M59.5508386,30 C59.5508386,46.5685433 46.3204783,60 30,60 C23.9471212,60 18.3192858,58.1525134 13.6339051,54.9827754 L47.4941264,5.81941103 C54.8060245,11.2806503 59.5508386,20.0777973 59.5508386,30 Z M59.5508386,30" id="reflec" fill-opacity="0.08" fill="#000000" sketch:type="MSShapeGroup"></path>
+</svg></a>
+          <a href="http://github.com/lagodiuk"><svg width="40px" height="40px" viewBox="0 0 60 60" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <path d="M0.336871032,30 C0.336871032,13.4314567 13.5672313,0 29.8877097,0 C46.208188,0 59.4385483,13.4314567 59.4385483,30 C59.4385483,46.5685433 46.208188,60 29.8877097,60 C13.5672313,60 0.336871032,46.5685433 0.336871032,30 Z M0.336871032,30" id="Github" fill="#333333" sketch:type="MSShapeGroup"></path>
+    <path d="M18.2184245,31.9355566 C19.6068506,34.4507902 22.2845295,36.0156764 26.8007287,36.4485173 C26.1561023,36.9365335 25.3817877,37.8630984 25.2749857,38.9342607 C24.4644348,39.4574749 22.8347506,39.62966 21.5674303,39.2310659 C19.7918469,38.6717023 19.1119377,35.1642642 16.4533306,35.6636959 C15.8773626,35.772144 15.9917933,36.1507609 16.489567,36.4722998 C17.3001179,36.9955141 18.0629894,37.6500075 18.6513541,39.04366 C19.1033554,40.113871 20.0531304,42.0259813 23.0569369,42.0259813 C24.2489236,42.0259813 25.0842679,41.8832865 25.0842679,41.8832865 C25.0842679,41.8832865 25.107154,44.6144649 25.107154,45.6761142 C25.107154,46.9004355 23.4507693,47.2457569 23.4507693,47.8346108 C23.4507693,48.067679 23.9990832,48.0895588 24.4396415,48.0895588 C25.3102685,48.0895588 27.1220883,47.3646693 27.1220883,46.0918317 C27.1220883,45.0806012 27.1382993,41.6806599 27.1382993,41.0860982 C27.1382993,39.785673 27.8372803,39.3737607 27.8372803,39.3737607 C27.8372803,39.3737607 27.924057,46.3153869 27.6704022,47.2457569 C27.3728823,48.3397504 26.8360115,48.1846887 26.8360115,48.6727049 C26.8360115,49.3985458 29.0168704,48.8505978 29.7396911,47.2571725 C30.2984945,46.0166791 30.0543756,39.2072834 30.0543756,39.2072834 L30.650369,39.1949165 C30.650369,39.1949165 30.6837446,42.3123222 30.6637192,43.7373675 C30.6427402,45.2128317 30.5426134,47.0792797 31.4208692,47.9592309 C31.9977907,48.5376205 33.868733,49.5526562 33.868733,48.62514 C33.868733,48.0857536 32.8436245,47.6424485 32.8436245,46.1831564 L32.8436245,39.4688905 C33.6618042,39.4688905 33.5387911,41.6768547 33.5387911,41.6768547 L33.5988673,45.7788544 C33.5988673,45.7788544 33.4186389,47.2733446 35.2190156,47.8992991 C35.8541061,48.1209517 37.2139245,48.1808835 37.277815,47.8089257 C37.3417055,47.4360167 35.6405021,46.8814096 35.6252446,45.7236791 C35.6157088,45.0178155 35.6567131,44.6059032 35.6567131,41.5379651 C35.6567131,38.470027 35.2438089,37.336079 33.8048426,36.4323453 C38.2457082,35.9766732 40.9939527,34.880682 42.3337458,31.9450695 C42.4383619,31.9484966 42.8791491,30.5737742 42.8219835,30.5742482 C43.1223642,29.4659853 43.2844744,28.1550957 43.3168964,26.6025764 C43.3092677,22.3930799 41.2895654,20.9042975 40.9014546,20.205093 C41.4736082,17.0182425 40.8060956,15.5675121 40.4961791,15.0699829 C39.3518719,14.6637784 36.5149435,16.1145088 34.9653608,17.1371548 C32.438349,16.3998984 27.0982486,16.4712458 25.0957109,17.3274146 C21.4005522,14.6875608 19.445694,15.0918628 19.445694,15.0918628 C19.445694,15.0918628 18.1821881,17.351197 19.1119377,20.6569598 C17.8961113,22.2028201 16.9902014,23.2968136 16.9902014,26.1963718 C16.9902014,27.8297516 17.1828264,29.2918976 17.6176632,30.5685404 C17.5643577,30.5684093 18.2008493,31.9359777 18.2184245,31.9355566 Z M18.2184245,31.9355566" id="Path" fill="#FFFFFF" sketch:type="MSShapeGroup"></path>
+    <path d="M59.4385483,30 C59.4385483,46.5685433 46.208188,60 29.8877097,60 C23.8348308,60 18.2069954,58.1525134 13.5216148,54.9827754 L47.3818361,5.81941103 C54.6937341,11.2806503 59.4385483,20.0777973 59.4385483,30 Z M59.4385483,30" id="reflec" fill-opacity="0.08" fill="#000000" sketch:type="MSShapeGroup"></path>
+</svg></a>
+          
+          <a href="http://www.spoj.com/users/stemm"><svg width="40px" height="40px" version="1.0" xmlns="http://www.w3.org/2000/svg"
+ width="192.000000pt" height="192.000000pt" viewBox="0 0 192.000000 192.000000"
+ preserveAspectRatio="xMidYMid meet">
+<metadata>
+Created by potrace 1.10, written by Peter Selinger 2001-2011
+</metadata>
+<g transform="translate(0.000000,192.000000) scale(0.100000,-0.100000)"
+fill="#2775bf" stroke="none">
+<path d="M884 1830 c-6 -6 -30 -13 -54 -16 -31 -4 -50 -13 -69 -35 -14 -16
+-35 -29 -49 -29 -12 0 -25 -7 -28 -15 -4 -8 -15 -15 -25 -15 -11 0 -22 -7 -25
+-15 -4 -8 -16 -15 -28 -15 -12 0 -36 -13 -54 -30 -18 -16 -41 -30 -52 -30 -10
+0 -20 -7 -24 -15 -3 -8 -16 -15 -30 -15 -13 0 -26 -7 -30 -15 -3 -8 -16 -15
+-30 -15 -13 0 -26 -7 -30 -15 -3 -8 -12 -15 -20 -15 -8 0 -24 -13 -36 -30 -12
+-16 -29 -30 -39 -30 -25 0 -111 -91 -111 -118 0 -13 -7 -25 -15 -28 -23 -9
+-23 -759 0 -768 8 -3 15 -16 15 -29 0 -26 86 -117 112 -117 9 0 26 -13 38 -30
+12 -16 28 -30 36 -30 8 0 17 -7 20 -15 4 -8 17 -15 30 -15 14 0 27 -7 30 -15
+4 -8 17 -15 30 -15 14 0 27 -7 30 -15 4 -8 14 -15 24 -15 11 0 34 -13 52 -30
+18 -16 42 -30 54 -30 12 0 24 -7 28 -15 3 -8 14 -15 25 -15 10 0 21 -7 25 -15
+3 -8 16 -15 28 -15 14 0 34 -13 48 -30 17 -21 34 -30 55 -30 16 0 43 -7 59
+-15 36 -19 115 -19 151 -1 15 8 33 12 39 10 7 -3 21 4 31 16 10 11 25 20 34
+20 9 1 27 14 41 30 13 17 31 30 40 30 8 0 28 7 44 15 15 8 36 15 46 15 10 0
+25 11 34 25 10 14 28 30 42 35 13 5 24 14 24 20 0 5 13 10 29 10 16 0 31 6 35
+15 3 9 18 15 36 15 26 0 70 29 70 46 0 13 46 43 66 44 23 0 64 39 64 60 0 7
+11 28 25 46 l25 33 0 391 0 391 -25 33 c-14 18 -25 40 -25 48 0 20 -42 58 -66
+58 -18 1 -64 32 -64 44 0 17 -44 46 -70 46 -18 0 -33 6 -36 15 -4 9 -19 15
+-35 15 -16 0 -29 5 -29 10 0 6 -11 15 -24 20 -14 5 -32 21 -42 35 -9 14 -24
+25 -34 25 -10 0 -31 7 -46 15 -16 8 -36 15 -44 15 -9 0 -27 13 -40 30 -14 16
+-32 29 -41 30 -9 0 -24 9 -34 20 -10 12 -24 19 -31 16 -6 -2 -24 2 -39 10 -32
+16 -126 19 -141 4z m238 -317 c17 -15 19 -15 37 1 16 15 19 15 31 1 7 -8 20
+-15 30 -15 30 0 71 -57 64 -88 -4 -15 -11 -31 -15 -37 -5 -5 -9 -20 -9 -33 0
+-51 -90 -100 -106 -57 -4 10 -20 15 -45 15 -26 0 -42 5 -45 15 -5 11 -22 15
+-69 15 -43 0 -66 -5 -75 -15 -7 -8 -19 -15 -26 -15 -18 0 -54 -36 -54 -55 0
+-7 -8 -19 -17 -25 -14 -8 -15 -12 -5 -17 7 -3 17 -16 22 -29 6 -13 21 -29 34
+-34 13 -5 27 -14 31 -19 3 -6 22 -11 41 -11 22 0 37 -6 40 -15 4 -8 14 -15 24
+-15 10 0 23 -7 30 -15 7 -8 25 -15 41 -15 15 0 30 -4 34 -9 3 -5 19 -13 36
+-16 38 -8 169 -136 169 -164 0 -10 7 -21 15 -25 22 -8 22 -214 0 -222 -8 -4
+-15 -17 -15 -30 0 -14 -7 -27 -15 -30 -8 -4 -15 -14 -15 -25 0 -25 -43 -69
+-68 -69 -11 0 -22 -7 -26 -15 -3 -8 -16 -15 -29 -15 -14 0 -30 -7 -37 -15 -8
+-10 -30 -15 -64 -15 -29 0 -57 -5 -64 -12 -17 -17 -160 -18 -174 -1 -7 8 -34
+13 -78 13 -51 0 -69 4 -74 15 -3 8 -17 15 -31 15 -14 0 -28 7 -31 15 -4 9 -19
+15 -35 15 -26 0 -29 3 -29 34 0 21 6 36 15 40 8 3 15 17 15 31 0 14 7 28 15
+31 9 4 15 19 15 39 0 19 4 36 10 40 11 7 51 -14 63 -32 4 -7 27 -13 51 -13 27
+0 48 -6 56 -15 18 -22 208 -22 216 0 4 8 16 15 28 15 33 0 51 29 51 80 0 48
+-18 80 -47 80 -9 0 -32 14 -50 30 -30 27 -55 35 -100 32 -9 -1 -22 5 -28 13
+-7 8 -27 15 -45 15 -24 0 -43 11 -79 45 -27 25 -58 45 -70 45 -16 0 -27 11
+-39 38 -9 21 -17 46 -17 56 0 9 -7 19 -15 22 -22 9 -22 222 0 230 9 4 15 19
+15 40 0 21 6 37 14 40 8 3 16 14 19 25 3 12 14 19 29 19 13 1 33 14 48 30 13
+17 33 30 45 30 12 0 25 4 31 9 14 14 49 18 183 20 103 1 128 -2 143 -16z"/>
+</g>
+</svg>
+</a>
+
+
+            <a href="http://stackoverflow.com/users/653511/stemm?tab=profile">
+            <img src="http://stackexchange.com/users/flair/329794.png" width="208" height="58" alt="profile for stemm on Stack Exchange, a network of free, community-driven Q&amp;A sites" title="profile for stemm on Stack Exchange, a network of free, community-driven Q&amp;A sites">
+            </a>
+        </div>
+    </div>
+
+  </div>
+</footer>
+
+
+    <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-83288425-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+  </body>
+
+</html>
