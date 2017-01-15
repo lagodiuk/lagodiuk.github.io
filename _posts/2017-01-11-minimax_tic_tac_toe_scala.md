@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Minimax-based AI for Tic-Tac Toe in Scala"
+title:  "Minimax-based AI for the Tic-Tac-Toe game in Scala"
 date:   2017-01-11 23:46:00
 categories: computer_science
 tags:
@@ -9,13 +9,23 @@ tags:
 comments: true
 ---
 
-Tic-Tac Toe belongs to the class of games, where two players compete against each other with strictly opposite interests, so the win of one player means the lose of another player. 
+This article contains a brief introduction of the Minimax principle, together with minimalistic and pure functional implementation of the Minimax algorithm in Scala for the purpose of creation of the unbeatable Tic-Tac-Toe program.
 
 ![Introduction image](/images/minimax_tic_tac_toe/intro.png)
 
+## Table of contents
+* [Minimax Principle]({{page.url}}#minimax-principle)
+* [Minimax Algorithm in Scala]({{page.url}}#minimax-algorithm-in-scala)
+* [Tic-Tac-Toe game in Scala]({{page.url}}#tic-tac-toe-game-in-scala)
+  * [Human-driven BestMoveFinder]({{page.url}}#human-driven-bestmovefinder)
+  * [Tic-Tac-Toe game driver]({{page.url}}#tic-tac-toe-game-driver)
+  * [Human vs. Computer game]({{page.url}}#human-vs-computer-game)
+
 <!--more-->
 
-## Minimax Principle ##
+## [Minimax Principle](#minimax-principle) ##
+
+Tic-Tac Toe belongs to the class of games, where two players compete against each other with strictly opposite interests, so the win of one player means the lose of another player. 
 
 A rational choice of the actions of the players during such kind of games is based on the maximization of the "chances to win". However, taking into account that there are only two players, the objectives of the players can be redefined in a following way: 
 - the first player wants to *maximize its own chances to win*
@@ -32,14 +42,12 @@ Thus, the logic of evaluation of the optimality of move can be represented as a 
 
 Described strategy is known as a [Minimax principle](https://en.wikipedia.org/wiki/Minimax).
 
-Below presented an example of the Minimax tree for the instance of Tic-Tac toe:
+Below presented a schematic example of the Minimax tree for the instance of Tic-Tac toe:
 ![Example of the Minimax tree](/images/minimax_tic_tac_toe/minimax_tree_example.png)
 
-## Minimax Algorithm in Scala ##
+## [Minimax Algorithm in Scala](#minimax-algorithm-in-scala) ##
 
 Let's implement the described Minimax strategy in Scala.
-
-First of all, let's define the basic components.
 
 1) The trait which represents the state of the game:
 {% highlight scala %}
@@ -110,7 +118,38 @@ class MinMaxStrategyFinder[S <: State[S]] extends BestMoveFinder[S] {
 
 As you can see, the algorithm is implemented in a pure functional style without usage of mutable state.
 
-## Tic-Tac Toe in Scala ##
+## [Tic-Tac-Toe game in Scala](#tic-tac-toe-game-in-scala) ##
+
+Now, everything is ready for implementation of the the unbeatable Tic-Tac-Toe program.
+
+We have to implement the class, which can describe the instance of the Tic-Tac-Toe game. Tic-Tac-Toe game board consists of 3x3 cells, which are all empty at the beginning of a game, and at each step players can choose empty cell and populate it with the figure of the player (either 'X' or 'O'). 
+
+One of the natural ways to model the game, is based on three sets: 
+- set of available cells
+- set of cells, populated by the first player
+- set of cells, populated by the second player
+
+Also, at every step of the game, we should know whose turn is to make a move, so this information should be included into the state of the game as well:
+
+{% highlight scala %}
+// The utility class, just for the sake of possibility
+// to manipulate conveniently with cells of the game board
+case class Position(val row: Int, val col: Int)
+
+class TicTacToeState(val playerOnePositions : Set[Position],
+                     val playerTwoPositions : Set[Position],
+                     val availablePositions : Set[Position],
+                     val isPlayerOneTurn : Boolean,
+                     // length of the sequence to win
+                     val winLength : Int) extends State[TicTacToeState]
+{% endhighlight %}
+
+The winner is a player, who populated the continuous sequence of cells with its figures (either vertical, or horizontal, or left diagonal, or right diagonal).
+
+In case if player wins there *always exists either the topmost, or the leftmost, or the top-leftmost, or the bottom-leftmost cell, starting from which all positions are populated by the figures of the player*:
+![Win conditions check visualization](/images/minimax_tic_tac_toe/win_conditions.png)
+
+Below is the full source code of the `TicTacToeState` class:
 
 {% highlight scala %}
 case class Position(val row: Int, val col: Int)
@@ -181,6 +220,10 @@ class TicTacToeState(val playerOnePositions : Set[Position],
 }
 {% endhighlight %}
 
+### [Human-driven BestMoveFinder](#human-driven-bestmovefinder) ###
+
+In order for being able to play with computer, we need to define an implementation of the `BestMoveFinder`, which will ask user to input the coordinates of the next move:
+
 {% highlight scala %}
 class HumanTicTacPlayer extends BestMoveFinder[TicTacToeState] {
   def move(s: TicTacToeState): TicTacToeState = {
@@ -196,49 +239,129 @@ class HumanTicTacPlayer extends BestMoveFinder[TicTacToeState] {
 }
 {% endhighlight %}
 
+### [Tic-Tac-Toe game driver](#tic-tac-toe-game-driver) ###
+
+Below is a source code of the Tic-Tac-Toe game driver, which requires two instances of the `BestMoveFinder` as the arguments of constructor (so we could arrange either *human-computer*, or *human-human*, or even *computer-computer* games):
+
+{% highlight scala %}
+class TicTacToe(playerOne: BestMoveFinder[TicTacToeState], 
+                playerTwo: BestMoveFinder[TicTacToeState]) {
+  
+  private var players = List(playerOne, playerTwo)
+
+  private var game: TicTacToeState = 
+    new TicTacToeState(DIMENSION, DIMENSION)
+  
+  def play = {
+    var moveNumber = 0
+    while(!game.isGameOver) {
+      println(s"Player ${moveNumber % 2 + 1} makes move:")
+      val player = players.head
+      game = player.move(game)
+      println(display(game))
+      players = players.tail :+ player
+      moveNumber += 1
+    }
+    if(game.playerOneWin) println("Player One win!")
+    else if(game.playerTwoWin) println("Player Two win!")
+    else println("Draw!")
+  }
+    
+  def display(game: TicTacToeState) = 
+    (1 to DIMENSION).map(row =>
+      (1 to DIMENSION).map(col => {
+        val p = Position(row, col)
+        if(game.playerOnePositions contains p) X_PLAYER 
+        else if(game.playerTwoPositions contains p) O_PLAYER 
+        else EMPTY_CELL
+      }).mkString).mkString("\n") + "\n"
+    
+  final val DIMENSION  = 3
+  final val X_PLAYER   = "X"
+  final val O_PLAYER   = "O"
+  final val EMPTY_CELL = "."
+}
+{% endhighlight %}
+
+Some mutable variables have been used inside, which was done just for the sake of conciseness of the code.
+
+### [Human vs. Computer game](#human-vs-computer-game) ###
+
+Below is presented the setup for the human vs. computer game (Player One is a human, Player Two is the Minimax-based best move finder):
+
 {% highlight scala %}
 object Demo extends Application {
   
-  val dimension = 3
-  var game: TicTacToeState = new TicTacToeState(dimension, dimension)
-  def display(game: TicTacToeState) = 
-    (1 to dimension).map(row =>
-      (1 to dimension).map(col => {
-        val p = Position(row, col)
-        (game.playerOnePositions contains p, game.playerTwoPositions contains p) match {
-          case (true, false) => playerOne
-          case (false, true) => playerTwo
-          case _ => emptyCell
-        }
-      }).mkString).mkString("\n") + "\n"
-  val playerOne = "X"
-  val playerTwo = "O"
-  val emptyCell = "."
+  val game = new TicTacToe(
+      new HumanTicTacPlayer(),
+      new MinMaxStrategyFinder[TicTacToeState]())
   
-  val ai = new MinMaxStrategyFinder[TicTacToeState]()
-  val human = new HumanTicTacPlayer()
-  
-  var players = List(human, ai)
-  
-  while(!game.isGameOver) {
-    val player = players.head
-    game = player.move(game)
-    println(display(game))
-    players = players.tail :+ player
-  }
-  
-  if(game.playerOneWin)      println("Player One win!")
-  else if(game.playerTwoWin) println("Player Two win!")
-  else                       println("Draw!")
+  game.play
 }
 {% endhighlight %}
+
+The log of the game:
+
+{% highlight text %}
+Player 1 makes move:
+Input the row and the column, please:
+3 3
+...
+...
+..X
+
+Player 2 makes move:
+...
+.O.
+..X
+
+Player 1 makes move:
+Input the row and the column, please:
+3 1
+...
+.O.
+X.X
+
+Player 2 makes move:
+...
+.O.
+XOX
+
+Player 1 makes move:
+Input the row and the column, please:
+1 1
+X..
+.O.
+XOX
+
+Player 2 makes move:
+X..
+OO.
+XOX
+
+Player 1 makes move:
+Input the row and the column, please:
+1 3
+X.X
+OO.
+XOX
+
+Player 2 makes move:
+XOX
+OO.
+XOX
+
+Player Two win!
+{% endhighlight %}
+
+The code is available on GitHub: https://github.com/lagodiuk/tic-tac-toe-minimax-scala
 
 <div id="disqus_thread"></div>
 <script>
 
 var disqus_config = function () {
-this.page.url = "http://lagodiuk.github.io/computer_science/2016/12/19/efficient_adjacency_lists_in_c.html";
-this.page.identifier = "efficient_adjacency_list_implementation";
+this.page.url = "http://lagodiuk.github.io/computer_science/2017/01/12/minimax_tic_tac_toe_scala.html";
+this.page.identifier = "minimax_tic_tac_toe_scala";
 };
 
 (function() { // DON'T EDIT BELOW THIS LINE
