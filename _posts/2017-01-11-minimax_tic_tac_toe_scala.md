@@ -42,7 +42,7 @@ Thus, the logic of evaluation of the optimality of move can be represented as a 
 
 Described strategy is known as a [Minimax principle](https://en.wikipedia.org/wiki/Minimax).
 
-Below presented a schematic example of the Minimax tree for the instance of Tic-Tac toe:
+Below presented a schematic example of the Minimax tree for the instance of the Tic-Tac-Toe game:
 ![Example of the Minimax tree](/images/minimax_tic_tac_toe/minimax_tree_example.png)
 
 ## [Minimax Algorithm in Scala](#minimax-algorithm-in-scala) ##
@@ -144,7 +144,7 @@ class TicTacToeState(val playerOnePositions : Set[Position],
                      val winLength : Int) extends State[TicTacToeState]
 {% endhighlight %}
 
-The winner is a player, who populated the continuous sequence of cells with its figures (either vertical, or horizontal, or left diagonal, or right diagonal).
+The winner is a player, which has populated the continuous sequence of cells with its figures (either vertical, or horizontal, or left diagonal, or right diagonal).
 
 In case if player wins there *always exists either the topmost, or the leftmost, or the top-leftmost, or the bottom-leftmost cell, starting from which all positions are populated by the figures of the player*:
 ![Win conditions check visualization](/images/minimax_tic_tac_toe/win_conditions.png)
