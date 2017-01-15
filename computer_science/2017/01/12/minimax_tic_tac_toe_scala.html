@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width initial-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>Minimax-based AI for the Tic-Tac-Toe game in Scala</title>
+    <meta name="description" content="This is my personal blog about Algorithms, Programming Problems solving techniques and interesting Computer Science topics.   Expressed opinions are my own.
+">
+
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="canonical" href="http://lagodiuk.github.io/computer_science/2017/01/12/minimax_tic_tac_toe_scala.html">
+    
+    
+
+    
+</head>
+
+
+  <body >
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="/">Home</a>
+
+    <a class="site-archive" href="/archive.html">Archive</a>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+
+      <div class="trigger">
+        
+          
+          <a class="page-link" href="/about/">About</a>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrapper">
+        <div class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Minimax-based AI for the Tic-Tac-Toe game in Scala</h1>
+    <p class="post-meta">Jan 12, 2017</p>
+  </header>
+
+  <article class="post-content">
+    <p>This article contains a brief introduction of the Minimax principle, together with minimalistic and pure functional implementation of the Minimax algorithm in Scala for the purpose of creation of the unbeatable Tic-Tac-Toe program.</p>
+
+<p><img src="/images/minimax_tic_tac_toe/intro.png" alt="Introduction image"></p>
+
+<h2 id="table-of-contents">Table of contents</h2>
+
+<ul>
+<li><a href="/computer_science/2017/01/12/minimax_tic_tac_toe_scala.html#minimax-principle">Minimax Principle</a></li>
+<li><a href="/computer_science/2017/01/12/minimax_tic_tac_toe_scala.html#minimax-algorithm-in-scala">Minimax Algorithm in Scala</a></li>
+<li><a href="/computer_science/2017/01/12/minimax_tic_tac_toe_scala.html#tic-tac-toe-game-in-scala">Tic-Tac-Toe game in Scala</a>
+
+<ul>
+<li><a href="/computer_science/2017/01/12/minimax_tic_tac_toe_scala.html#human-driven-bestmovefinder">Human-driven BestMoveFinder</a></li>
+<li><a href="/computer_science/2017/01/12/minimax_tic_tac_toe_scala.html#tic-tac-toe-game-driver">Tic-Tac-Toe game driver</a></li>
+<li><a href="/computer_science/2017/01/12/minimax_tic_tac_toe_scala.html#human-vs-computer-game">Human vs. Computer game</a></li>
+</ul></li>
+</ul>
+
+<!--more-->
+
+<h2 id="minimax-principle"><a href="#minimax-principle">Minimax Principle</a></h2>
+
+<p>Tic-Tac Toe belongs to the class of games, where two players compete against each other with strictly opposite interests, so the win of one player means the lose of another player. </p>
+
+<p>A rational choice of the actions of the players during such kind of games is based on the maximization of the &quot;chances to win&quot;. However, taking into account that there are only two players, the objectives of the players can be redefined in a following way: </p>
+
+<ul>
+<li>the first player wants to <em>maximize its own chances to win</em></li>
+<li>the second player wants to <em>minimize the chances of the opponent to win</em></li>
+</ul>
+
+<p>How can the first player choose the best move, given the current state of the game?<br>
+The optimal strategy would be to choose such move, which maximizes the chances to win, <em>even in case if the second player will make the best possible move afterwards</em>.</p>
+
+<p>The similar strategy is optimal for the second player as well: it is needed to choose such move, which minimizes the chances of the first player to win, <em>even if the first player will make the best possible move afterwards</em>.</p>
+
+<p>Hence, in order to choose the best move, the first player should consider all possible moves, and in order to evaluate the chances of win after each particular move - it is needed to estimate which move the opponent will do afterwards. However, the opponent will make the decision about the optimal move, based on the similar logic (based on the further optimal decision of the first player), and so forth. </p>
+
+<p>Thus, the logic of evaluation of the optimality of move can be represented as a tree of game states, where each move represented as an edge, in combination with mutually alternating decisions regarding the optimality, depending on which player makes a move (e.g.: &quot;maximization of chances of the first player to win&quot; -&gt; &quot;minimization of chances of the first player&quot; -&gt; &quot;maximization of chances of the first player&quot; -&gt; ... -&gt; until the end of the game).</p>
+
+<p>Described strategy is known as a <a href="https://en.wikipedia.org/wiki/Minimax">Minimax principle</a>.</p>
+
+<p>Below presented a schematic example of the Minimax tree for the instance of the Tic-Tac-Toe game:
+<img src="/images/minimax_tic_tac_toe/minimax_tree_example.png" alt="Example of the Minimax tree"></p>
+
+<h2 id="minimax-algorithm-in-scala"><a href="#minimax-algorithm-in-scala">Minimax Algorithm in Scala</a></h2>
+
+<p>Let&#39;s implement the described Minimax strategy in Scala.</p>
+
+<p>1) The trait which represents the state of the game:</p>
+
+<div class="highlight"><pre><code class="language-scala" data-lang="scala"><span class="k">trait</span> <span class="nc">State</span><span class="o">[</span><span class="kt">S</span> <span class="k">&lt;:</span> <span class="kt">State</span><span class="o">[</span><span class="kt">S</span><span class="o">]]</span> <span class="o">{</span>
+  <span class="k">def</span> <span class="n">isGameOver</span>      <span class="k">:</span> <span class="kt">Boolean</span>
+  <span class="k">def</span> <span class="n">playerOneWin</span>    <span class="k">:</span> <span class="kt">Boolean</span>
+  <span class="k">def</span> <span class="n">playerTwoWin</span>    <span class="k">:</span> <span class="kt">Boolean</span>
+  <span class="k">def</span> <span class="n">isPlayerOneTurn</span> <span class="k">:</span> <span class="kt">Boolean</span>
+  <span class="c1">// generates all possible states</span>
+  <span class="c1">// which can be produced from</span>
+  <span class="c1">// the current state of the game</span>
+  <span class="k">def</span> <span class="n">generateStates</span>  <span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">S</span><span class="o">]</span>
+<span class="o">}</span></code></pre></div>
+
+<p>2) The trait which represents the algorithm for finding the optimal move for the given state of the game:</p>
+
+<div class="highlight"><pre><code class="language-scala" data-lang="scala"><span class="k">trait</span> <span class="nc">BestMoveFinder</span><span class="o">[</span><span class="kt">S</span> <span class="k">&lt;:</span> <span class="kt">State</span><span class="o">[</span><span class="kt">S</span><span class="o">]]</span> <span class="o">{</span>
+  <span class="c1">// produces the state, which represents</span>
+  <span class="c1">// the most optimal move for the given</span>
+  <span class="c1">// state of the game</span>
+  <span class="k">def</span> <span class="n">move</span><span class="o">(</span><span class="n">s</span><span class="k">:</span> <span class="kt">S</span><span class="o">)</span><span class="k">:</span> <span class="kt">S</span>
+<span class="o">}</span></code></pre></div>
+
+<p>3) Implementation of the Minimax strategy for finding of the best move:</p>
+
+<div class="highlight"><pre><code class="language-scala" data-lang="scala"><span class="k">class</span> <span class="nc">MinMaxStrategyFinder</span><span class="o">[</span><span class="kt">S</span> <span class="k">&lt;:</span> <span class="kt">State</span><span class="o">[</span><span class="kt">S</span><span class="o">]]</span> <span class="nc">extends</span> <span class="nc">BestMoveFinder</span><span class="o">[</span><span class="kt">S</span><span class="o">]</span> <span class="o">{</span>
+
+  <span class="c1">// Here, and in other methods</span>
+  <span class="c1">// parameter s - is a current state of the game</span>
+  <span class="k">def</span> <span class="n">move</span><span class="o">(</span><span class="n">s</span><span class="k">:</span> <span class="kt">S</span><span class="o">)</span><span class="k">:</span> <span class="kt">S</span> <span class="o">=</span> 
+    <span class="k">if</span><span class="o">(</span><span class="n">s</span><span class="o">.</span><span class="n">isPlayerOneTurn</span><span class="o">)</span> <span class="n">firstTurn</span><span class="o">(</span><span class="n">s</span><span class="o">).</span><span class="n">state</span>
+    <span class="k">else</span> <span class="n">secondTurn</span><span class="o">(</span><span class="n">s</span><span class="o">).</span><span class="n">state</span>
+  
+  <span class="k">def</span> <span class="n">secondTurn</span><span class="o">(</span><span class="n">s</span><span class="k">:</span> <span class="kt">S</span><span class="o">)</span><span class="k">:</span> <span class="kt">Outcome</span> <span class="o">=</span> 
+    <span class="n">bestMoveFinder</span><span class="o">(</span><span class="n">minimize</span><span class="o">,</span> <span class="n">firstTurn</span><span class="o">,</span> <span class="nc">PLAYER_ONE_WIN</span><span class="o">,</span> <span class="n">s</span><span class="o">)</span>
+  
+  <span class="k">def</span> <span class="n">firstTurn</span><span class="o">(</span><span class="n">s</span><span class="k">:</span> <span class="kt">S</span><span class="o">)</span><span class="k">:</span> <span class="kt">Outcome</span> <span class="o">=</span> 
+    <span class="n">bestMoveFinder</span><span class="o">(</span><span class="n">maximize</span><span class="o">,</span> <span class="n">secondTurn</span><span class="o">,</span> <span class="nc">PLAYER_ONE_LOOSE</span><span class="o">,</span> <span class="n">s</span><span class="o">)</span>
+  
+  <span class="k">def</span> <span class="n">bestMoveFinder</span><span class="o">(</span><span class="n">strategy</span><span class="k">:</span> <span class="kt">Criteria</span><span class="o">,</span> <span class="n">opponentMove</span><span class="k">:</span> <span class="kt">S</span> <span class="o">=&gt;</span> <span class="nc">Outcome</span><span class="o">,</span> 
+                     <span class="n">worstOutcome</span><span class="k">:</span> <span class="kt">Int</span><span class="o">,</span> <span class="n">s</span><span class="k">:</span> <span class="kt">S</span><span class="o">)</span><span class="k">:</span> <span class="kt">Outcome</span> <span class="o">=</span> 
+    <span class="k">if</span><span class="o">(</span><span class="n">s</span><span class="o">.</span><span class="n">isGameOver</span><span class="o">)</span> <span class="nc">Outcome</span><span class="o">(</span><span class="n">outcomeOfGame</span><span class="o">(</span><span class="n">s</span><span class="o">),</span> <span class="n">s</span><span class="o">)</span>
+    <span class="k">else</span> <span class="n">s</span><span class="o">.</span><span class="n">generateStates</span>
+          <span class="o">.</span><span class="n">foldLeft</span><span class="o">(</span><span class="nc">Outcome</span><span class="o">(</span><span class="n">worstOutcome</span><span class="o">,</span> <span class="n">s</span><span class="o">)){(</span><span class="n">acc</span><span class="o">,</span> <span class="n">state</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="o">{</span>
+              <span class="k">val</span> <span class="n">outcome</span> <span class="k">=</span> <span class="n">opponentMove</span><span class="o">(</span><span class="n">state</span><span class="o">).</span><span class="n">cost</span>
+              <span class="k">if</span><span class="o">(</span><span class="n">strategy</span><span class="o">(</span><span class="n">outcome</span><span class="o">,</span> <span class="n">acc</span><span class="o">.</span><span class="n">cost</span><span class="o">))</span> <span class="nc">Outcome</span><span class="o">(</span><span class="n">outcome</span><span class="o">,</span> <span class="n">state</span><span class="o">)</span>
+              <span class="k">else</span> <span class="n">acc</span><span class="o">}}</span>
+  
+  <span class="k">def</span> <span class="n">outcomeOfGame</span><span class="o">(</span><span class="n">s</span><span class="k">:</span> <span class="kt">S</span><span class="o">)</span><span class="k">:</span> <span class="kt">Int</span> <span class="o">=</span> 
+    <span class="k">if</span> <span class="o">(</span><span class="n">s</span><span class="o">.</span><span class="n">playerOneWin</span><span class="o">)</span> <span class="nc">PLAYER_ONE_WIN</span> 
+    <span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">s</span><span class="o">.</span><span class="n">playerTwoWin</span><span class="o">)</span> <span class="nc">PLAYER_ONE_LOOSE</span> 
+    <span class="k">else</span> <span class="nc">DRAW</span>
+  
+  <span class="k">case</span> <span class="k">class</span> <span class="nc">Outcome</span><span class="o">(</span><span class="n">cost</span><span class="k">:</span> <span class="kt">Int</span><span class="o">,</span> <span class="n">state</span><span class="k">:</span> <span class="kt">S</span><span class="o">)</span>
+  
+  <span class="k">val</span> <span class="nc">PLAYER_ONE_WIN</span>   <span class="k">=</span>  <span class="mi">1</span> <span class="c1">// the outcome, when first player wins</span>
+  <span class="k">val</span> <span class="nc">PLAYER_ONE_LOOSE</span> <span class="k">=</span> <span class="o">-</span><span class="mi">1</span> <span class="c1">// the outcome, when second player wins</span>
+  <span class="k">val</span> <span class="nc">DRAW</span>             <span class="k">=</span>  <span class="mi">0</span> <span class="c1">// the outcome, when nobody wins</span>
+  
+  <span class="k">type</span> <span class="kt">Criteria</span> <span class="o">=</span> <span class="o">(</span><span class="nc">Int</span><span class="o">,</span> <span class="nc">Int</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="nc">Boolean</span>
+  <span class="k">def</span> <span class="n">maximize</span><span class="k">:</span> <span class="kt">Criteria</span> <span class="o">=</span> <span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">b</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">a</span> <span class="o">&gt;=</span> <span class="n">b</span>
+  <span class="k">def</span> <span class="n">minimize</span><span class="k">:</span> <span class="kt">Criteria</span> <span class="o">=</span> <span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">b</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">a</span> <span class="o">&lt;=</span> <span class="n">b</span>
+<span class="o">}</span></code></pre></div>
+
+<p>As you can see, the algorithm is implemented in a pure functional style without usage of mutable state.</p>
+
+<h2 id="tic-tac-toe-game-in-scala"><a href="#tic-tac-toe-game-in-scala">Tic-Tac-Toe game in Scala</a></h2>
+
+<p>Now, everything is ready for implementation of the the unbeatable Tic-Tac-Toe program.</p>
+
+<p>We have to implement the class, which can describe the instance of the Tic-Tac-Toe game. Tic-Tac-Toe game board consists of 3x3 cells, which are all empty at the beginning of a game, and at each step players can choose empty cell and populate it with the figure of the player (either &#39;X&#39; or &#39;O&#39;). </p>
+
+<p>One of the natural ways to model the game, is based on three sets: </p>
+
+<ul>
+<li>set of available cells</li>
+<li>set of cells, populated by the first player</li>
+<li>set of cells, populated by the second player</li>
+</ul>
+
+<p>Also, at every step of the game, we should know whose turn is to make a move, so this information should be included into the state of the game as well:</p>
+
+<div class="highlight"><pre><code class="language-scala" data-lang="scala"><span class="c1">// The utility class, just for the sake of possibility</span>
+<span class="c1">// to manipulate conveniently with cells of the game board</span>
+<span class="k">case</span> <span class="k">class</span> <span class="nc">Position</span><span class="o">(</span><span class="k">val</span> <span class="n">row</span><span class="k">:</span> <span class="kt">Int</span><span class="o">,</span> <span class="k">val</span> <span class="n">col</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span>
+
+<span class="k">class</span> <span class="nc">TicTacToeState</span><span class="o">(</span><span class="k">val</span> <span class="n">playerOnePositions</span> <span class="k">:</span> <span class="kt">Set</span><span class="o">[</span><span class="kt">Position</span><span class="o">],</span>
+                     <span class="k">val</span> <span class="n">playerTwoPositions</span> <span class="k">:</span> <span class="kt">Set</span><span class="o">[</span><span class="kt">Position</span><span class="o">],</span>
+                     <span class="k">val</span> <span class="n">availablePositions</span> <span class="k">:</span> <span class="kt">Set</span><span class="o">[</span><span class="kt">Position</span><span class="o">],</span>
+                     <span class="k">val</span> <span class="n">isPlayerOneTurn</span> <span class="k">:</span> <span class="kt">Boolean</span><span class="o">,</span>
+                     <span class="c1">// length of the sequence to win</span>
+                     <span class="k">val</span> <span class="n">winLength</span> <span class="k">:</span> <span class="kt">Int</span><span class="o">)</span> <span class="k">extends</span> <span class="nc">State</span><span class="o">[</span><span class="kt">TicTacToeState</span><span class="o">]</span></code></pre></div>
+
+<p>The winner is a player, which has populated the continuous sequence of cells with its figures (either vertical, or horizontal, or left diagonal, or right diagonal).</p>
+
+<p>In case if player wins there <em>always exists either the topmost, or the leftmost, or the top-leftmost, or the bottom-leftmost cell, starting from which all positions are populated by the figures of the player</em>:
+<img src="/images/minimax_tic_tac_toe/win_conditions.png" alt="Win conditions check visualization"></p>
+
+<p>Below is the full source code of the <code>TicTacToeState</code> class:</p>
+
+<div class="highlight"><pre><code class="language-scala" data-lang="scala"><span class="k">case</span> <span class="k">class</span> <span class="nc">Position</span><span class="o">(</span><span class="k">val</span> <span class="n">row</span><span class="k">:</span> <span class="kt">Int</span><span class="o">,</span> <span class="k">val</span> <span class="n">col</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span>
+
+<span class="k">class</span> <span class="nc">TicTacToeState</span><span class="o">(</span><span class="k">val</span> <span class="n">playerOnePositions</span> <span class="k">:</span> <span class="kt">Set</span><span class="o">[</span><span class="kt">Position</span><span class="o">],</span>
+                     <span class="k">val</span> <span class="n">playerTwoPositions</span> <span class="k">:</span> <span class="kt">Set</span><span class="o">[</span><span class="kt">Position</span><span class="o">],</span>
+                     <span class="k">val</span> <span class="n">availablePositions</span> <span class="k">:</span> <span class="kt">Set</span><span class="o">[</span><span class="kt">Position</span><span class="o">],</span>
+                     <span class="k">val</span> <span class="n">isPlayerOneTurn</span> <span class="k">:</span> <span class="kt">Boolean</span><span class="o">,</span>
+                     <span class="k">val</span> <span class="n">winLength</span> <span class="k">:</span> <span class="kt">Int</span><span class="o">)</span> <span class="k">extends</span> <span class="nc">State</span><span class="o">[</span><span class="kt">TicTacToeState</span><span class="o">]</span> <span class="o">{</span>
+  
+  <span class="k">lazy</span> <span class="k">val</span> <span class="n">isGameOver</span>  <span class="k">:</span> <span class="kt">Boolean</span> <span class="o">=</span> 
+    <span class="n">availablePositions</span><span class="o">.</span><span class="n">isEmpty</span> <span class="o">||</span> <span class="n">playerOneWin</span> <span class="o">||</span> <span class="n">playerTwoWin</span>
+    
+  <span class="k">lazy</span> <span class="k">val</span> <span class="n">playerOneWin</span><span class="k">:</span> <span class="kt">Boolean</span> <span class="o">=</span> <span class="n">checkWin</span><span class="o">(</span><span class="n">playerOnePositions</span><span class="o">)</span>
+  
+  <span class="k">lazy</span> <span class="k">val</span> <span class="n">playerTwoWin</span><span class="k">:</span> <span class="kt">Boolean</span> <span class="o">=</span> <span class="n">checkWin</span><span class="o">(</span><span class="n">playerTwoPositions</span><span class="o">)</span>
+  
+  <span class="k">def</span> <span class="n">generateStates</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">TicTacToeState</span><span class="o">]</span> <span class="k">=</span> 
+    <span class="k">for</span><span class="o">(</span><span class="n">pos</span> <span class="k">&lt;-</span> <span class="n">availablePositions</span><span class="o">.</span><span class="n">toSeq</span><span class="o">)</span> <span class="k">yield</span> <span class="n">makeMove</span><span class="o">(</span><span class="n">pos</span><span class="o">)</span>
+            
+  <span class="k">def</span> <span class="n">makeMove</span><span class="o">(</span><span class="n">p</span><span class="k">:</span> <span class="kt">Position</span><span class="o">)</span><span class="k">:</span> <span class="kt">TicTacToeState</span> <span class="o">=</span> <span class="o">{</span>
+    <span class="n">assert</span><span class="o">(</span><span class="n">availablePositions</span><span class="o">.</span><span class="n">contains</span><span class="o">(</span><span class="n">p</span><span class="o">))</span>
+    <span class="k">if</span><span class="o">(</span><span class="n">isPlayerOneTurn</span><span class="o">)</span> 
+      <span class="k">new</span> <span class="nc">TicTacToeState</span><span class="o">(</span>
+          <span class="n">playerOnePositions</span> <span class="o">+</span> <span class="n">p</span><span class="o">,</span> 
+          <span class="n">playerTwoPositions</span><span class="o">,</span> 
+          <span class="n">availablePositions</span> <span class="o">-</span> <span class="n">p</span><span class="o">,</span> 
+          <span class="o">!</span><span class="n">isPlayerOneTurn</span><span class="o">,</span> 
+          <span class="n">winLength</span><span class="o">)</span>
+    <span class="k">else</span> <span class="k">new</span> <span class="nc">TicTacToeState</span><span class="o">(</span>
+          <span class="n">playerOnePositions</span><span class="o">,</span> 
+          <span class="n">playerTwoPositions</span> <span class="o">+</span> <span class="n">p</span><span class="o">,</span> 
+          <span class="n">availablePositions</span> <span class="o">-</span> <span class="n">p</span><span class="o">,</span> 
+          <span class="o">!</span><span class="n">isPlayerOneTurn</span><span class="o">,</span> 
+          <span class="n">winLength</span><span class="o">)}</span>
+      
+  <span class="k">def</span> <span class="n">checkWin</span><span class="o">(</span><span class="n">positions</span><span class="k">:</span> <span class="kt">Set</span><span class="o">[</span><span class="kt">Position</span><span class="o">])</span><span class="k">:</span> <span class="kt">Boolean</span> <span class="o">=</span>
+    <span class="n">directions</span><span class="o">.</span><span class="n">exists</span><span class="o">(</span><span class="n">winConditionsSatisified</span><span class="o">(</span><span class="k">_</span><span class="o">)(</span><span class="n">positions</span><span class="o">))</span>
+    
+  <span class="k">final</span> <span class="k">val</span> <span class="n">directions</span> <span class="k">=</span> <span class="nc">List</span><span class="o">(</span><span class="n">leftDiagonal</span><span class="o">,</span> <span class="n">rightDiagonal</span><span class="o">,</span> <span class="n">row</span><span class="o">,</span> <span class="n">column</span><span class="o">)</span>
+  
+  <span class="k">type</span> <span class="kt">StepOffsetGen</span> <span class="o">=</span> <span class="o">(</span><span class="nc">Position</span><span class="o">,</span> <span class="nc">Int</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="nc">Position</span>
+  
+  <span class="k">def</span> <span class="n">leftDiagonal</span> <span class="k">:</span> <span class="kt">StepOffsetGen</span> <span class="o">=</span> 
+    <span class="o">(</span><span class="n">pos</span><span class="o">,</span> <span class="n">offset</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="nc">Position</span><span class="o">(</span><span class="n">pos</span><span class="o">.</span><span class="n">row</span> <span class="o">+</span> <span class="n">offset</span><span class="o">,</span> <span class="n">pos</span><span class="o">.</span><span class="n">col</span> <span class="o">+</span> <span class="n">offset</span><span class="o">)</span>
+    
+  <span class="k">def</span> <span class="n">rightDiagonal</span> <span class="k">:</span> <span class="kt">StepOffsetGen</span> <span class="o">=</span> 
+    <span class="o">(</span><span class="n">pos</span><span class="o">,</span> <span class="n">offset</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="nc">Position</span><span class="o">(</span><span class="n">pos</span><span class="o">.</span><span class="n">row</span> <span class="o">-</span> <span class="n">offset</span><span class="o">,</span> <span class="n">pos</span><span class="o">.</span><span class="n">col</span> <span class="o">+</span> <span class="n">offset</span><span class="o">)</span>
+    
+  <span class="k">def</span> <span class="n">row</span> <span class="k">:</span> <span class="kt">StepOffsetGen</span> <span class="o">=</span> 
+    <span class="o">(</span><span class="n">pos</span><span class="o">,</span> <span class="n">offset</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="nc">Position</span><span class="o">(</span><span class="n">pos</span><span class="o">.</span><span class="n">row</span> <span class="o">+</span> <span class="n">offset</span><span class="o">,</span> <span class="n">pos</span><span class="o">.</span><span class="n">col</span><span class="o">)</span>
+    
+  <span class="k">private</span> <span class="k">def</span> <span class="n">column</span> <span class="k">:</span> <span class="kt">StepOffsetGen</span> <span class="o">=</span> 
+    <span class="o">(</span><span class="n">pos</span><span class="o">,</span> <span class="n">offset</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="nc">Position</span><span class="o">(</span><span class="n">pos</span><span class="o">.</span><span class="n">row</span><span class="o">,</span> <span class="n">pos</span><span class="o">.</span><span class="n">col</span> <span class="o">+</span> <span class="n">offset</span><span class="o">)</span>
+    
+  <span class="k">def</span> <span class="n">winConditionsSatisified</span><span class="o">(</span><span class="n">step</span><span class="k">:</span> <span class="kt">StepOffsetGen</span><span class="o">)</span>
+                             <span class="o">(</span><span class="n">positions</span><span class="k">:</span> <span class="kt">Set</span><span class="o">[</span><span class="kt">Position</span><span class="o">])</span><span class="k">:</span> <span class="kt">Boolean</span> <span class="o">=</span>
+    <span class="n">positions</span> <span class="n">exists</span><span class="o">(</span> <span class="n">position</span> <span class="k">=&gt;</span>
+      <span class="o">(</span><span class="mi">0</span> <span class="n">until</span> <span class="n">winLength</span><span class="o">)</span> <span class="n">forall</span><span class="o">(</span> <span class="n">offset</span> <span class="k">=&gt;</span>
+        <span class="n">positions</span> <span class="n">contains</span> <span class="n">step</span><span class="o">(</span><span class="n">position</span><span class="o">,</span> <span class="n">offset</span><span class="o">)))</span>
+    
+  <span class="c1">// Just additional constructor for convenience  </span>
+  <span class="k">def</span> <span class="k">this</span><span class="o">(</span><span class="n">dimension</span><span class="k">:</span> <span class="kt">Int</span><span class="o">,</span> <span class="n">winLength</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span> <span class="k">=</span> <span class="k">this</span><span class="o">(</span>
+      <span class="nc">Set</span><span class="o">(),</span> <span class="nc">Set</span><span class="o">(),</span> <span class="c1">// positions of the players are empty initially</span>
+      <span class="o">(</span><span class="k">for</span><span class="o">{</span><span class="n">row</span> <span class="k">&lt;-</span> <span class="o">(</span><span class="mi">1</span> <span class="n">to</span> <span class="n">dimension</span><span class="o">)</span> <span class="c1">// initialize available positions </span>
+           <span class="n">col</span> <span class="k">&lt;-</span> <span class="o">(</span><span class="mi">1</span> <span class="n">to</span> <span class="n">dimension</span><span class="o">)}</span> <span class="k">yield</span> <span class="nc">Position</span><span class="o">(</span><span class="n">row</span><span class="o">,</span> <span class="n">col</span><span class="o">)).</span><span class="n">toSet</span><span class="o">,</span> 
+      <span class="kc">true</span><span class="o">,</span> <span class="n">winLength</span><span class="o">)</span>
+<span class="o">}</span></code></pre></div>
+
+<h3 id="human-driven-bestmovefinder"><a href="#human-driven-bestmovefinder">Human-driven BestMoveFinder</a></h3>
+
+<p>In order for being able to play with computer, we need to define an implementation of the <code>BestMoveFinder</code>, which will ask user to input the coordinates of the next move:</p>
+
+<div class="highlight"><pre><code class="language-scala" data-lang="scala"><span class="k">class</span> <span class="nc">HumanTicTacPlayer</span> <span class="k">extends</span> <span class="nc">BestMoveFinder</span><span class="o">[</span><span class="kt">TicTacToeState</span><span class="o">]</span> <span class="o">{</span>
+  <span class="k">def</span> <span class="n">move</span><span class="o">(</span><span class="n">s</span><span class="k">:</span> <span class="kt">TicTacToeState</span><span class="o">)</span><span class="k">:</span> <span class="kt">TicTacToeState</span> <span class="o">=</span> <span class="o">{</span>
+    <span class="n">println</span><span class="o">(</span><span class="s">&quot;Input the row and the column, please:&quot;</span><span class="o">)</span>
+    <span class="k">val</span> <span class="o">(</span><span class="n">row</span><span class="o">,</span> <span class="n">col</span><span class="o">)</span> <span class="k">=</span> <span class="n">readf2</span><span class="o">(</span><span class="s">&quot;{0, number} {1,number}&quot;</span><span class="o">)</span>
+    <span class="k">val</span> <span class="n">pos</span> <span class="k">=</span> <span class="nc">Position</span><span class="o">(</span><span class="n">row</span><span class="o">.</span><span class="n">asInstanceOf</span><span class="o">[</span><span class="kt">Long</span><span class="o">].</span><span class="n">toInt</span><span class="o">,</span> <span class="n">col</span><span class="o">.</span><span class="n">asInstanceOf</span><span class="o">[</span><span class="kt">Long</span><span class="o">].</span><span class="n">toInt</span><span class="o">)</span>
+    <span class="k">try</span> <span class="o">{</span>
+      <span class="n">s</span><span class="o">.</span><span class="n">makeMove</span><span class="o">(</span><span class="n">pos</span><span class="o">)</span>
+    <span class="o">}</span> <span class="k">catch</span> <span class="o">{</span>
+      <span class="k">case</span> <span class="k">_:</span> <span class="kt">Throwable</span> <span class="o">=&gt;</span> <span class="o">{</span>
+        <span class="n">println</span><span class="o">(</span><span class="s">&quot;Such move is impossible!&quot;</span><span class="o">)</span>
+        <span class="n">move</span><span class="o">(</span><span class="n">s</span><span class="o">)}}}</span>
+<span class="o">}</span></code></pre></div>
+
+<h3 id="tic-tac-toe-game-driver"><a href="#tic-tac-toe-game-driver">Tic-Tac-Toe game driver</a></h3>
+
+<p>Below is a source code of the Tic-Tac-Toe game driver, which requires two instances of the <code>BestMoveFinder</code> as the arguments of constructor (so we could arrange either <em>human-computer</em>, or <em>human-human</em>, or even <em>computer-computer</em> games):</p>
+
+<div class="highlight"><pre><code class="language-scala" data-lang="scala"><span class="k">class</span> <span class="nc">TicTacToe</span><span class="o">(</span><span class="n">playerOne</span><span class="k">:</span> <span class="kt">BestMoveFinder</span><span class="o">[</span><span class="kt">TicTacToeState</span><span class="o">],</span> 
+                <span class="n">playerTwo</span><span class="k">:</span> <span class="kt">BestMoveFinder</span><span class="o">[</span><span class="kt">TicTacToeState</span><span class="o">])</span> <span class="o">{</span>
+  
+  <span class="k">private</span> <span class="k">var</span> <span class="n">players</span> <span class="k">=</span> <span class="nc">List</span><span class="o">(</span><span class="n">playerOne</span><span class="o">,</span> <span class="n">playerTwo</span><span class="o">)</span>
+
+  <span class="k">private</span> <span class="k">var</span> <span class="n">game</span><span class="k">:</span> <span class="kt">TicTacToeState</span> <span class="o">=</span> 
+    <span class="k">new</span> <span class="nc">TicTacToeState</span><span class="o">(</span><span class="nc">DIMENSION</span><span class="o">,</span> <span class="nc">DIMENSION</span><span class="o">)</span>
+  
+  <span class="k">def</span> <span class="n">play</span> <span class="k">=</span> <span class="o">{</span>
+    <span class="k">var</span> <span class="n">moveNumber</span> <span class="k">=</span> <span class="mi">0</span>
+    <span class="k">while</span><span class="o">(!</span><span class="n">game</span><span class="o">.</span><span class="n">isGameOver</span><span class="o">)</span> <span class="o">{</span>
+      <span class="n">println</span><span class="o">(</span><span class="n">s</span><span class="s">&quot;Player ${moveNumber % 2 + 1} makes move:&quot;</span><span class="o">)</span>
+      <span class="k">val</span> <span class="n">player</span> <span class="k">=</span> <span class="n">players</span><span class="o">.</span><span class="n">head</span>
+      <span class="n">game</span> <span class="k">=</span> <span class="n">player</span><span class="o">.</span><span class="n">move</span><span class="o">(</span><span class="n">game</span><span class="o">)</span>
+      <span class="n">println</span><span class="o">(</span><span class="n">display</span><span class="o">(</span><span class="n">game</span><span class="o">))</span>
+      <span class="n">players</span> <span class="k">=</span> <span class="n">players</span><span class="o">.</span><span class="n">tail</span> <span class="o">:+</span> <span class="n">player</span>
+      <span class="n">moveNumber</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="o">}</span>
+    <span class="k">if</span><span class="o">(</span><span class="n">game</span><span class="o">.</span><span class="n">playerOneWin</span><span class="o">)</span> <span class="n">println</span><span class="o">(</span><span class="s">&quot;Player One win!&quot;</span><span class="o">)</span>
+    <span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">game</span><span class="o">.</span><span class="n">playerTwoWin</span><span class="o">)</span> <span class="n">println</span><span class="o">(</span><span class="s">&quot;Player Two win!&quot;</span><span class="o">)</span>
+    <span class="k">else</span> <span class="n">println</span><span class="o">(</span><span class="s">&quot;Draw!&quot;</span><span class="o">)</span>
+  <span class="o">}</span>
+    
+  <span class="k">def</span> <span class="n">display</span><span class="o">(</span><span class="n">game</span><span class="k">:</span> <span class="kt">TicTacToeState</span><span class="o">)</span> <span class="k">=</span> 
+    <span class="o">(</span><span class="mi">1</span> <span class="n">to</span> <span class="nc">DIMENSION</span><span class="o">).</span><span class="n">map</span><span class="o">(</span><span class="n">row</span> <span class="k">=&gt;</span>
+      <span class="o">(</span><span class="mi">1</span> <span class="n">to</span> <span class="nc">DIMENSION</span><span class="o">).</span><span class="n">map</span><span class="o">(</span><span class="n">col</span> <span class="k">=&gt;</span> <span class="o">{</span>
+        <span class="k">val</span> <span class="n">p</span> <span class="k">=</span> <span class="nc">Position</span><span class="o">(</span><span class="n">row</span><span class="o">,</span> <span class="n">col</span><span class="o">)</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">game</span><span class="o">.</span><span class="n">playerOnePositions</span> <span class="n">contains</span> <span class="n">p</span><span class="o">)</span> <span class="nc">X_PLAYER</span> 
+        <span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">game</span><span class="o">.</span><span class="n">playerTwoPositions</span> <span class="n">contains</span> <span class="n">p</span><span class="o">)</span> <span class="nc">O_PLAYER</span> 
+        <span class="k">else</span> <span class="nc">EMPTY_CELL</span>
+      <span class="o">}).</span><span class="n">mkString</span><span class="o">).</span><span class="n">mkString</span><span class="o">(</span><span class="s">&quot;\n&quot;</span><span class="o">)</span> <span class="o">+</span> <span class="s">&quot;\n&quot;</span>
+    
+  <span class="k">final</span> <span class="k">val</span> <span class="nc">DIMENSION</span>  <span class="k">=</span> <span class="mi">3</span>
+  <span class="k">final</span> <span class="k">val</span> <span class="nc">X_PLAYER</span>   <span class="k">=</span> <span class="s">&quot;X&quot;</span>
+  <span class="k">final</span> <span class="k">val</span> <span class="nc">O_PLAYER</span>   <span class="k">=</span> <span class="s">&quot;O&quot;</span>
+  <span class="k">final</span> <span class="k">val</span> <span class="nc">EMPTY_CELL</span> <span class="k">=</span> <span class="s">&quot;.&quot;</span>
+<span class="o">}</span></code></pre></div>
+
+<p>Some mutable variables have been used inside, which was done just for the sake of conciseness of the code.</p>
+
+<h3 id="human-vs-computer-game"><a href="#human-vs-computer-game">Human vs. Computer game</a></h3>
+
+<p>Below is presented the setup for the human vs. computer game (Player One is a human, Player Two is the Minimax-based best move finder):</p>
+
+<div class="highlight"><pre><code class="language-scala" data-lang="scala"><span class="k">object</span> <span class="nc">Demo</span> <span class="k">extends</span> <span class="nc">Application</span> <span class="o">{</span>
+  
+  <span class="k">val</span> <span class="n">game</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">TicTacToe</span><span class="o">(</span>
+      <span class="k">new</span> <span class="nc">HumanTicTacPlayer</span><span class="o">(),</span>
+      <span class="k">new</span> <span class="nc">MinMaxStrategyFinder</span><span class="o">[</span><span class="kt">TicTacToeState</span><span class="o">]())</span>
+  
+  <span class="n">game</span><span class="o">.</span><span class="n">play</span>
+<span class="o">}</span></code></pre></div>
+
+<p>The log of the game:</p>
+
+<div class="highlight"><pre><code class="language-text" data-lang="text">Player 1 makes move:
+Input the row and the column, please:
+3 3
+...
+...
+..X
+
+Player 2 makes move:
+...
+.O.
+..X
+
+Player 1 makes move:
+Input the row and the column, please:
+3 1
+...
+.O.
+X.X
+
+Player 2 makes move:
+...
+.O.
+XOX
+
+Player 1 makes move:
+Input the row and the column, please:
+1 1
+X..
+.O.
+XOX
+
+Player 2 makes move:
+X..
+OO.
+XOX
+
+Player 1 makes move:
+Input the row and the column, please:
+1 3
+X.X
+OO.
+XOX
+
+Player 2 makes move:
+XOX
+OO.
+XOX
+
+Player Two win!</code></pre></div>
+
+<p>The code is available on GitHub: <a href="https://github.com/lagodiuk/tic-tac-toe-minimax-scala">https://github.com/lagodiuk/tic-tac-toe-minimax-scala</a></p>
+
+<div id="disqus_thread"></div>
+
+<script>
+
+var disqus_config = function () {
+this.page.url = "http://lagodiuk.github.io/computer_science/2017/01/12/minimax_tic_tac_toe_scala.html";
+this.page.identifier = "minimax_tic_tac_toe_scala";
+};
+
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+
+s.src = '//lahodiuk.disqus.com/embed.js';
+
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+  </article>
+
+</div>
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+  <div class="wrapper">
+  
+    <div class="footer-col-wrapper">
+        <div class="footer-col  footer-col-50-percent">
+            <h2 class="footer-heading">Yurii Lahodiuk</h2>
+            <p class="text center-justified">This is my personal blog about Algorithms, Programming Problems solving techniques and interesting Computer Science topics.   Expressed opinions are my own.
+</p>
+        </div>
+      
+        <div class="footer-col-right">
+	    
+
+                      <a href="/feed.xml"><svg width="40px" height="40px" viewBox="0 0 60 60" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <path d="M0.112290344,30 C0.112290344,13.4314567 13.3426506,0 29.663129,0 C45.9836073,0 59.2139676,13.4314567 59.2139676,30 C59.2139676,46.5685433 45.9836073,60 29.663129,60 C13.3426506,60 0.112290344,46.5685433 0.112290344,30 Z M0.112290344,30" fill="#E18F00" sketch:type="MSShapeGroup"></path>
+    <path d="M26.5147755,38.7571296 C26.5147755,36.8192934 24.9575021,35.2291656 23.0297047,35.2291656 C21.1094331,35.2291656 19.5492775,36.8192934 19.5492775,38.7571296 C19.5492775,40.7052068 21.1094331,42.277616 23.0297047,42.277616 C24.957422,42.277616 26.5146954,40.7052881 26.5147755,38.7571296 Z M36.8075433,42.2700571 C36.8075433,32.6055847 29.062648,24.7442705 19.5492775,24.7442705 L19.5492775,29.8318017 C22.8128986,29.8318017 25.8817303,31.1272145 28.1920609,33.4740429 C30.4999895,35.8159133 31.7732853,38.9454513 31.7732853,42.2701384 L36.8075433,42.2700571 Z M45.6871482,42.2675375 C45.6871482,27.6346878 33.9604014,15.722384 19.5492775,15.722384 L19.5492775,20.8123535 C31.186916,20.8123535 40.660496,30.438869 40.660496,42.2673749 L45.6871482,42.2675375 Z M45.6871482,42.2675375" id="Path" fill="#FFFFFF" sketch:type="MSShapeGroup"></path>
+    <path d="M59.2139676,30 C59.2139676,46.5685433 45.9836073,60 29.663129,60 C23.6102502,60 17.9824147,58.1525134 13.2970341,54.9827754 L47.1572554,5.81941103 C54.4691534,11.2806503 59.2139676,20.0777973 59.2139676,30 Z M59.2139676,30" id="reflec" fill-opacity="0.08" fill="#000000" sketch:type="MSShapeGroup"></path>
+</svg></a>
+          
+          
+          
+          
+          
+          
+          <a href="http://twitter.com/ylahodiuk"><svg width="40px" height="40px" viewBox="0 0 60 60" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <path d="M0,30 C0,13.4314567 13.4508663,0 30.0433526,0 C46.6358389,0 60.0867052,13.4314567 60.0867052,30 C60.0867052,46.5685433 46.6358389,60 30.0433526,60 C13.4508663,60 0,46.5685433 0,30 Z M0,30" fill="#4099FF" sketch:type="MSShapeGroup"></path>
+    <path d="M29.2997675,23.8879776 L29.3627206,24.9260453 L28.3135016,24.798935 C24.4943445,24.3116787 21.1578281,22.6592444 18.3249368,19.8840023 L16.9399677,18.5069737 L16.5832333,19.5238563 C15.8277956,21.7906572 16.3104363,24.1845684 17.8842648,25.7946325 C18.72364,26.6844048 18.5347806,26.8115152 17.0868584,26.2818888 C16.5832333,26.1124083 16.1425613,25.985298 16.1005925,26.0488532 C15.9537019,26.1971486 16.457327,28.1249885 16.8560302,28.8876505 C17.4016241,29.9469033 18.5137962,30.9849709 19.7308902,31.5993375 L20.7591248,32.0865938 L19.5420308,32.1077788 C18.3669055,32.1077788 18.3249368,32.1289639 18.4508431,32.57385 C18.8705307,33.9508786 20.5282967,35.4126474 22.3749221,36.048199 L23.6759536,36.4930852 L22.5427971,37.1710069 C20.8640467,38.1455194 18.891515,38.6963309 16.9189833,38.738701 C15.9746862,38.759886 15.1982642,38.8446262 15.1982642,38.9081814 C15.1982642,39.1200319 17.7583585,40.306395 19.2482495,40.7724662 C23.7179224,42.1494948 29.0269705,41.5563132 33.0140027,39.2047722 C35.846894,37.5311528 38.6797853,34.2050993 40.0018012,30.9849709 C40.7152701,29.2689815 41.428739,26.1335934 41.428739,24.6294545 C41.428739,23.654942 41.4916922,23.5278317 42.6668174,22.3626537 C43.359302,21.6847319 44.0098178,20.943255 44.135724,20.7314044 C44.3455678,20.3288884 44.3245835,20.3288884 43.2543801,20.6890343 C41.4707078,21.324586 41.2188952,21.2398458 42.1002392,20.2865183 C42.750755,19.6085965 43.527177,18.3798634 43.527177,18.0197174 C43.527177,17.9561623 43.2124113,18.0620876 42.8556769,18.252753 C42.477958,18.4646036 41.6385828,18.7823794 41.0090514,18.9730449 L39.8758949,19.3331908 L38.8476603,18.634084 C38.281082,18.252753 37.4836756,17.829052 37.063988,17.7019416 C35.9937846,17.4053509 34.357003,17.447721 33.3917215,17.7866818 C30.768674,18.7400093 29.110908,21.1974757 29.2997675,23.8879776 Z M29.2997675,23.8879776" id="Path" fill="#FFFFFF" sketch:type="MSShapeGroup"></path>
+    <path d="M60.0867052,30 C60.0867052,46.5685433 46.6358389,60 30.0433526,60 C23.8895925,60 18.1679598,58.1525134 13.4044895,54.9827754 L47.8290478,5.81941103 C55.2628108,11.2806503 60.0867052,20.0777973 60.0867052,30 Z M60.0867052,30" id="reflec" fill-opacity="0.08" fill="#000000" sketch:type="MSShapeGroup"></path>
+</svg></a>
+          <a href="http://linkedin.com/in/ylahodiuk"><svg width="40px" height="40px" viewBox="0 0 60 60" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <path d="M0.449161376,30 C0.449161376,13.4314567 13.6795217,0 30,0 C46.3204783,0 59.5508386,13.4314567 59.5508386,30 C59.5508386,46.5685433 46.3204783,60 30,60 C13.6795217,60 0.449161376,46.5685433 0.449161376,30 Z M0.449161376,30" fill="#007BB6" sketch:type="MSShapeGroup"></path>
+    <path d="M22.4680392,23.7098144 L15.7808366,23.7098144 L15.7808366,44.1369537 L22.4680392,44.1369537 L22.4680392,23.7098144 Z M22.4680392,23.7098144" id="Path" fill="#FFFFFF" sketch:type="MSShapeGroup"></path>
+    <path d="M22.9084753,17.3908761 C22.8650727,15.3880081 21.4562917,13.862504 19.1686418,13.862504 C16.8809918,13.862504 15.3854057,15.3880081 15.3854057,17.3908761 C15.3854057,19.3522579 16.836788,20.9216886 19.0818366,20.9216886 L19.1245714,20.9216886 C21.4562917,20.9216886 22.9084753,19.3522579 22.9084753,17.3908761 Z M22.9084753,17.3908761" id="Path" fill="#FFFFFF" sketch:type="MSShapeGroup"></path>
+    <path d="M46.5846502,32.4246563 C46.5846502,26.1503226 43.2856534,23.2301456 38.8851658,23.2301456 C35.3347011,23.2301456 33.7450983,25.2128128 32.8575489,26.6036896 L32.8575489,23.7103567 L26.1695449,23.7103567 C26.2576856,25.6271338 26.1695449,44.137496 26.1695449,44.137496 L32.8575489,44.137496 L32.8575489,32.7292961 C32.8575489,32.1187963 32.9009514,31.5097877 33.0777669,31.0726898 C33.5610713,29.8530458 34.6614937,28.5902885 36.5089747,28.5902885 C38.9297703,28.5902885 39.8974476,30.4634101 39.8974476,33.2084226 L39.8974476,44.1369537 L46.5843832,44.1369537 L46.5846502,32.4246563 Z M46.5846502,32.4246563" id="Path" fill="#FFFFFF" sketch:type="MSShapeGroup"></path>
+    <path d="M59.5508386,30 C59.5508386,46.5685433 46.3204783,60 30,60 C23.9471212,60 18.3192858,58.1525134 13.6339051,54.9827754 L47.4941264,5.81941103 C54.8060245,11.2806503 59.5508386,20.0777973 59.5508386,30 Z M59.5508386,30" id="reflec" fill-opacity="0.08" fill="#000000" sketch:type="MSShapeGroup"></path>
+</svg></a>
+          <a href="http://github.com/lagodiuk"><svg width="40px" height="40px" viewBox="0 0 60 60" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <path d="M0.336871032,30 C0.336871032,13.4314567 13.5672313,0 29.8877097,0 C46.208188,0 59.4385483,13.4314567 59.4385483,30 C59.4385483,46.5685433 46.208188,60 29.8877097,60 C13.5672313,60 0.336871032,46.5685433 0.336871032,30 Z M0.336871032,30" id="Github" fill="#333333" sketch:type="MSShapeGroup"></path>
+    <path d="M18.2184245,31.9355566 C19.6068506,34.4507902 22.2845295,36.0156764 26.8007287,36.4485173 C26.1561023,36.9365335 25.3817877,37.8630984 25.2749857,38.9342607 C24.4644348,39.4574749 22.8347506,39.62966 21.5674303,39.2310659 C19.7918469,38.6717023 19.1119377,35.1642642 16.4533306,35.6636959 C15.8773626,35.772144 15.9917933,36.1507609 16.489567,36.4722998 C17.3001179,36.9955141 18.0629894,37.6500075 18.6513541,39.04366 C19.1033554,40.113871 20.0531304,42.0259813 23.0569369,42.0259813 C24.2489236,42.0259813 25.0842679,41.8832865 25.0842679,41.8832865 C25.0842679,41.8832865 25.107154,44.6144649 25.107154,45.6761142 C25.107154,46.9004355 23.4507693,47.2457569 23.4507693,47.8346108 C23.4507693,48.067679 23.9990832,48.0895588 24.4396415,48.0895588 C25.3102685,48.0895588 27.1220883,47.3646693 27.1220883,46.0918317 C27.1220883,45.0806012 27.1382993,41.6806599 27.1382993,41.0860982 C27.1382993,39.785673 27.8372803,39.3737607 27.8372803,39.3737607 C27.8372803,39.3737607 27.924057,46.3153869 27.6704022,47.2457569 C27.3728823,48.3397504 26.8360115,48.1846887 26.8360115,48.6727049 C26.8360115,49.3985458 29.0168704,48.8505978 29.7396911,47.2571725 C30.2984945,46.0166791 30.0543756,39.2072834 30.0543756,39.2072834 L30.650369,39.1949165 C30.650369,39.1949165 30.6837446,42.3123222 30.6637192,43.7373675 C30.6427402,45.2128317 30.5426134,47.0792797 31.4208692,47.9592309 C31.9977907,48.5376205 33.868733,49.5526562 33.868733,48.62514 C33.868733,48.0857536 32.8436245,47.6424485 32.8436245,46.1831564 L32.8436245,39.4688905 C33.6618042,39.4688905 33.5387911,41.6768547 33.5387911,41.6768547 L33.5988673,45.7788544 C33.5988673,45.7788544 33.4186389,47.2733446 35.2190156,47.8992991 C35.8541061,48.1209517 37.2139245,48.1808835 37.277815,47.8089257 C37.3417055,47.4360167 35.6405021,46.8814096 35.6252446,45.7236791 C35.6157088,45.0178155 35.6567131,44.6059032 35.6567131,41.5379651 C35.6567131,38.470027 35.2438089,37.336079 33.8048426,36.4323453 C38.2457082,35.9766732 40.9939527,34.880682 42.3337458,31.9450695 C42.4383619,31.9484966 42.8791491,30.5737742 42.8219835,30.5742482 C43.1223642,29.4659853 43.2844744,28.1550957 43.3168964,26.6025764 C43.3092677,22.3930799 41.2895654,20.9042975 40.9014546,20.205093 C41.4736082,17.0182425 40.8060956,15.5675121 40.4961791,15.0699829 C39.3518719,14.6637784 36.5149435,16.1145088 34.9653608,17.1371548 C32.438349,16.3998984 27.0982486,16.4712458 25.0957109,17.3274146 C21.4005522,14.6875608 19.445694,15.0918628 19.445694,15.0918628 C19.445694,15.0918628 18.1821881,17.351197 19.1119377,20.6569598 C17.8961113,22.2028201 16.9902014,23.2968136 16.9902014,26.1963718 C16.9902014,27.8297516 17.1828264,29.2918976 17.6176632,30.5685404 C17.5643577,30.5684093 18.2008493,31.9359777 18.2184245,31.9355566 Z M18.2184245,31.9355566" id="Path" fill="#FFFFFF" sketch:type="MSShapeGroup"></path>
+    <path d="M59.4385483,30 C59.4385483,46.5685433 46.208188,60 29.8877097,60 C23.8348308,60 18.2069954,58.1525134 13.5216148,54.9827754 L47.3818361,5.81941103 C54.6937341,11.2806503 59.4385483,20.0777973 59.4385483,30 Z M59.4385483,30" id="reflec" fill-opacity="0.08" fill="#000000" sketch:type="MSShapeGroup"></path>
+</svg></a>
+          
+          <a href="http://www.spoj.com/users/stemm"><svg width="40px" height="40px" version="1.0" xmlns="http://www.w3.org/2000/svg"
+ width="192.000000pt" height="192.000000pt" viewBox="0 0 192.000000 192.000000"
+ preserveAspectRatio="xMidYMid meet">
+<metadata>
+Created by potrace 1.10, written by Peter Selinger 2001-2011
+</metadata>
+<g transform="translate(0.000000,192.000000) scale(0.100000,-0.100000)"
+fill="#2775bf" stroke="none">
+<path d="M884 1830 c-6 -6 -30 -13 -54 -16 -31 -4 -50 -13 -69 -35 -14 -16
+-35 -29 -49 -29 -12 0 -25 -7 -28 -15 -4 -8 -15 -15 -25 -15 -11 0 -22 -7 -25
+-15 -4 -8 -16 -15 -28 -15 -12 0 -36 -13 -54 -30 -18 -16 -41 -30 -52 -30 -10
+0 -20 -7 -24 -15 -3 -8 -16 -15 -30 -15 -13 0 -26 -7 -30 -15 -3 -8 -16 -15
+-30 -15 -13 0 -26 -7 -30 -15 -3 -8 -12 -15 -20 -15 -8 0 -24 -13 -36 -30 -12
+-16 -29 -30 -39 -30 -25 0 -111 -91 -111 -118 0 -13 -7 -25 -15 -28 -23 -9
+-23 -759 0 -768 8 -3 15 -16 15 -29 0 -26 86 -117 112 -117 9 0 26 -13 38 -30
+12 -16 28 -30 36 -30 8 0 17 -7 20 -15 4 -8 17 -15 30 -15 14 0 27 -7 30 -15
+4 -8 17 -15 30 -15 14 0 27 -7 30 -15 4 -8 14 -15 24 -15 11 0 34 -13 52 -30
+18 -16 42 -30 54 -30 12 0 24 -7 28 -15 3 -8 14 -15 25 -15 10 0 21 -7 25 -15
+3 -8 16 -15 28 -15 14 0 34 -13 48 -30 17 -21 34 -30 55 -30 16 0 43 -7 59
+-15 36 -19 115 -19 151 -1 15 8 33 12 39 10 7 -3 21 4 31 16 10 11 25 20 34
+20 9 1 27 14 41 30 13 17 31 30 40 30 8 0 28 7 44 15 15 8 36 15 46 15 10 0
+25 11 34 25 10 14 28 30 42 35 13 5 24 14 24 20 0 5 13 10 29 10 16 0 31 6 35
+15 3 9 18 15 36 15 26 0 70 29 70 46 0 13 46 43 66 44 23 0 64 39 64 60 0 7
+11 28 25 46 l25 33 0 391 0 391 -25 33 c-14 18 -25 40 -25 48 0 20 -42 58 -66
+58 -18 1 -64 32 -64 44 0 17 -44 46 -70 46 -18 0 -33 6 -36 15 -4 9 -19 15
+-35 15 -16 0 -29 5 -29 10 0 6 -11 15 -24 20 -14 5 -32 21 -42 35 -9 14 -24
+25 -34 25 -10 0 -31 7 -46 15 -16 8 -36 15 -44 15 -9 0 -27 13 -40 30 -14 16
+-32 29 -41 30 -9 0 -24 9 -34 20 -10 12 -24 19 -31 16 -6 -2 -24 2 -39 10 -32
+16 -126 19 -141 4z m238 -317 c17 -15 19 -15 37 1 16 15 19 15 31 1 7 -8 20
+-15 30 -15 30 0 71 -57 64 -88 -4 -15 -11 -31 -15 -37 -5 -5 -9 -20 -9 -33 0
+-51 -90 -100 -106 -57 -4 10 -20 15 -45 15 -26 0 -42 5 -45 15 -5 11 -22 15
+-69 15 -43 0 -66 -5 -75 -15 -7 -8 -19 -15 -26 -15 -18 0 -54 -36 -54 -55 0
+-7 -8 -19 -17 -25 -14 -8 -15 -12 -5 -17 7 -3 17 -16 22 -29 6 -13 21 -29 34
+-34 13 -5 27 -14 31 -19 3 -6 22 -11 41 -11 22 0 37 -6 40 -15 4 -8 14 -15 24
+-15 10 0 23 -7 30 -15 7 -8 25 -15 41 -15 15 0 30 -4 34 -9 3 -5 19 -13 36
+-16 38 -8 169 -136 169 -164 0 -10 7 -21 15 -25 22 -8 22 -214 0 -222 -8 -4
+-15 -17 -15 -30 0 -14 -7 -27 -15 -30 -8 -4 -15 -14 -15 -25 0 -25 -43 -69
+-68 -69 -11 0 -22 -7 -26 -15 -3 -8 -16 -15 -29 -15 -14 0 -30 -7 -37 -15 -8
+-10 -30 -15 -64 -15 -29 0 -57 -5 -64 -12 -17 -17 -160 -18 -174 -1 -7 8 -34
+13 -78 13 -51 0 -69 4 -74 15 -3 8 -17 15 -31 15 -14 0 -28 7 -31 15 -4 9 -19
+15 -35 15 -26 0 -29 3 -29 34 0 21 6 36 15 40 8 3 15 17 15 31 0 14 7 28 15
+31 9 4 15 19 15 39 0 19 4 36 10 40 11 7 51 -14 63 -32 4 -7 27 -13 51 -13 27
+0 48 -6 56 -15 18 -22 208 -22 216 0 4 8 16 15 28 15 33 0 51 29 51 80 0 48
+-18 80 -47 80 -9 0 -32 14 -50 30 -30 27 -55 35 -100 32 -9 -1 -22 5 -28 13
+-7 8 -27 15 -45 15 -24 0 -43 11 -79 45 -27 25 -58 45 -70 45 -16 0 -27 11
+-39 38 -9 21 -17 46 -17 56 0 9 -7 19 -15 22 -22 9 -22 222 0 230 9 4 15 19
+15 40 0 21 6 37 14 40 8 3 16 14 19 25 3 12 14 19 29 19 13 1 33 14 48 30 13
+17 33 30 45 30 12 0 25 4 31 9 14 14 49 18 183 20 103 1 128 -2 143 -16z"/>
+</g>
+</svg>
+</a>
+
+
+            <a href="http://stackoverflow.com/users/653511/stemm?tab=profile">
+            <img src="http://stackexchange.com/users/flair/329794.png" width="208" height="58" alt="profile for stemm on Stack Exchange, a network of free, community-driven Q&amp;A sites" title="profile for stemm on Stack Exchange, a network of free, community-driven Q&amp;A sites">
+            </a>
+        </div>
+    </div>
+
+  </div>
+</footer>
+
+
+    <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-83288425-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+  </body>
+
+</html>
