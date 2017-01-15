@@ -36,7 +36,7 @@ The optimal strategy would be to choose such move, which maximizes the chances t
 
 The similar strategy is optimal for the second player as well: it is needed to choose such move, which minimizes the chances of the first player to win, *even if the first player will make the best possible move afterwards*.
 
-Hence, in order to choose the best move, the first player should calculate the chances of win for all possible moves, and in order to evaluate the optimality of each move - it is needed to estimate which move the opponent will do afterwards. However, the opponent will make the decision about the optimal move, based on the similar logic (based on the further optimal decision of the first player), and so forth. 
+Hence, in order to choose the best move, the first player should consider all possible moves, and in order to evaluate the chances of win after each particular move - it is needed to estimate which move the opponent will do afterwards. However, the opponent will make the decision about the optimal move, based on the similar logic (based on the further optimal decision of the first player), and so forth. 
 
 Thus, the logic of evaluation of the optimality of move can be represented as a tree of game states, where each move represented as an edge, in combination with mutually alternating decisions regarding the optimality, depending on which player makes a move (e.g.: "maximization of chances of the first player to win" -> "minimization of chances of the first player" -> "maximization of chances of the first player" -> ... -> until the end of the game).
 
