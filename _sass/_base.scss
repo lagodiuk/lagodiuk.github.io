@@ -23,7 +23,11 @@ body {
     -webkit-text-size-adjust: 100%;
 }
 
-
+table, tr, td, th {
+    border:1px solid black; 
+    border-collapse: collapse;
+    padding:5px;
+}
 
 /**
  * Set `margin-bottom` to maintain vertical rhythm
