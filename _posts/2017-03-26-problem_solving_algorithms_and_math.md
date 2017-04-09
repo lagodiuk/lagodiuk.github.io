@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Demonstrative comparison of the problem solving strategies"
+title:  "Random walks in a hexagon"
 date:   2017-03-26 10:00:00
 categories: computer_science
 tags:
@@ -26,7 +26,7 @@ We will see, how the runtime efficiency of solutions can be improved from expone
 ## [Description of the problem](#description-of-the-problem) ##
 
 
-There is a hexagon and some kind of a creature, which moves between vertices of the hexagon. At every step the creature randomly picks one of adjacent vertices and moves there. The creature starts to move from the vertex, named "A". The question is: how many paths are there - which ends in the initial vertex after N moves?
+There is a hexagon and a traveller, which moves between vertices of the hexagon. At every step the traveller randomly picks one of adjacent vertices and moves there. The traveller starts to move from the vertex, named "A". The question is: how many paths are there - which ends in the initial vertex after N moves?
 
 Below is an illustration, which demonstrates two paths (out of six possible), which ends in the initial vertex after four moves (the arrows are indexed in the order of performed moves):
 
@@ -42,29 +42,38 @@ depends only on the amount of paths to the adjacent vertices (with an amount of 
 
 ![Demonstration of the Brute-force solution](/images/problem_solving_algorithms_and_math/img3.png)
 
-So, based on the described observation, we can straightforwardly implement the solution as a recursive function:
+So, based on the described observation, we can derive the following recurrence relation:
+
+![Recurrence relation for the Brute-force solution](/images/problem_solving_algorithms_and_math/img12.png)
+
+Which can be straightforwardly implemented as a recursive function:
 
 {% highlight java %}
-// Amount of vertices of the polygon
+// amount of vertices of the polygon
 final int V = 6;
 
 int solve(int moves) {
-    // Start vertex is "A" (index 0)
-    // Target vertex is also "A"
-    return count(moves, 0);
+	return F(0, moves);
 }
 
+// curr - index of a current vertex
 // moves - amount of moves
-// curr  - index of a current vertex
-int count(int moves, int curr) {
-	if(moves == 0) { return (curr == 0) ? 1 : 0; }
-	int next = count(moves - 1, (curr + 1) % V);
-	int prev = count(moves - 1, (curr > 0) ? curr - 1 : V - 1);
-	return next + prev;
+int F(int curr, int moves) {
+	if(moves == 0) {
+		return (curr == 0) ? 1 : 0;
+		
+	} else if(curr > 0) {
+		return F((curr + 1) % V, moves - 1)
+			 + F(curr - 1, moves - 1);
+			 
+	} else {
+		return F((curr + 1) % V, moves - 1)
+			 + F(V - 1, moves - 1);		
+	}
 }
 {% endhighlight %}
 
-However, the analysis of the tree of recursive calls of the function `count` shows, that there are many identical subtrees:
+However, the analysis of the tree of recursive calls shows, that there are many identical subtrees:
 
 ![Demonstration of the problem of the Brute-force solution](/images/problem_solving_algorithms_and_math/img5.png)
 
@@ -75,35 +84,35 @@ The presence of identical subtrees of recursive calls, is a result of a fact, th
 So we see, that *the solution of the problem consists of the overlapping solutions of subproblems*.
 
 As far as described thoughts are valid *for every value of N (amount of moves)* - we can conclude, that the solution of *every* subproblem consists of the overlapping solutions of its subproblems and so forth.
-Hence, **the overall complexity of provided solution is exponential**.
+Hence, using the reasoning based on induction, **the overall complexity of provided solution is exponential**.
 
 ## [Dynamic programming solution](#dynamic-programming-solution) ##
 
 As far as the recursive solution consists of the overlapping problems, let's calculate *the cardinality of the space of all subproblems*. 
-The function `count` has two arguments: 
-- `int moves` - amount of available moves, and the value of `moves` varies *from 0 to N*
-- `int curr` - index of a current vertex, and the value of `curr` varies *from 0 to (V - 1)* (where *V* - is an amount of vertices).  
+The recursive function `F` has two arguments: 
+- `int moves` - amount of available moves, which varies *from 0 to N*
+- `int curr` - index of a current vertex, which varies *from 0 to (V - 1)*  
 
 So, as far as the combination of argument values uniquely determines a subproblem - the total amount of subproblems is `(N+1) * V`.
 
 Hence, we can make use of the *memoization* table (with dimensions *(N+1) x V*) in order to cache the values of the already solved subproblems:
 
 {% highlight java %}
-// Amount of vertices of the polygon
+// amount of vertices of the polygon
 final int V = 6;
 
 // Needed for memoization
 final int NOT_SOLVED_YET = -1;
 
 int solve(int moves) {
-	// Initialization of the memoization table
-    int[][] memoized = new int[moves + 1][V];
+    // Initialization of the memoization table
+	int[][] memoized = new int[moves + 1][V];
 	for(int[] row : memoized) { Arrays.fill(row, NOT_SOLVED_YET); }
     
-	return count(moves, 0, memoized);
+	return F(0, moves, memoized);
 }
 
-int count(int moves, int curr, int[][] memoized) {
+int F(int curr, int moves, int[][] memoized) {
     // Is the subproblem already solved?
 	if(memoized[moves][curr] != NOT_SOLVED_YET) {
 		return memoized[moves][curr];
@@ -113,9 +122,13 @@ int count(int moves, int curr, int[][] memoized) {
 	if(moves == 0) {
 		result = (curr == 0) ? 1 : 0;
 	} else {
-		int next = count(moves - 1, (curr + 1) % V);
-		int prev = count(moves - 1, (curr > 0) ? curr - 1 : V - 1);
-		result = next + prev;
+		if(curr > 0) {
+			result = F((curr + 1) % V, moves - 1, memoized)
+				   + F(curr - 1, moves - 1, memoized);
+		} else {
+			result = F((curr + 1) % V, moves - 1, memoized)
+				   + F(V - 1, moves - 1, memoized);	
+		}
 	}
 
     // Remember the solution of the subproblem
@@ -138,8 +151,8 @@ Taking into account that *V* (amount of vertices) is a constant - the complexity
 
 ### [Explicit closed-form formula solution](#explicit-closed-form-formula-solution) ###
 
-Is it possible to develop a solution with better runtime complexity?
-It turns out that *yes*! However, we will need a bit of the extra math in order to reveal additional aspects of the problem.
+Is it possible to develop a solution with better runtime complexity?    
+It turns out that *yes*! However, we will need a bit of the extra math in order to reveal additional insights regarding the problem.
 
 Let's introduce an auxiliary notation (keeping in mind, that we consider only paths, which starts in the vertex "A"):
 
