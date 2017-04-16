@@ -71,6 +71,47 @@
       <li>
         <div class="post-item">
             <div class="post-item-header">
+                <span class="post-meta">Apr 17, 2017</span>
+                <h2>
+                  <a class="post-link" href="/computer_science/2017/04/17/random_walks_in_a_hexagon.html">Random walks in a hexagon</a>
+                </h2>
+            </div>
+            <div class="post-summary">
+                <p>There is a hexagon and a traveller, which moves between vertices of the hexagon.
+At every step the traveller randomly chooses one of adjacent vertices and moves there.
+The question is: how many paths are there - which end in the initial vertex after <em>N</em> steps?</p>
+
+<p>For the sake of convenience, let&#39;s assign letters to the vertices of the hexagon, and let&#39;s assume that initial vertex is &quot;A&quot;.
+Below is an illustration, which demonstrates two paths (out of six possible), which end in the initial vertex after four steps (the arrows are indexed in the order of performed moves):</p>
+
+<p><img src="/images/problem_solving_algorithms_and_math/img2.png" alt="Demonstration of the problem"></p>
+
+<p>I will describe a couple of algorithms for tackling described problem, we will see how the runtime efficiency of solutions can be improved from an exponential complexity down to almost a constant time complexity. 
+And, finally, we will discuss the pros and cons of each approach.</p>
+
+<h2 id="table-of-contents">Table of contents</h2>
+
+<ul>
+<li><a href="/computer_science/2017/04/17/random_walks_in_a_hexagon.html#brute-force-solution">Brute-force solution</a></li>
+<li><a href="/computer_science/2017/04/17/random_walks_in_a_hexagon.html#dynamic-programming-solution">Dynamic programming solution</a></li>
+<li><a href="/computer_science/2017/04/17/random_walks_in_a_hexagon.html#derivation-of-a-simpler-recurrence-relation">Derivation of a simpler recurrence relation</a>
+
+<ul>
+<li><a href="/computer_science/2017/04/17/random_walks_in_a_hexagon.html#o-log-n-solution-using-generating-matrix-and-exponentiation-by-squaring">O(log(N)) solution using generating matrix and exponentiation by squaring</a></li>
+<li><a href="/computer_science/2017/04/17/random_walks_in_a_hexagon.html#closed-form-solution-using-characteristic-polynomial">Closed-form solution using characteristic polynomial</a></li>
+<li><a href="/computer_science/2017/04/17/random_walks_in_a_hexagon.html#recurrence-relations-for-other-kinds-of-polygons">Recurrence relations for other kinds of polygons</a></li>
+</ul></li>
+<li><a href="/computer_science/2017/04/17/random_walks_in_a_hexagon.html#conclusion">Conclusion</a></li>
+<li><a href="/computer_science/2017/04/17/random_walks_in_a_hexagon.html#source-of-the-problem">Source of the problem</a></li>
+</ul>
+
+            </div>
+        <div>
+      </li>
+    
+      <li>
+        <div class="post-item">
+            <div class="post-item-header">
                 <span class="post-meta">Jan 12, 2017</span>
                 <h2>
                   <a class="post-link" href="/computer_science/2017/01/12/minimax_tic_tac_toe_scala.html">Minimax-based AI for the Tic-Tac-Toe game in Scala</a>

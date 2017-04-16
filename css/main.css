@@ -5,6 +5,7 @@
 body, h1, h2, h3, h4, h5, h6,
 p, blockquote, pre, hr,
 dl, dd, ol, ul, figure {
+  text-decoration: none;
   margin: 0;
   padding: 0; }
 
@@ -19,6 +20,13 @@ body {
   color: #111;
   background-color: #fdfdfd;
   -webkit-text-size-adjust: 100%; }
+
+table, tr, td, th {
+  border: 1px solid black;
+  border-collapse: collapse;
+  padding: 5px;
+  margin: 10px;
+  margin-bottom: 20px; }
 
 /**
  * Set `margin-bottom` to maintain vertical rhythm
@@ -66,12 +74,15 @@ h1, h2, h3, h4, h5, h6 {
  */
 a {
   color: #2a7ae2;
-  text-decoration: none; }
+  text-decoration: underline; }
   a:visited {
     color: #1756a9; }
   a:hover {
     color: #111;
     text-decoration: underline; }
+
+h2 > a {
+  text-decoration: none; }
 
 /**
  * Blockquotes

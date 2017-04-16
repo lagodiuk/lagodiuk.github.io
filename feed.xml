@@ -6,9 +6,615 @@
 </description>
     <link>http://lagodiuk.github.io/</link>
     <atom:link href="http://lagodiuk.github.io/feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Sun, 15 Jan 2017 20:36:03 +0100</pubDate>
-    <lastBuildDate>Sun, 15 Jan 2017 20:36:03 +0100</lastBuildDate>
+    <pubDate>Sun, 16 Apr 2017 22:41:17 +0200</pubDate>
+    <lastBuildDate>Sun, 16 Apr 2017 22:41:17 +0200</lastBuildDate>
     <generator>Jekyll v2.4.0</generator>
+    
+      <item>
+        <title>Random walks in a hexagon</title>
+        <description>&lt;p&gt;There is a hexagon and a traveller, which moves between vertices of the hexagon.
+At every step the traveller randomly chooses one of adjacent vertices and moves there.
+The question is: how many paths are there - which end in the initial vertex after &lt;em&gt;N&lt;/em&gt; steps?&lt;/p&gt;
+
+&lt;p&gt;For the sake of convenience, let&amp;#39;s assign letters to the vertices of the hexagon, and let&amp;#39;s assume that initial vertex is &amp;quot;A&amp;quot;.
+Below is an illustration, which demonstrates two paths (out of six possible), which end in the initial vertex after four steps (the arrows are indexed in the order of performed moves):&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/problem_solving_algorithms_and_math/img2.png&quot; alt=&quot;Demonstration of the problem&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;I will describe a couple of algorithms for tackling described problem, we will see how the runtime efficiency of solutions can be improved from an exponential complexity down to almost a constant time complexity. 
+And, finally, we will discuss the pros and cons of each approach.&lt;/p&gt;
+
+&lt;h2 id=&quot;table-of-contents&quot;&gt;Table of contents&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;/computer_science/2017/04/17/random_walks_in_a_hexagon.html#brute-force-solution&quot;&gt;Brute-force solution&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;/computer_science/2017/04/17/random_walks_in_a_hexagon.html#dynamic-programming-solution&quot;&gt;Dynamic programming solution&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;/computer_science/2017/04/17/random_walks_in_a_hexagon.html#derivation-of-a-simpler-recurrence-relation&quot;&gt;Derivation of a simpler recurrence relation&lt;/a&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;/computer_science/2017/04/17/random_walks_in_a_hexagon.html#o-log-n-solution-using-generating-matrix-and-exponentiation-by-squaring&quot;&gt;O(log(N)) solution using generating matrix and exponentiation by squaring&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;/computer_science/2017/04/17/random_walks_in_a_hexagon.html#closed-form-solution-using-characteristic-polynomial&quot;&gt;Closed-form solution using characteristic polynomial&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;/computer_science/2017/04/17/random_walks_in_a_hexagon.html#recurrence-relations-for-other-kinds-of-polygons&quot;&gt;Recurrence relations for other kinds of polygons&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;/computer_science/2017/04/17/random_walks_in_a_hexagon.html#conclusion&quot;&gt;Conclusion&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;/computer_science/2017/04/17/random_walks_in_a_hexagon.html#source-of-the-problem&quot;&gt;Source of the problem&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;!--more--&gt;
+
+&lt;h2 id=&quot;brute-force-solution&quot;&gt;&lt;a href=&quot;#brute-force-solution&quot;&gt;Brute-force solution&lt;/a&gt;&lt;/h2&gt;
+
+&lt;p&gt;Let&amp;#39;s start with a Brute-force solution.&lt;br&gt;
+As an auxiliary step, let&amp;#39;s assign indices to the vertices of the hexagon (from the interval &lt;em&gt;0 to 5&lt;/em&gt;).
+We can observe that an amount of paths, which end in any specific vertex, 
+depends only on the amount of paths to adjacent vertices:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/problem_solving_algorithms_and_math/img3.png&quot; alt=&quot;Demonstration of the Brute-force solution&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;So, based on the described observation, we can derive the following recurrence relation:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/problem_solving_algorithms_and_math/img12.png&quot; alt=&quot;Recurrence relation for the Brute-force solution&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;Which can be straightforwardly implemented as a recursive function:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;&lt;span class=&quot;c1&quot;&gt;// amount of vertices of the polygon&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;V&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;6&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;solve&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;moves&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;F&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;moves&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;// curr - index of a current vertex&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;// moves - amount of moves&lt;/span&gt;
+&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;F&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;curr&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;moves&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;moves&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;curr&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;?&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+        
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;curr&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;F&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;curr&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;%&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;V&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;moves&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+             &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;F&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;curr&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;moves&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+             
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;F&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;curr&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;%&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;V&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;moves&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+             &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;F&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;V&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;moves&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;      
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;However, the analysis of the tree of recursive calls shows, that there are many identical subtrees:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/problem_solving_algorithms_and_math/img5.png&quot; alt=&quot;Demonstration of the problem of the Brute-force solution&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;The presence of identical subtrees of recursive calls, is a result of a fact, that it is possible to arrive in a vertex via different paths, using the same amount of moves:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/problem_solving_algorithms_and_math/img4.png&quot; alt=&quot;Demonstration of the problem of the Brute-force solution&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;So we see, that &lt;em&gt;the solution of the problem consists of solutions of &lt;a href=&quot;https://en.wikipedia.org/wiki/Overlapping_subproblems&quot;&gt;the overlapping subproblems&lt;/a&gt;&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;As far as described thoughts are valid &lt;em&gt;for every value of N (amount of moves)&lt;/em&gt; - we can conclude, that the solution of &lt;em&gt;every&lt;/em&gt; instance of the problem consists of the solutions of overlapping subproblems.
+Hence, using the reasoning based on &lt;a href=&quot;https://en.wikipedia.org/wiki/Mathematical_induction&quot;&gt;induction&lt;/a&gt; we can conclude, that &lt;strong&gt;the overall complexity of described solution is exponential&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;Actually, the brute-force solution is too impractical even for middle-sized instances of the problem.&lt;/p&gt;
+
+&lt;h2 id=&quot;dynamic-programming-solution&quot;&gt;&lt;a href=&quot;#dynamic-programming-solution&quot;&gt;Dynamic programming solution&lt;/a&gt;&lt;/h2&gt;
+
+&lt;p&gt;As far as the recursive solution consists of the overlapping problems, let&amp;#39;s calculate &lt;em&gt;the size of the space of subproblems&lt;/em&gt;. &lt;/p&gt;
+
+&lt;p&gt;The recursive function &lt;code&gt;F&lt;/code&gt; has two arguments: &lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;int moves&lt;/code&gt; - amount of available moves, which varies &lt;em&gt;from 0 to N&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;int curr&lt;/code&gt; - index of a current vertex, which varies &lt;em&gt;from 0 to (V - 1)&lt;/em&gt;&lt;br&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;So, as far as the combination of values of the arguments of function &lt;code&gt;F&lt;/code&gt; uniquely determines a subproblem - the total amount of subproblems is &lt;code&gt;(N+1) * V&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Hence, we can make use of the &lt;a href=&quot;https://en.wikipedia.org/wiki/Memoization&quot;&gt;&lt;em&gt;memoization&lt;/em&gt; table&lt;/a&gt; (with dimensions &lt;em&gt;(N+1) x V&lt;/em&gt;) in order to store the values of already solved subproblems:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;&lt;span class=&quot;c1&quot;&gt;// amount of vertices of the polygon&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;V&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;6&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;// Needed for memoization&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;NOT_SOLVED_YET&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;solve&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;moves&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;// Initialization of the memoization table&lt;/span&gt;
+    &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[][]&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;memoized&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;moves&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;V&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;];&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[]&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;row&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;memoized&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Arrays&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;fill&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;row&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;NOT_SOLVED_YET&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+    
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;F&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;moves&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;memoized&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;F&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;curr&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;moves&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[][]&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;memoized&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;// Is the subproblem already solved?&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;memoized&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;moves&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;curr&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;NOT_SOLVED_YET&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;memoized&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;moves&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;curr&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;];&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+    
+    &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;result&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;moves&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;result&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;curr&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;?&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;curr&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;result&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;F&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;curr&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;%&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;V&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;moves&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;memoized&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+                   &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;F&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;curr&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;moves&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;memoized&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;result&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;F&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;curr&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;%&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;V&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;moves&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;memoized&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+                   &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;F&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;V&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;moves&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;memoized&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;    
+        &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;c1&quot;&gt;// Remember the solution of the subproblem&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;memoized&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;moves&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;curr&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;result&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;result&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Provided recursive algorithm is a &lt;a href=&quot;http://stackoverflow.com/questions/6164629/dynamic-programming-and-memoization-bottom-up-vs-top-down-approaches&quot;&gt;&lt;em&gt;Top-down&lt;/em&gt;&lt;/a&gt; version of the Dynamic programming solution. 
+It can be rewritten into the iterative algorithm (a &lt;em&gt;Bottom-up&lt;/em&gt; version of the Dynamic Programming solution). 
+Inside the iterative solution - it is not needed to keep the entire memoization table, and instead we can track only the previous row of the table, which helps to reduce the memory footprint of the solution.&lt;/p&gt;
+
+&lt;p&gt;As far as in a worst case it is needed to traverse an entire memoization table in order to solve the problem - the complexity of the Dynamic programming solution is &lt;code&gt;O(N * V)&lt;/code&gt;. 
+Taking into account that &lt;em&gt;V&lt;/em&gt; (amount of vertices) is a constant - the complexity of solution is linear in terms of &lt;em&gt;N&lt;/em&gt;: &lt;strong&gt;&lt;code&gt;O(N)&lt;/code&gt;&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;For the sake of curiosity let&amp;#39;s look on the table of solutions of the small instances of the problem:&lt;/p&gt;
+
+&lt;table&gt;&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Amount of steps&lt;/th&gt;
+&lt;th&gt;1&lt;/th&gt;
+&lt;th&gt;2&lt;/th&gt;
+&lt;th&gt;3&lt;/th&gt;
+&lt;th&gt;4&lt;/th&gt;
+&lt;th&gt;5&lt;/th&gt;
+&lt;th&gt;6&lt;/th&gt;
+&lt;th&gt;7&lt;/th&gt;
+&lt;th&gt;8&lt;/th&gt;
+&lt;th&gt;9&lt;/th&gt;
+&lt;th&gt;10&lt;/th&gt;
+&lt;th&gt;11&lt;/th&gt;
+&lt;th&gt;12&lt;/th&gt;
+&lt;th&gt;13&lt;/th&gt;
+&lt;th&gt;14&lt;/th&gt;
+&lt;th&gt;15&lt;/th&gt;
+&lt;th&gt;16&lt;/th&gt;
+&lt;th&gt;17&lt;/th&gt;
+&lt;th&gt;18&lt;/th&gt;
+&lt;th&gt;19&lt;/th&gt;
+&lt;th&gt;20&lt;/th&gt;
+&lt;th&gt;21&lt;/th&gt;
+&lt;th&gt;22&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Amount of paths&lt;/td&gt;
+&lt;td&gt;&lt;em&gt;0&lt;/em&gt;&lt;/td&gt;
+&lt;td&gt;&lt;em&gt;2&lt;/em&gt;&lt;/td&gt;
+&lt;td&gt;&lt;em&gt;0&lt;/em&gt;&lt;/td&gt;
+&lt;td&gt;&lt;em&gt;6&lt;/em&gt;&lt;/td&gt;
+&lt;td&gt;&lt;em&gt;0&lt;/em&gt;&lt;/td&gt;
+&lt;td&gt;&lt;em&gt;22&lt;/em&gt;&lt;/td&gt;
+&lt;td&gt;&lt;em&gt;0&lt;/em&gt;&lt;/td&gt;
+&lt;td&gt;&lt;em&gt;86&lt;/em&gt;&lt;/td&gt;
+&lt;td&gt;&lt;em&gt;0&lt;/em&gt;&lt;/td&gt;
+&lt;td&gt;&lt;em&gt;342&lt;/em&gt;&lt;/td&gt;
+&lt;td&gt;&lt;em&gt;0&lt;/em&gt;&lt;/td&gt;
+&lt;td&gt;&lt;em&gt;1366&lt;/em&gt;&lt;/td&gt;
+&lt;td&gt;&lt;em&gt;0&lt;/em&gt;&lt;/td&gt;
+&lt;td&gt;&lt;em&gt;5462&lt;/em&gt;&lt;/td&gt;
+&lt;td&gt;&lt;em&gt;0&lt;/em&gt;&lt;/td&gt;
+&lt;td&gt;&lt;em&gt;21846&lt;/em&gt;&lt;/td&gt;
+&lt;td&gt;&lt;em&gt;0&lt;/em&gt;&lt;/td&gt;
+&lt;td&gt;&lt;em&gt;87382&lt;/em&gt;&lt;/td&gt;
+&lt;td&gt;&lt;em&gt;0&lt;/em&gt;&lt;/td&gt;
+&lt;td&gt;&lt;em&gt;349526&lt;/em&gt;&lt;/td&gt;
+&lt;td&gt;&lt;em&gt;0&lt;/em&gt;&lt;/td&gt;
+&lt;td&gt;&lt;em&gt;1398102&lt;/em&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;
+
+&lt;p&gt;Observe, that for all odd values of &lt;em&gt;N&lt;/em&gt; the solution is zero.&lt;/p&gt;
+
+&lt;h2 id=&quot;derivation-of-a-simpler-recurrence-relation&quot;&gt;&lt;a href=&quot;#derivation-of-a-simpler-recurrence-relation&quot;&gt;Derivation of a simpler recurrence relation&lt;/a&gt;&lt;/h2&gt;
+
+&lt;p&gt;Is it possible to develop a solution with better runtime complexity?&lt;br&gt;
+It turns out that &lt;em&gt;yes&lt;/em&gt;. However, we will need a bit of the extra math in order to reveal the insights regarding the structure of problem.&lt;/p&gt;
+
+&lt;p&gt;Let&amp;#39;s introduce an auxiliary notation (keeping in mind, that we consider only paths, which starts in the vertex &amp;quot;A&amp;quot;):&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/problem_solving_algorithms_and_math/img6.png&quot; alt=&quot;Auxiliary notation&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;The presence of the symmetry axis (which goes through the starting vertex &amp;quot;A&amp;quot;) of hexagon implies:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/problem_solving_algorithms_and_math/img7.png&quot; alt=&quot;Implication of the symmetry property&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;Let&amp;#39;s write recurrence relations for calculations of amount of paths to the different vertices of the hexagon:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/problem_solving_algorithms_and_math/img8.png&quot; alt=&quot;Recurrence relations&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;Now, our goal is to reduce an amount of variables inside the recurrence relations:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/problem_solving_algorithms_and_math/img9.png&quot; alt=&quot;Simplified recurrence relations&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;So, we have obtained a system of two recurrence relations: (6) and (7), with two variables:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/problem_solving_algorithms_and_math/img10.png&quot; alt=&quot;System of two recurrence relations&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;Now, let&amp;#39;s derive the recurrence relation for amount of paths, which end in the vertex &amp;quot;A&amp;quot; after &lt;em&gt;n&lt;/em&gt; moves:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/problem_solving_algorithms_and_math/img11.png&quot; alt=&quot;Solution of the system of two recurrence relations&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;So, finally, we have derived a neat recurrence relation for calculation of the amount of paths, which end in the vertex &amp;quot;A&amp;quot; after given amount of moves.&lt;/p&gt;
+
+&lt;p&gt;I would like to show its formula once more, together with solutions for the base cases (when &lt;em&gt;N&lt;/em&gt; is &lt;em&gt;1, 2, 3 or 4&lt;/em&gt;):&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/problem_solving_algorithms_and_math/img13.png&quot; alt=&quot;Recurrence relation for An&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;You can verify by hand the correctness of the derived recurrence relation, using the table with solutions, which was presented in the previous section of the post.&lt;/p&gt;
+
+&lt;p&gt;Using the derived recurrence relation, we can implement very simple non-recursive solution:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;solve&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;moves&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;moves&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;moves&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;moves&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;moves&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;6&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+ 
+    &lt;span class=&quot;c1&quot;&gt;// Sliding window, which spans over:&lt;/span&gt;
+    &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a_n_1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;6&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// A(n-1)&lt;/span&gt;
+    &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a_n_2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// A(n-2)&lt;/span&gt;
+    &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a_n_3&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// A(n-3)&lt;/span&gt;
+    &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a_n_4&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// A(n-4)&lt;/span&gt;
+    
+    &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;moves&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;c1&quot;&gt;// Calculate a new item of the sequence:&lt;/span&gt;
+        &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a_n&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a_n_2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a_n_4&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+        
+        &lt;span class=&quot;c1&quot;&gt;// Shift the sliding window:&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;a_n_4&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a_n_3&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// A(n-4) &amp;lt;- A(n-3)&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;a_n_3&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a_n_2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// A(n-3) &amp;lt;- A(n-2)&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;a_n_2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a_n_1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// A(n-2) &amp;lt;- A(n-1)&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;a_n_1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a_n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;   &lt;span class=&quot;c1&quot;&gt;// A(n-1) &amp;lt;- A(n)&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;// Now, the result is inside A(n-1)&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a_n_1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;However, the runtime complexity of presented algorithm is obviously, still &lt;code&gt;O(N)&lt;/code&gt;!&lt;br&gt;
+So, why would be bother ourselves with all these derivations, if we still get the linear-time solution?&lt;/p&gt;
+
+&lt;p&gt;Well, we have revealed the fact, that the solution of the problem can be expressed in the form of a &lt;a href=&quot;https://en.wikipedia.org/wiki/Constant-recursive_sequence&quot;&gt;linear recurrence relation of the 4th order with constant coefficients&lt;/a&gt;.
+We can make use of this fact for development of more efficient algorithms.&lt;/p&gt;
+
+&lt;p&gt;Additionally, based on the discovered recurrence and the principle of &lt;a href=&quot;https://en.wikipedia.org/wiki/Mathematical_induction&quot;&gt;induction&lt;/a&gt;, we can prove, that the solution for odd values of &lt;em&gt;N&lt;/em&gt; is always zero:
+&lt;img src=&quot;/images/problem_solving_algorithms_and_math/img14.png&quot; alt=&quot;Solution for the odd values of N&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;This observation allows us to solve immediately the problems with odd values of &lt;em&gt;N&lt;/em&gt; (solution is always &lt;em&gt;zero&lt;/em&gt;), 
+and for instances of the problem with even values of &lt;em&gt;N&lt;/em&gt; we can &lt;em&gt;transform the 4th-order recurrence relation into the 2nd-order recurrence relation&lt;/em&gt;:
+&lt;img src=&quot;/images/problem_solving_algorithms_and_math/img15.png&quot; alt=&quot;Second-order recurrence relation&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;So, here is a full description of solution, based on the 2nd-order recurrence relation:
+&lt;img src=&quot;/images/problem_solving_algorithms_and_math/img16.png&quot; alt=&quot;Second-order recurrence relation detailed&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;Now, before moving to the more optimal algorithm, let&amp;#39;s implement the simpler version of &lt;code&gt;O(N)&lt;/code&gt; solution, based on the derived 2-nd order recurrence:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;solve&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;moves&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;moves&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;%&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+    
+    &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;k&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;moves&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+    
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;k&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;k&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;6&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+ 
+    &lt;span class=&quot;c1&quot;&gt;// Sliding window, which spans over:&lt;/span&gt;
+    &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a_n_1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;6&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// A(n-1)&lt;/span&gt;
+    &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a_n_2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// A(n-2)&lt;/span&gt;
+    
+    &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;k&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;c1&quot;&gt;// Calculate a new item of the sequence:&lt;/span&gt;
+        &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a_n&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a_n_1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a_n_2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+        
+        &lt;span class=&quot;c1&quot;&gt;// Shift the sliding window:&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;a_n_2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a_n_1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// A(n-2) &amp;lt;- A(n-1)&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;a_n_1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a_n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;   &lt;span class=&quot;c1&quot;&gt;// A(n-1) &amp;lt;- A(n)&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;// Now, the result is inside A(n-1)&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a_n_1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;As you can see, provided &lt;code&gt;O(N)&lt;/code&gt; solution is much more concise than &lt;a href=&quot;/computer_science/2017/04/17/random_walks_in_a_hexagon.html#dynamic-programming-solution&quot;&gt;Dynamic programming-based solution&lt;/a&gt; with the same runtime complexity.&lt;/p&gt;
+
+&lt;p&gt;Now, it is time to develop an algorithm with better runtime complexity.&lt;/p&gt;
+
+&lt;h2 id=&quot;o-log-n-solution-using-generating-matrix-and-exponentiation-by-squaring&quot;&gt;&lt;a href=&quot;#o-log-n-solution-using-generating-matrix-and-exponentiation-by-squaring&quot;&gt;O(log(N)) solution using generating matrix and exponentiation by squaring&lt;/a&gt;&lt;/h2&gt;
+
+&lt;p&gt;We will continue to work with the recurrence relation, derived in &lt;a href=&quot;#derivation-of-a-simpler-recurrence-relation&quot;&gt;the previous section&lt;/a&gt;:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/problem_solving_algorithms_and_math/img17.png&quot; alt=&quot;Second-order recurrence relation reminder&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;Now, let&amp;#39;s consider a column-vector of two consecutive values of this recurrence relation:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/problem_solving_algorithms_and_math/img18.png&quot; alt=&quot;Second-order recurrence relation two consecutive values column vector&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;Also, let&amp;#39;s consider a matrix, which contains coefficients of the recurrence relation in the first row (and the second row, constructed in a special way):&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/problem_solving_algorithms_and_math/img19.png&quot; alt=&quot;Second-order recurrence relation - generating matrix&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;Now, let&amp;#39;s multiple given matrix and the column-vector:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/problem_solving_algorithms_and_math/img20.png&quot; alt=&quot;Generating matrix multiplied with a column-vector&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;As a result of multiplication we have obtained a column-vector, which contains a new value of the recurrence relation:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/problem_solving_algorithms_and_math/img21.png&quot; alt=&quot;Result of multiplication of the generating matrix and a column-vector&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;You can see, that the new column-vector also contains two consecutive values of the sequence.
+So, in order to produce the next value of the recurrence relation, we can multiply it with a matrix again:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/problem_solving_algorithms_and_math/img22.png&quot; alt=&quot;The next result of multiplication of the generating matrix and a column-vector&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;We can multiply the column-vector with a matrix once more, in order to obtain a next value, and so forth:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/problem_solving_algorithms_and_math/img23.png&quot; alt=&quot;The next-next result of multiplication of the generating matrix and a column-vector&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;Now let&amp;#39;s rewrite the considered equation, according to &lt;a href=&quot;http://www.leadinglesson.com/problem-on-showing-that-matrix-multiplication-is-associative&quot;&gt;the associativity property of the matrix multiplication&lt;/a&gt;:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/problem_solving_algorithms_and_math/img24.png&quot; alt=&quot;Rewriting according to the associativity property of the matrix multiplication&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;So, based on &lt;a href=&quot;https://en.wikipedia.org/wiki/Mathematical_induction&quot;&gt;induction&lt;/a&gt;, we can prove, that for calculation of the &lt;em&gt;k-th&lt;/em&gt; item of the sequence - it is needed to multiply the column-vector (which consists of the two initial items of the recurrence) with a &lt;em&gt;(k-2)-th&lt;/em&gt; power of the matrix:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/problem_solving_algorithms_and_math/img25.png&quot; alt=&quot;Matrix multiplication for calculation of the k-th item of the sequence&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;Can we calculate the &lt;em&gt;N-th&lt;/em&gt; power faster than &lt;code&gt;O(N)&lt;/code&gt;?&lt;br&gt;
+Yes, we can! Let&amp;#39;s make use of the &lt;a href=&quot;https://en.wikipedia.org/wiki/Exponentiation_by_squaring&quot;&gt;Exponentiation by squaring technique&lt;/a&gt; in order to obtain the result within &lt;code&gt;O(log(N))&lt;/code&gt; steps.&lt;/p&gt;
+
+&lt;p&gt;So, now the solution can be expressed in a following form:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/problem_solving_algorithms_and_math/img26.png&quot; alt=&quot;Matrix exponentiation solution&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;Below is code snippet with implementation of the described solution.
+The code is not so concise as previously, however this approach allows to solve large instances of the problem.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;solve&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;moves&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;// For odd values of moves &lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;// solution is always zero&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;moves&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;%&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+    
+    &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;k&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;moves&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+    
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;k&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;k&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;6&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+    
+    &lt;span class=&quot;c1&quot;&gt;// Solve with O(log(N)) complexity&lt;/span&gt;
+    &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[][]&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Mn&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;power_M&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;k&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;6&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;result&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Mn&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Mn&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+    
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;result&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;// Calculate n-th power of generating matrix&lt;/span&gt;
+&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[][]&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;power_M&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[][]&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;result&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[][]{&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;},&lt;/span&gt; 
+                                  &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;  &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;};&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;power&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;result&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;result&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;// Exponentiation by squaring&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;// O(log(N)) complexity&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;// https://en.wikipedia.org/wiki/Exponentiation_by_squaring&lt;/span&gt;
+&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;power&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[][]&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;X&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;%&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;multiply&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;X&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;X&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;power&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;X&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;n&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[][]&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;initial&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;X&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;X&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]},&lt;/span&gt; 
+                            &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;X&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;X&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]}&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;};&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;multiply&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;X&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;X&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;power&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;X&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;multiply&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;X&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;initial&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;// Multiplies AxB and writes result to A&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;// A and B are 2x2 matrices&lt;/span&gt;
+&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;multiply&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[][]&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;A&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[][]&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;B&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;r_0_0&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;A&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;B&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;A&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;B&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;];&lt;/span&gt;
+    &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;r_0_1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;A&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;B&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;A&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;B&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;];&lt;/span&gt;
+    &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;r_1_0&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;A&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;B&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;A&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;B&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;];&lt;/span&gt;
+    &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;r_1_1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;A&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;B&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;A&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;B&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;];&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;A&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;r_0_0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;A&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;r_0_1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;A&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;r_1_0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;A&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;r_1_1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Described approach is a well-known technique, and you can find more details about it in the following resources: &lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://en.wikipedia.org/wiki/Matrix_difference_equation&quot;&gt;Matrix difference equation&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://math.stackexchange.com/questions/858268/converting-recursive-equations-into-matrices&quot;&gt;Math.StackExchange: Converting recursive equations into matrices&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://zobayer.blogspot.de/2010/11/matrix-exponentiation.html&quot;&gt;Matrix Exponentiation&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://fusharblog.com/solving-linear-recurrence-for-programming-contest/&quot;&gt;Solving Linear Recurrence for Programming Contest&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://math.stackexchange.com/questions/124178/generating-matrix-for-a-recurrence-relation&quot;&gt;Math.StackExchange: Generating matrix for a recurrence relation&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://stackoverflow.com/questions/9858072/generating-matrix-for-a-recurrence-relation&quot;&gt;Stackoverflow: Generating matrix for a recurrence relation&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;closed-form-solution-using-characteristic-polynomial&quot;&gt;&lt;a href=&quot;#closed-form-solution-using-characteristic-polynomial&quot;&gt;Closed-form solution using characteristic polynomial&lt;/a&gt;&lt;/h2&gt;
+
+&lt;p&gt;In this section we will continue to work with the recurrence relation, derived in &lt;a href=&quot;#derivation-of-a-simpler-recurrence-relation&quot;&gt;one of the previous sections&lt;/a&gt;:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/problem_solving_algorithms_and_math/img17.png&quot; alt=&quot;Second-order recurrence relation reminder&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;Let&amp;#39;s construct a &lt;a href=&quot;https://en.wikipedia.org/wiki/Constant-recursive_sequence#Characterization_in_terms_of_exponential_polynomials&quot;&gt;characteristic polynomial&lt;/a&gt; for the given recurrence relation:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/problem_solving_algorithms_and_math/img27.png&quot; alt=&quot;Characteristic polynomial&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;In order to find the closed-form solution, we need to solve given equation:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/problem_solving_algorithms_and_math/img28.png&quot; alt=&quot;Characteristic polynomial factorization&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;So, the roots of characteristic polynomial are:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/problem_solving_algorithms_and_math/img29.png&quot; alt=&quot;Roots of the characteristic polynomial&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;According to &lt;a href=&quot;https://en.wikipedia.org/wiki/Constant-recursive_sequence#Characterization_in_terms_of_exponential_polynomials&quot;&gt;the properties of linear recurrence relations&lt;/a&gt;, 
+the closed-form solution has the following structure:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/problem_solving_algorithms_and_math/img30.png&quot; alt=&quot;Structure of the closed form solution&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;Let&amp;#39;s find the coefficients, using the values of the first items of the sequence:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/problem_solving_algorithms_and_math/img31.png&quot; alt=&quot;Finding the coefficients&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;So, the closed-form formula for the &lt;em&gt;n-th&lt;/em&gt; item of the sequence, defined by our recurrence relation, is:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/problem_solving_algorithms_and_math/img32.png&quot; alt=&quot;Closed form formula&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Hence, here is a final and very short solution of the problem:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/problem_solving_algorithms_and_math/img33.png&quot; alt=&quot;Final solution&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;And here a final implenetation of solution of the problem:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;solve&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;moves&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;moves&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;%&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;result&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;moves&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;result&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Frankly speaking, due to the need of calculation of the &lt;em&gt;k-th&lt;/em&gt; power of number &lt;em&gt;4&lt;/em&gt;  - from the theoretical perspective, the solution still has complexity &lt;code&gt;O(log(k))&lt;/code&gt;, however let&amp;#39;s leave these details away and enjoy the neat formula, which we have just derived &lt;em&gt;:-)&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;Additionally, the derived formula is convenient for computation of analytical properties of the solution. 
+For example, we can calculate the probability, that after large amount of steps, traveller will arrive into the vertex &amp;quot;A&amp;quot; (of course, we are interested only in even amounts of steps):&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Total amount of possible paths within &lt;em&gt;2k&lt;/em&gt; steps is: &lt;img src=&quot;/images/problem_solving_algorithms_and_math/img34.png&quot; alt=&quot;Total amount of paths&quot;&gt; (we are rising the number &lt;em&gt;2&lt;/em&gt; to the power of &lt;em&gt;2k&lt;/em&gt; - because on each of &lt;em&gt;2k&lt;/em&gt; steps, traveller can choose either of two adjacent vertices)&lt;/li&gt;
+&lt;li&gt;Hence, the probability to arrive into vertex &amp;quot;A&amp;quot; is:
+&lt;img src=&quot;/images/problem_solving_algorithms_and_math/img35.png&quot; alt=&quot;Probability to arrive into the vertex &amp;quot;A&amp;quot;&quot;&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Which means, that with a probability approximately &lt;em&gt;0.33&lt;/em&gt;  traveller will arrive to the initial vertex after large amount of moves.&lt;/p&gt;
+
+&lt;p&gt;As you can see - the closed-form solution is very convenient for the further analysis, and allows to reveal additional insights about the problem.&lt;/p&gt;
+
+&lt;h2 id=&quot;recurrence-relations-for-other-kinds-of-polygons&quot;&gt;&lt;a href=&quot;/computer_science/2017/04/17/random_walks_in_a_hexagon.html#recurrence-relations-for-other-kinds-of-polygons&quot;&gt;Recurrence relations for other kinds of polygons&lt;/a&gt;&lt;/h2&gt;
+
+&lt;p&gt;So far we have discussed only the neat recurrence relations for the hexagon, but what about other kinds of polygons? &lt;/p&gt;
+
+&lt;p&gt;Well, we were able to reduce the complexity of the solution, but we have lost the universality of the developed solutions - it turns out, that for each kind of polygon we need to derive its own linear recurrence relation.&lt;/p&gt;
+
+&lt;p&gt;I have derived linear recurrence relations for a couple of different kinds of polygons, and below is provided a table with recurrence relations for the various kinds of polygons:&lt;/p&gt;
+
+&lt;table&gt;&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;&lt;/th&gt;
+&lt;th&gt;Type&lt;/th&gt;
+&lt;th&gt;Recurrence relation&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;3&lt;/td&gt;
+&lt;td&gt;&lt;img src=&quot;/images/problem_solving_algorithms_and_math/img36.png&quot; alt=&quot;Triangle&quot;&gt;&lt;/td&gt;
+&lt;td&gt;&lt;img src=&quot;/images/problem_solving_algorithms_and_math/img41.png&quot; alt=&quot;Triangle recurrence relation&quot;&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;4&lt;/td&gt;
+&lt;td&gt;&lt;img src=&quot;/images/problem_solving_algorithms_and_math/img37.png&quot; alt=&quot;Rectangle&quot;&gt;&lt;/td&gt;
+&lt;td&gt;&lt;img src=&quot;/images/problem_solving_algorithms_and_math/img42.png&quot; alt=&quot;Rectangle recurrence relation&quot;&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;5&lt;/td&gt;
+&lt;td&gt;&lt;img src=&quot;/images/problem_solving_algorithms_and_math/img38.png&quot; alt=&quot;Pentagon&quot;&gt;&lt;/td&gt;
+&lt;td&gt;&lt;img src=&quot;/images/problem_solving_algorithms_and_math/img43.png&quot; alt=&quot;Pentagon recurrence relation&quot;&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;6&lt;/td&gt;
+&lt;td&gt;&lt;img src=&quot;/images/problem_solving_algorithms_and_math/img39.png&quot; alt=&quot;Hexagon&quot;&gt;&lt;/td&gt;
+&lt;td&gt;&lt;img src=&quot;/images/problem_solving_algorithms_and_math/img44.png&quot; alt=&quot;Hexagon recurrence relation&quot;&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;7&lt;/td&gt;
+&lt;td&gt;&lt;img src=&quot;/images/problem_solving_algorithms_and_math/img40.png&quot; alt=&quot;Heptagon&quot;&gt;&lt;/td&gt;
+&lt;td&gt;&lt;img src=&quot;/images/problem_solving_algorithms_and_math/img45.png&quot; alt=&quot;Heptagon recurrence relation&quot;&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;
+
+&lt;p&gt;For me it is still an open question, whether there are any pattern with respect to the structure of the derived recurrence relations (it would be good to have a possibility to obtain a recurrence relation, skipping the boilerplate derivation routine).&lt;/p&gt;
+
+&lt;h2 id=&quot;conclusion&quot;&gt;&lt;a href=&quot;#conclusion&quot;&gt;Conclusion&lt;/a&gt;&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&quot;/computer_science/2017/04/17/random_walks_in_a_hexagon.html#brute-force-solution&quot;&gt;The brute-force solution&lt;/a&gt;: &lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Is a fastest way to tackle the problem&lt;/li&gt;
+&lt;li&gt;Can be implemented for different kinds of polygons (not only a hexagon)&lt;/li&gt;
+&lt;li&gt;Has &lt;strong&gt;exponential runtime complexity&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;Hence, sufficient only for the small instances of the problem&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;a href=&quot;/computer_science/2017/04/17/random_walks_in_a_hexagon.html#dynamic-programming-solution&quot;&gt;Dynamic programming based solution&lt;/a&gt;:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;In case, when brute-force solution depends on solutions of overlapping subproblems - it can be transformed into the Dynamic programming solution&lt;/li&gt;
+&lt;li&gt;Can be implemented for different kinds of polygons (not only a hexagon)&lt;/li&gt;
+&lt;li&gt;Has &lt;strong&gt;linear runtime complexity&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;Hence, can be used for solving the large instances of the problem&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;More efficient algorithms require an information about additional aspects of the problem - which limits the scope of the developed solution&lt;/strong&gt; (for every type of a polygon - we will need to design its own solution):&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;We are lucky, that for the given kind of problem it is possible &lt;a href=&quot;/computer_science/2017/04/17/random_walks_in_a_hexagon.html#derivation-of-a-simpler-recurrence-relation&quot;&gt;to derive a linear recurrence relation&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;/computer_science/2017/04/17/random_walks_in_a_hexagon.html#o-log-n-solution-using-generating-matrix-and-exponentiation-by-squaring&quot;&gt;Generating matrices and exponentiation by squaring&lt;/a&gt; - allows to design &lt;strong&gt;&lt;code&gt;O(log(N))&lt;/code&gt; solution&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;Derivation of the &lt;a href=&quot;/computer_science/2017/04/17/random_walks_in_a_hexagon.html#closed-form-solution-using-characteristic-polynomial&quot;&gt;closed-form solution&lt;/a&gt; &lt;strong&gt;leads to the most fruitful results&lt;/strong&gt;, however requires more efforts in comparison to the previous approaches&lt;/li&gt;
+&lt;li&gt;Having the closed-form solution, we can investigate the various interesting properties of the problem&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://en.wikipedia.org/wiki/Mathematical_induction&quot;&gt;Mathematical induction&lt;/a&gt; is a useful tool for proving the various properties of designed solutions&lt;br&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;source-of-the-problem&quot;&gt;&lt;a href=&quot;/computer_science/2017/04/17/random_walks_in_a_hexagon.html#source-of-the-problem&quot;&gt;Source of the problem&lt;/a&gt;&lt;/h2&gt;
+
+&lt;p&gt;The problem and its closed-form solution were discussed during one of the practical lessons of the course &lt;a href=&quot;https://www.coursera.org/learn/modern-combinatorics&quot;&gt;Modern combinatorics&lt;/a&gt;, taught by &lt;a href=&quot;http://discrete-mathematics.org/?page_id=29&quot;&gt;Andrei Mikhailovich Raigorodskii&lt;/a&gt; and &lt;a href=&quot;http://wikimipt.org/wiki/%D0%98%D0%BB%D1%8C%D0%B8%D0%BD%D1%81%D0%BA%D0%B8%D0%B9_%D0%94%D0%BC%D0%B8%D1%82%D1%80%D0%B8%D0%B9_%D0%93%D0%B5%D0%BD%D0%BD%D0%B0%D0%B4%D0%B8%D0%B5%D0%B2%D0%B8%D1%87&quot;&gt;Dmitriy Gennadievich Ilyinskiy&lt;/a&gt;.&lt;/p&gt;
+
+&lt;div id=&quot;disqus_thread&quot;&gt;&lt;/div&gt;
+
+&lt;script&gt;
+
+var disqus_config = function () {
+this.page.url = &quot;http://lagodiuk.github.io/computer_science/2017/04/17/random_walks_in_a_hexagon.html&quot;;
+this.page.identifier = &quot;random_walks_in_a_hexagon&quot;;
+};
+
+(function() { // DON&#39;T EDIT BELOW THIS LINE
+var d = document, s = d.createElement(&#39;script&#39;);
+
+s.src = &#39;//lahodiuk.disqus.com/embed.js&#39;;
+
+s.setAttribute(&#39;data-timestamp&#39;, +new Date());
+(d.head || d.body).appendChild(s);
+})();
+&lt;/script&gt;
+
+&lt;noscript&gt;Please enable JavaScript to view the &lt;a href=&quot;https://disqus.com/?ref_noscript&quot; rel=&quot;nofollow&quot;&gt;comments powered by Disqus.&lt;/a&gt;&lt;/noscript&gt;
+</description>
+        <pubDate>Mon, 17 Apr 2017 00:15:00 +0200</pubDate>
+        <link>http://lagodiuk.github.io/computer_science/2017/04/17/random_walks_in_a_hexagon.html</link>
+        <guid isPermaLink="true">http://lagodiuk.github.io/computer_science/2017/04/17/random_walks_in_a_hexagon.html</guid>
+        
+        <category>algorithms</category>
+        
+        <category>combinatorics</category>
+        
+        <category>math</category>
+        
+        
+        <category>computer_science</category>
+        
+      </item>
     
       <item>
         <title>Minimax-based AI for the Tic-Tac-Toe game in Scala</title>

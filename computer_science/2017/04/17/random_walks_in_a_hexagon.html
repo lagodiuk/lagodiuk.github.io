@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width initial-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>Random walks in a hexagon</title>
+    <meta name="description" content="This is my personal blog about Algorithms, Programming Problems solving techniques and interesting Computer Science topics.   Expressed opinions are my own.
+">
+
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="canonical" href="http://lagodiuk.github.io/computer_science/2017/04/17/random_walks_in_a_hexagon.html">
+    
+    
+
+    
+</head>
+
+
+  <body >
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="/">Home</a>
+
+    <a class="site-archive" href="/archive.html">Archive</a>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+
+      <div class="trigger">
+        
+          
+          <a class="page-link" href="/about/">About</a>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrapper">
+        <div class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Random walks in a hexagon</h1>
+    <p class="post-meta">Apr 17, 2017</p>
+  </header>
+
+  <article class="post-content">
+    <p>There is a hexagon and a traveller, which moves between vertices of the hexagon.
+At every step the traveller randomly chooses one of adjacent vertices and moves there.
+The question is: how many paths are there - which end in the initial vertex after <em>N</em> steps?</p>
+
+<p>For the sake of convenience, let&#39;s assign letters to the vertices of the hexagon, and let&#39;s assume that initial vertex is &quot;A&quot;.
+Below is an illustration, which demonstrates two paths (out of six possible), which end in the initial vertex after four steps (the arrows are indexed in the order of performed moves):</p>
+
+<p><img src="/images/problem_solving_algorithms_and_math/img2.png" alt="Demonstration of the problem"></p>
+
+<p>I will describe a couple of algorithms for tackling described problem, we will see how the runtime efficiency of solutions can be improved from an exponential complexity down to almost a constant time complexity. 
+And, finally, we will discuss the pros and cons of each approach.</p>
+
+<h2 id="table-of-contents">Table of contents</h2>
+
+<ul>
+<li><a href="/computer_science/2017/04/17/random_walks_in_a_hexagon.html#brute-force-solution">Brute-force solution</a></li>
+<li><a href="/computer_science/2017/04/17/random_walks_in_a_hexagon.html#dynamic-programming-solution">Dynamic programming solution</a></li>
+<li><a href="/computer_science/2017/04/17/random_walks_in_a_hexagon.html#derivation-of-a-simpler-recurrence-relation">Derivation of a simpler recurrence relation</a>
+
+<ul>
+<li><a href="/computer_science/2017/04/17/random_walks_in_a_hexagon.html#o-log-n-solution-using-generating-matrix-and-exponentiation-by-squaring">O(log(N)) solution using generating matrix and exponentiation by squaring</a></li>
+<li><a href="/computer_science/2017/04/17/random_walks_in_a_hexagon.html#closed-form-solution-using-characteristic-polynomial">Closed-form solution using characteristic polynomial</a></li>
+<li><a href="/computer_science/2017/04/17/random_walks_in_a_hexagon.html#recurrence-relations-for-other-kinds-of-polygons">Recurrence relations for other kinds of polygons</a></li>
+</ul></li>
+<li><a href="/computer_science/2017/04/17/random_walks_in_a_hexagon.html#conclusion">Conclusion</a></li>
+<li><a href="/computer_science/2017/04/17/random_walks_in_a_hexagon.html#source-of-the-problem">Source of the problem</a></li>
+</ul>
+
+<!--more-->
+
+<h2 id="brute-force-solution"><a href="#brute-force-solution">Brute-force solution</a></h2>
+
+<p>Let&#39;s start with a Brute-force solution.<br>
+As an auxiliary step, let&#39;s assign indices to the vertices of the hexagon (from the interval <em>0 to 5</em>).
+We can observe that an amount of paths, which end in any specific vertex, 
+depends only on the amount of paths to adjacent vertices:</p>
+
+<p><img src="/images/problem_solving_algorithms_and_math/img3.png" alt="Demonstration of the Brute-force solution"></p>
+
+<p>So, based on the described observation, we can derive the following recurrence relation:</p>
+
+<p><img src="/images/problem_solving_algorithms_and_math/img12.png" alt="Recurrence relation for the Brute-force solution"></p>
+
+<p>Which can be straightforwardly implemented as a recursive function:</p>
+
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="c1">// amount of vertices of the polygon</span>
+<span class="kd">final</span> <span class="kt">int</span> <span class="n">V</span> <span class="o">=</span> <span class="mi">6</span><span class="o">;</span>
+
+<span class="kt">int</span> <span class="nf">solve</span><span class="o">(</span><span class="kt">int</span> <span class="n">moves</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="nf">F</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="n">moves</span><span class="o">);</span>
+<span class="o">}</span>
+
+<span class="c1">// curr - index of a current vertex</span>
+<span class="c1">// moves - amount of moves</span>
+<span class="kt">int</span> <span class="nf">F</span><span class="o">(</span><span class="kt">int</span> <span class="n">curr</span><span class="o">,</span> <span class="kt">int</span> <span class="n">moves</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">if</span><span class="o">(</span><span class="n">moves</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="o">(</span><span class="n">curr</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="o">?</span> <span class="mi">1</span> <span class="o">:</span> <span class="mi">0</span><span class="o">;</span>
+        
+    <span class="o">}</span> <span class="k">else</span> <span class="nf">if</span><span class="o">(</span><span class="n">curr</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="nf">F</span><span class="o">((</span><span class="n">curr</span> <span class="o">+</span> <span class="mi">1</span><span class="o">)</span> <span class="o">%</span> <span class="n">V</span><span class="o">,</span> <span class="n">moves</span> <span class="o">-</span> <span class="mi">1</span><span class="o">)</span>
+             <span class="o">+</span> <span class="n">F</span><span class="o">(</span><span class="n">curr</span> <span class="o">-</span> <span class="mi">1</span><span class="o">,</span> <span class="n">moves</span> <span class="o">-</span> <span class="mi">1</span><span class="o">);</span>
+             
+    <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="nf">F</span><span class="o">((</span><span class="n">curr</span> <span class="o">+</span> <span class="mi">1</span><span class="o">)</span> <span class="o">%</span> <span class="n">V</span><span class="o">,</span> <span class="n">moves</span> <span class="o">-</span> <span class="mi">1</span><span class="o">)</span>
+             <span class="o">+</span> <span class="n">F</span><span class="o">(</span><span class="n">V</span> <span class="o">-</span> <span class="mi">1</span><span class="o">,</span> <span class="n">moves</span> <span class="o">-</span> <span class="mi">1</span><span class="o">);</span>      
+    <span class="o">}</span>
+<span class="o">}</span></code></pre></div>
+
+<p>However, the analysis of the tree of recursive calls shows, that there are many identical subtrees:</p>
+
+<p><img src="/images/problem_solving_algorithms_and_math/img5.png" alt="Demonstration of the problem of the Brute-force solution"></p>
+
+<p>The presence of identical subtrees of recursive calls, is a result of a fact, that it is possible to arrive in a vertex via different paths, using the same amount of moves:</p>
+
+<p><img src="/images/problem_solving_algorithms_and_math/img4.png" alt="Demonstration of the problem of the Brute-force solution"></p>
+
+<p>So we see, that <em>the solution of the problem consists of solutions of <a href="https://en.wikipedia.org/wiki/Overlapping_subproblems">the overlapping subproblems</a></em>.</p>
+
+<p>As far as described thoughts are valid <em>for every value of N (amount of moves)</em> - we can conclude, that the solution of <em>every</em> instance of the problem consists of the solutions of overlapping subproblems.
+Hence, using the reasoning based on <a href="https://en.wikipedia.org/wiki/Mathematical_induction">induction</a> we can conclude, that <strong>the overall complexity of described solution is exponential</strong>.</p>
+
+<p>Actually, the brute-force solution is too impractical even for middle-sized instances of the problem.</p>
+
+<h2 id="dynamic-programming-solution"><a href="#dynamic-programming-solution">Dynamic programming solution</a></h2>
+
+<p>As far as the recursive solution consists of the overlapping problems, let&#39;s calculate <em>the size of the space of subproblems</em>. </p>
+
+<p>The recursive function <code>F</code> has two arguments: </p>
+
+<ul>
+<li><code>int moves</code> - amount of available moves, which varies <em>from 0 to N</em></li>
+<li><code>int curr</code> - index of a current vertex, which varies <em>from 0 to (V - 1)</em><br></li>
+</ul>
+
+<p>So, as far as the combination of values of the arguments of function <code>F</code> uniquely determines a subproblem - the total amount of subproblems is <code>(N+1) * V</code>.</p>
+
+<p>Hence, we can make use of the <a href="https://en.wikipedia.org/wiki/Memoization"><em>memoization</em> table</a> (with dimensions <em>(N+1) x V</em>) in order to store the values of already solved subproblems:</p>
+
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="c1">// amount of vertices of the polygon</span>
+<span class="kd">final</span> <span class="kt">int</span> <span class="n">V</span> <span class="o">=</span> <span class="mi">6</span><span class="o">;</span>
+
+<span class="c1">// Needed for memoization</span>
+<span class="kd">final</span> <span class="kt">int</span> <span class="n">NOT_SOLVED_YET</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+
+<span class="kt">int</span> <span class="nf">solve</span><span class="o">(</span><span class="kt">int</span> <span class="n">moves</span><span class="o">)</span> <span class="o">{</span>
+    <span class="c1">// Initialization of the memoization table</span>
+    <span class="kt">int</span><span class="o">[][]</span> <span class="n">memoized</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">moves</span> <span class="o">+</span> <span class="mi">1</span><span class="o">][</span><span class="n">V</span><span class="o">];</span>
+    <span class="k">for</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">row</span> <span class="o">:</span> <span class="n">memoized</span><span class="o">)</span> <span class="o">{</span> <span class="n">Arrays</span><span class="o">.</span><span class="na">fill</span><span class="o">(</span><span class="n">row</span><span class="o">,</span> <span class="n">NOT_SOLVED_YET</span><span class="o">);</span> <span class="o">}</span>
+    
+    <span class="k">return</span> <span class="nf">F</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="n">moves</span><span class="o">,</span> <span class="n">memoized</span><span class="o">);</span>
+<span class="o">}</span>
+
+<span class="kt">int</span> <span class="nf">F</span><span class="o">(</span><span class="kt">int</span> <span class="n">curr</span><span class="o">,</span> <span class="kt">int</span> <span class="n">moves</span><span class="o">,</span> <span class="kt">int</span><span class="o">[][]</span> <span class="n">memoized</span><span class="o">)</span> <span class="o">{</span>
+    <span class="c1">// Is the subproblem already solved?</span>
+    <span class="k">if</span><span class="o">(</span><span class="n">memoized</span><span class="o">[</span><span class="n">moves</span><span class="o">][</span><span class="n">curr</span><span class="o">]</span> <span class="o">!=</span> <span class="n">NOT_SOLVED_YET</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">memoized</span><span class="o">[</span><span class="n">moves</span><span class="o">][</span><span class="n">curr</span><span class="o">];</span>
+    <span class="o">}</span>
+    
+    <span class="kt">int</span> <span class="n">result</span><span class="o">;</span>
+    <span class="k">if</span><span class="o">(</span><span class="n">moves</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="o">(</span><span class="n">curr</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="o">?</span> <span class="mi">1</span> <span class="o">:</span> <span class="mi">0</span><span class="o">;</span>
+    <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">curr</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">F</span><span class="o">((</span><span class="n">curr</span> <span class="o">+</span> <span class="mi">1</span><span class="o">)</span> <span class="o">%</span> <span class="n">V</span><span class="o">,</span> <span class="n">moves</span> <span class="o">-</span> <span class="mi">1</span><span class="o">,</span> <span class="n">memoized</span><span class="o">)</span>
+                   <span class="o">+</span> <span class="n">F</span><span class="o">(</span><span class="n">curr</span> <span class="o">-</span> <span class="mi">1</span><span class="o">,</span> <span class="n">moves</span> <span class="o">-</span> <span class="mi">1</span><span class="o">,</span> <span class="n">memoized</span><span class="o">);</span>
+        <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">F</span><span class="o">((</span><span class="n">curr</span> <span class="o">+</span> <span class="mi">1</span><span class="o">)</span> <span class="o">%</span> <span class="n">V</span><span class="o">,</span> <span class="n">moves</span> <span class="o">-</span> <span class="mi">1</span><span class="o">,</span> <span class="n">memoized</span><span class="o">)</span>
+                   <span class="o">+</span> <span class="n">F</span><span class="o">(</span><span class="n">V</span> <span class="o">-</span> <span class="mi">1</span><span class="o">,</span> <span class="n">moves</span> <span class="o">-</span> <span class="mi">1</span><span class="o">,</span> <span class="n">memoized</span><span class="o">);</span>    
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="c1">// Remember the solution of the subproblem</span>
+    <span class="n">memoized</span><span class="o">[</span><span class="n">moves</span><span class="o">][</span><span class="n">curr</span><span class="o">]</span> <span class="o">=</span> <span class="n">result</span><span class="o">;</span>
+    <span class="k">return</span> <span class="n">result</span><span class="o">;</span>
+<span class="o">}</span></code></pre></div>
+
+<p>Provided recursive algorithm is a <a href="http://stackoverflow.com/questions/6164629/dynamic-programming-and-memoization-bottom-up-vs-top-down-approaches"><em>Top-down</em></a> version of the Dynamic programming solution. 
+It can be rewritten into the iterative algorithm (a <em>Bottom-up</em> version of the Dynamic Programming solution). 
+Inside the iterative solution - it is not needed to keep the entire memoization table, and instead we can track only the previous row of the table, which helps to reduce the memory footprint of the solution.</p>
+
+<p>As far as in a worst case it is needed to traverse an entire memoization table in order to solve the problem - the complexity of the Dynamic programming solution is <code>O(N * V)</code>. 
+Taking into account that <em>V</em> (amount of vertices) is a constant - the complexity of solution is linear in terms of <em>N</em>: <strong><code>O(N)</code></strong>.</p>
+
+<p>For the sake of curiosity let&#39;s look on the table of solutions of the small instances of the problem:</p>
+
+<table><thead>
+<tr>
+<th>Amount of steps</th>
+<th>1</th>
+<th>2</th>
+<th>3</th>
+<th>4</th>
+<th>5</th>
+<th>6</th>
+<th>7</th>
+<th>8</th>
+<th>9</th>
+<th>10</th>
+<th>11</th>
+<th>12</th>
+<th>13</th>
+<th>14</th>
+<th>15</th>
+<th>16</th>
+<th>17</th>
+<th>18</th>
+<th>19</th>
+<th>20</th>
+<th>21</th>
+<th>22</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Amount of paths</td>
+<td><em>0</em></td>
+<td><em>2</em></td>
+<td><em>0</em></td>
+<td><em>6</em></td>
+<td><em>0</em></td>
+<td><em>22</em></td>
+<td><em>0</em></td>
+<td><em>86</em></td>
+<td><em>0</em></td>
+<td><em>342</em></td>
+<td><em>0</em></td>
+<td><em>1366</em></td>
+<td><em>0</em></td>
+<td><em>5462</em></td>
+<td><em>0</em></td>
+<td><em>21846</em></td>
+<td><em>0</em></td>
+<td><em>87382</em></td>
+<td><em>0</em></td>
+<td><em>349526</em></td>
+<td><em>0</em></td>
+<td><em>1398102</em></td>
+</tr>
+</tbody></table>
+
+<p>Observe, that for all odd values of <em>N</em> the solution is zero.</p>
+
+<h2 id="derivation-of-a-simpler-recurrence-relation"><a href="#derivation-of-a-simpler-recurrence-relation">Derivation of a simpler recurrence relation</a></h2>
+
+<p>Is it possible to develop a solution with better runtime complexity?<br>
+It turns out that <em>yes</em>. However, we will need a bit of the extra math in order to reveal the insights regarding the structure of problem.</p>
+
+<p>Let&#39;s introduce an auxiliary notation (keeping in mind, that we consider only paths, which starts in the vertex &quot;A&quot;):</p>
+
+<p><img src="/images/problem_solving_algorithms_and_math/img6.png" alt="Auxiliary notation"></p>
+
+<p>The presence of the symmetry axis (which goes through the starting vertex &quot;A&quot;) of hexagon implies:</p>
+
+<p><img src="/images/problem_solving_algorithms_and_math/img7.png" alt="Implication of the symmetry property"></p>
+
+<p>Let&#39;s write recurrence relations for calculations of amount of paths to the different vertices of the hexagon:</p>
+
+<p><img src="/images/problem_solving_algorithms_and_math/img8.png" alt="Recurrence relations"></p>
+
+<p>Now, our goal is to reduce an amount of variables inside the recurrence relations:</p>
+
+<p><img src="/images/problem_solving_algorithms_and_math/img9.png" alt="Simplified recurrence relations"></p>
+
+<p>So, we have obtained a system of two recurrence relations: (6) and (7), with two variables:</p>
+
+<p><img src="/images/problem_solving_algorithms_and_math/img10.png" alt="System of two recurrence relations"></p>
+
+<p>Now, let&#39;s derive the recurrence relation for amount of paths, which end in the vertex &quot;A&quot; after <em>n</em> moves:</p>
+
+<p><img src="/images/problem_solving_algorithms_and_math/img11.png" alt="Solution of the system of two recurrence relations"></p>
+
+<p>So, finally, we have derived a neat recurrence relation for calculation of the amount of paths, which end in the vertex &quot;A&quot; after given amount of moves.</p>
+
+<p>I would like to show its formula once more, together with solutions for the base cases (when <em>N</em> is <em>1, 2, 3 or 4</em>):</p>
+
+<p><img src="/images/problem_solving_algorithms_and_math/img13.png" alt="Recurrence relation for An"></p>
+
+<p>You can verify by hand the correctness of the derived recurrence relation, using the table with solutions, which was presented in the previous section of the post.</p>
+
+<p>Using the derived recurrence relation, we can implement very simple non-recursive solution:</p>
+
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="kt">int</span> <span class="nf">solve</span><span class="o">(</span><span class="kt">int</span> <span class="n">moves</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">if</span><span class="o">(</span><span class="n">moves</span> <span class="o">==</span> <span class="mi">1</span><span class="o">)</span> <span class="k">return</span> <span class="mi">0</span><span class="o">;</span>
+    <span class="k">if</span><span class="o">(</span><span class="n">moves</span> <span class="o">==</span> <span class="mi">2</span><span class="o">)</span> <span class="k">return</span> <span class="mi">2</span><span class="o">;</span>
+    <span class="k">if</span><span class="o">(</span><span class="n">moves</span> <span class="o">==</span> <span class="mi">3</span><span class="o">)</span> <span class="k">return</span> <span class="mi">0</span><span class="o">;</span>
+    <span class="k">if</span><span class="o">(</span><span class="n">moves</span> <span class="o">==</span> <span class="mi">4</span><span class="o">)</span> <span class="k">return</span> <span class="mi">6</span><span class="o">;</span>
+ 
+    <span class="c1">// Sliding window, which spans over:</span>
+    <span class="kt">int</span> <span class="n">a_n_1</span> <span class="o">=</span> <span class="mi">6</span><span class="o">;</span> <span class="c1">// A(n-1)</span>
+    <span class="kt">int</span> <span class="n">a_n_2</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="c1">// A(n-2)</span>
+    <span class="kt">int</span> <span class="n">a_n_3</span> <span class="o">=</span> <span class="mi">2</span><span class="o">;</span> <span class="c1">// A(n-3)</span>
+    <span class="kt">int</span> <span class="n">a_n_4</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="c1">// A(n-4)</span>
+    
+    <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">5</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">moves</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+        <span class="c1">// Calculate a new item of the sequence:</span>
+        <span class="kt">int</span> <span class="n">a_n</span> <span class="o">=</span> <span class="mi">5</span> <span class="o">*</span> <span class="n">a_n_2</span> <span class="o">-</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">a_n_4</span><span class="o">;</span>
+        
+        <span class="c1">// Shift the sliding window:</span>
+        <span class="n">a_n_4</span> <span class="o">=</span> <span class="n">a_n_3</span><span class="o">;</span> <span class="c1">// A(n-4) &lt;- A(n-3)</span>
+        <span class="n">a_n_3</span> <span class="o">=</span> <span class="n">a_n_2</span><span class="o">;</span> <span class="c1">// A(n-3) &lt;- A(n-2)</span>
+        <span class="n">a_n_2</span> <span class="o">=</span> <span class="n">a_n_1</span><span class="o">;</span> <span class="c1">// A(n-2) &lt;- A(n-1)</span>
+        <span class="n">a_n_1</span> <span class="o">=</span> <span class="n">a_n</span><span class="o">;</span>   <span class="c1">// A(n-1) &lt;- A(n)</span>
+    <span class="o">}</span>
+    <span class="c1">// Now, the result is inside A(n-1)</span>
+    <span class="k">return</span> <span class="n">a_n_1</span><span class="o">;</span>
+<span class="o">}</span></code></pre></div>
+
+<p>However, the runtime complexity of presented algorithm is obviously, still <code>O(N)</code>!<br>
+So, why would be bother ourselves with all these derivations, if we still get the linear-time solution?</p>
+
+<p>Well, we have revealed the fact, that the solution of the problem can be expressed in the form of a <a href="https://en.wikipedia.org/wiki/Constant-recursive_sequence">linear recurrence relation of the 4th order with constant coefficients</a>.
+We can make use of this fact for development of more efficient algorithms.</p>
+
+<p>Additionally, based on the discovered recurrence and the principle of <a href="https://en.wikipedia.org/wiki/Mathematical_induction">induction</a>, we can prove, that the solution for odd values of <em>N</em> is always zero:
+<img src="/images/problem_solving_algorithms_and_math/img14.png" alt="Solution for the odd values of N"></p>
+
+<p>This observation allows us to solve immediately the problems with odd values of <em>N</em> (solution is always <em>zero</em>), 
+and for instances of the problem with even values of <em>N</em> we can <em>transform the 4th-order recurrence relation into the 2nd-order recurrence relation</em>:
+<img src="/images/problem_solving_algorithms_and_math/img15.png" alt="Second-order recurrence relation"></p>
+
+<p>So, here is a full description of solution, based on the 2nd-order recurrence relation:
+<img src="/images/problem_solving_algorithms_and_math/img16.png" alt="Second-order recurrence relation detailed"></p>
+
+<p>Now, before moving to the more optimal algorithm, let&#39;s implement the simpler version of <code>O(N)</code> solution, based on the derived 2-nd order recurrence:</p>
+
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="kt">int</span> <span class="nf">solve</span><span class="o">(</span><span class="kt">int</span> <span class="n">moves</span><span class="o">)</span> <span class="o">{</span>
+    
+    <span class="k">if</span><span class="o">(</span><span class="n">moves</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">1</span><span class="o">)</span> <span class="k">return</span> <span class="mi">0</span><span class="o">;</span>
+    
+    <span class="kt">int</span> <span class="n">k</span> <span class="o">=</span> <span class="n">moves</span> <span class="o">/</span> <span class="mi">2</span><span class="o">;</span>
+    
+    <span class="k">if</span><span class="o">(</span><span class="n">k</span> <span class="o">==</span> <span class="mi">1</span><span class="o">)</span> <span class="k">return</span> <span class="mi">2</span><span class="o">;</span>
+    <span class="k">if</span><span class="o">(</span><span class="n">k</span> <span class="o">==</span> <span class="mi">2</span><span class="o">)</span> <span class="k">return</span> <span class="mi">6</span><span class="o">;</span>
+ 
+    <span class="c1">// Sliding window, which spans over:</span>
+    <span class="kt">int</span> <span class="n">a_n_1</span> <span class="o">=</span> <span class="mi">6</span><span class="o">;</span> <span class="c1">// A(n-1)</span>
+    <span class="kt">int</span> <span class="n">a_n_2</span> <span class="o">=</span> <span class="mi">2</span><span class="o">;</span> <span class="c1">// A(n-2)</span>
+    
+    <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">3</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">k</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+        <span class="c1">// Calculate a new item of the sequence:</span>
+        <span class="kt">int</span> <span class="n">a_n</span> <span class="o">=</span> <span class="mi">5</span> <span class="o">*</span> <span class="n">a_n_1</span> <span class="o">-</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">a_n_2</span><span class="o">;</span>
+        
+        <span class="c1">// Shift the sliding window:</span>
+        <span class="n">a_n_2</span> <span class="o">=</span> <span class="n">a_n_1</span><span class="o">;</span> <span class="c1">// A(n-2) &lt;- A(n-1)</span>
+        <span class="n">a_n_1</span> <span class="o">=</span> <span class="n">a_n</span><span class="o">;</span>   <span class="c1">// A(n-1) &lt;- A(n)</span>
+    <span class="o">}</span>
+    <span class="c1">// Now, the result is inside A(n-1)</span>
+    <span class="k">return</span> <span class="n">a_n_1</span><span class="o">;</span>
+<span class="o">}</span></code></pre></div>
+
+<p>As you can see, provided <code>O(N)</code> solution is much more concise than <a href="/computer_science/2017/04/17/random_walks_in_a_hexagon.html#dynamic-programming-solution">Dynamic programming-based solution</a> with the same runtime complexity.</p>
+
+<p>Now, it is time to develop an algorithm with better runtime complexity.</p>
+
+<h2 id="o-log-n-solution-using-generating-matrix-and-exponentiation-by-squaring"><a href="#o-log-n-solution-using-generating-matrix-and-exponentiation-by-squaring">O(log(N)) solution using generating matrix and exponentiation by squaring</a></h2>
+
+<p>We will continue to work with the recurrence relation, derived in <a href="#derivation-of-a-simpler-recurrence-relation">the previous section</a>:</p>
+
+<p><img src="/images/problem_solving_algorithms_and_math/img17.png" alt="Second-order recurrence relation reminder"></p>
+
+<p>Now, let&#39;s consider a column-vector of two consecutive values of this recurrence relation:</p>
+
+<p><img src="/images/problem_solving_algorithms_and_math/img18.png" alt="Second-order recurrence relation two consecutive values column vector"></p>
+
+<p>Also, let&#39;s consider a matrix, which contains coefficients of the recurrence relation in the first row (and the second row, constructed in a special way):</p>
+
+<p><img src="/images/problem_solving_algorithms_and_math/img19.png" alt="Second-order recurrence relation - generating matrix"></p>
+
+<p>Now, let&#39;s multiple given matrix and the column-vector:</p>
+
+<p><img src="/images/problem_solving_algorithms_and_math/img20.png" alt="Generating matrix multiplied with a column-vector"></p>
+
+<p>As a result of multiplication we have obtained a column-vector, which contains a new value of the recurrence relation:</p>
+
+<p><img src="/images/problem_solving_algorithms_and_math/img21.png" alt="Result of multiplication of the generating matrix and a column-vector"></p>
+
+<p>You can see, that the new column-vector also contains two consecutive values of the sequence.
+So, in order to produce the next value of the recurrence relation, we can multiply it with a matrix again:</p>
+
+<p><img src="/images/problem_solving_algorithms_and_math/img22.png" alt="The next result of multiplication of the generating matrix and a column-vector"></p>
+
+<p>We can multiply the column-vector with a matrix once more, in order to obtain a next value, and so forth:</p>
+
+<p><img src="/images/problem_solving_algorithms_and_math/img23.png" alt="The next-next result of multiplication of the generating matrix and a column-vector"></p>
+
+<p>Now let&#39;s rewrite the considered equation, according to <a href="http://www.leadinglesson.com/problem-on-showing-that-matrix-multiplication-is-associative">the associativity property of the matrix multiplication</a>:</p>
+
+<p><img src="/images/problem_solving_algorithms_and_math/img24.png" alt="Rewriting according to the associativity property of the matrix multiplication"></p>
+
+<p>So, based on <a href="https://en.wikipedia.org/wiki/Mathematical_induction">induction</a>, we can prove, that for calculation of the <em>k-th</em> item of the sequence - it is needed to multiply the column-vector (which consists of the two initial items of the recurrence) with a <em>(k-2)-th</em> power of the matrix:</p>
+
+<p><img src="/images/problem_solving_algorithms_and_math/img25.png" alt="Matrix multiplication for calculation of the k-th item of the sequence"></p>
+
+<p>Can we calculate the <em>N-th</em> power faster than <code>O(N)</code>?<br>
+Yes, we can! Let&#39;s make use of the <a href="https://en.wikipedia.org/wiki/Exponentiation_by_squaring">Exponentiation by squaring technique</a> in order to obtain the result within <code>O(log(N))</code> steps.</p>
+
+<p>So, now the solution can be expressed in a following form:</p>
+
+<p><img src="/images/problem_solving_algorithms_and_math/img26.png" alt="Matrix exponentiation solution"></p>
+
+<p>Below is code snippet with implementation of the described solution.
+The code is not so concise as previously, however this approach allows to solve large instances of the problem.</p>
+
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="kt">int</span> <span class="nf">solve</span><span class="o">(</span><span class="kt">int</span> <span class="n">moves</span><span class="o">)</span> <span class="o">{</span>
+    <span class="c1">// For odd values of moves </span>
+    <span class="c1">// solution is always zero</span>
+    <span class="k">if</span><span class="o">(</span><span class="n">moves</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">1</span><span class="o">)</span> <span class="k">return</span> <span class="mi">0</span><span class="o">;</span>
+    
+    <span class="kt">int</span> <span class="n">k</span> <span class="o">=</span> <span class="n">moves</span> <span class="o">/</span> <span class="mi">2</span><span class="o">;</span>
+    
+    <span class="k">if</span><span class="o">(</span><span class="n">k</span> <span class="o">==</span> <span class="mi">1</span><span class="o">)</span> <span class="k">return</span> <span class="mi">2</span><span class="o">;</span>
+    <span class="k">if</span><span class="o">(</span><span class="n">k</span> <span class="o">==</span> <span class="mi">2</span><span class="o">)</span> <span class="k">return</span> <span class="mi">6</span><span class="o">;</span>
+    
+    <span class="c1">// Solve with O(log(N)) complexity</span>
+    <span class="kt">int</span><span class="o">[][]</span> <span class="n">Mn</span> <span class="o">=</span> <span class="n">power_M</span><span class="o">(</span><span class="n">k</span> <span class="o">-</span> <span class="mi">2</span><span class="o">);</span>
+    <span class="kt">int</span> <span class="n">a2</span> <span class="o">=</span> <span class="mi">6</span><span class="o">;</span>
+    <span class="kt">int</span> <span class="n">a1</span> <span class="o">=</span> <span class="mi">2</span><span class="o">;</span>
+    <span class="kt">int</span> <span class="n">result</span> <span class="o">=</span> <span class="n">Mn</span><span class="o">[</span><span class="mi">0</span><span class="o">][</span><span class="mi">0</span><span class="o">]</span> <span class="o">*</span> <span class="n">a2</span> <span class="o">+</span> <span class="n">Mn</span><span class="o">[</span><span class="mi">0</span><span class="o">][</span><span class="mi">1</span><span class="o">]</span> <span class="o">*</span> <span class="n">a1</span><span class="o">;</span>
+    
+    <span class="k">return</span> <span class="n">result</span><span class="o">;</span>
+<span class="o">}</span>
+
+<span class="c1">// Calculate n-th power of generating matrix</span>
+<span class="kt">int</span><span class="o">[][]</span> <span class="nf">power_M</span><span class="o">(</span><span class="kt">int</span> <span class="n">n</span><span class="o">)</span> <span class="o">{</span>
+    <span class="kt">int</span><span class="o">[][]</span> <span class="n">result</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[][]{</span> <span class="o">{</span><span class="mi">5</span><span class="o">,</span> <span class="o">-</span><span class="mi">4</span><span class="o">},</span> 
+                                  <span class="o">{</span><span class="mi">1</span><span class="o">,</span>  <span class="mi">0</span><span class="o">}</span> <span class="o">};</span>
+    <span class="n">power</span><span class="o">(</span><span class="n">result</span><span class="o">,</span> <span class="n">n</span><span class="o">);</span>
+    <span class="k">return</span> <span class="n">result</span><span class="o">;</span>
+<span class="o">}</span>
+
+<span class="c1">// Exponentiation by squaring</span>
+<span class="c1">// O(log(N)) complexity</span>
+<span class="c1">// https://en.wikipedia.org/wiki/Exponentiation_by_squaring</span>
+<span class="kt">void</span> <span class="nf">power</span><span class="o">(</span><span class="kt">int</span><span class="o">[][]</span> <span class="n">X</span><span class="o">,</span> <span class="kt">int</span> <span class="n">n</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">if</span><span class="o">(</span><span class="n">n</span> <span class="o">==</span> <span class="mi">1</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="k">if</span><span class="o">(</span><span class="n">n</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">multiply</span><span class="o">(</span><span class="n">X</span><span class="o">,</span> <span class="n">X</span><span class="o">);</span>
+        <span class="n">power</span><span class="o">(</span><span class="n">X</span><span class="o">,</span> <span class="n">n</span> <span class="o">/</span> <span class="mi">2</span><span class="o">);</span>
+    <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+        <span class="kt">int</span><span class="o">[][]</span> <span class="n">initial</span> <span class="o">=</span> <span class="o">{</span> <span class="o">{</span><span class="n">X</span><span class="o">[</span><span class="mi">0</span><span class="o">][</span><span class="mi">0</span><span class="o">],</span> <span class="n">X</span><span class="o">[</span><span class="mi">0</span><span class="o">][</span><span class="mi">1</span><span class="o">]},</span> 
+                            <span class="o">{</span><span class="n">X</span><span class="o">[</span><span class="mi">1</span><span class="o">][</span><span class="mi">0</span><span class="o">],</span> <span class="n">X</span><span class="o">[</span><span class="mi">1</span><span class="o">][</span><span class="mi">1</span><span class="o">]}</span> <span class="o">};</span>
+        <span class="n">multiply</span><span class="o">(</span><span class="n">X</span><span class="o">,</span> <span class="n">X</span><span class="o">);</span>
+        <span class="n">power</span><span class="o">(</span><span class="n">X</span><span class="o">,</span> <span class="o">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="o">)</span> <span class="o">/</span> <span class="mi">2</span><span class="o">);</span>
+        <span class="n">multiply</span><span class="o">(</span><span class="n">X</span><span class="o">,</span> <span class="n">initial</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="c1">// Multiplies AxB and writes result to A</span>
+<span class="c1">// A and B are 2x2 matrices</span>
+<span class="kt">void</span> <span class="nf">multiply</span><span class="o">(</span><span class="kt">int</span><span class="o">[][]</span> <span class="n">A</span><span class="o">,</span> <span class="kt">int</span><span class="o">[][]</span> <span class="n">B</span><span class="o">)</span> <span class="o">{</span>
+    <span class="kt">int</span> <span class="n">r_0_0</span> <span class="o">=</span> <span class="n">A</span><span class="o">[</span><span class="mi">0</span><span class="o">][</span><span class="mi">0</span><span class="o">]</span> <span class="o">*</span> <span class="n">B</span><span class="o">[</span><span class="mi">0</span><span class="o">][</span><span class="mi">0</span><span class="o">]</span> <span class="o">+</span> <span class="n">A</span><span class="o">[</span><span class="mi">0</span><span class="o">][</span><span class="mi">1</span><span class="o">]</span> <span class="o">*</span> <span class="n">B</span><span class="o">[</span><span class="mi">1</span><span class="o">][</span><span class="mi">0</span><span class="o">];</span>
+    <span class="kt">int</span> <span class="n">r_0_1</span> <span class="o">=</span> <span class="n">A</span><span class="o">[</span><span class="mi">0</span><span class="o">][</span><span class="mi">0</span><span class="o">]</span> <span class="o">*</span> <span class="n">B</span><span class="o">[</span><span class="mi">0</span><span class="o">][</span><span class="mi">1</span><span class="o">]</span> <span class="o">+</span> <span class="n">A</span><span class="o">[</span><span class="mi">0</span><span class="o">][</span><span class="mi">1</span><span class="o">]</span> <span class="o">*</span> <span class="n">B</span><span class="o">[</span><span class="mi">1</span><span class="o">][</span><span class="mi">1</span><span class="o">];</span>
+    <span class="kt">int</span> <span class="n">r_1_0</span> <span class="o">=</span> <span class="n">A</span><span class="o">[</span><span class="mi">1</span><span class="o">][</span><span class="mi">0</span><span class="o">]</span> <span class="o">*</span> <span class="n">B</span><span class="o">[</span><span class="mi">0</span><span class="o">][</span><span class="mi">0</span><span class="o">]</span> <span class="o">+</span> <span class="n">A</span><span class="o">[</span><span class="mi">1</span><span class="o">][</span><span class="mi">1</span><span class="o">]</span> <span class="o">*</span> <span class="n">B</span><span class="o">[</span><span class="mi">1</span><span class="o">][</span><span class="mi">0</span><span class="o">];</span>
+    <span class="kt">int</span> <span class="n">r_1_1</span> <span class="o">=</span> <span class="n">A</span><span class="o">[</span><span class="mi">1</span><span class="o">][</span><span class="mi">0</span><span class="o">]</span> <span class="o">*</span> <span class="n">B</span><span class="o">[</span><span class="mi">0</span><span class="o">][</span><span class="mi">1</span><span class="o">]</span> <span class="o">+</span> <span class="n">A</span><span class="o">[</span><span class="mi">1</span><span class="o">][</span><span class="mi">1</span><span class="o">]</span> <span class="o">*</span> <span class="n">B</span><span class="o">[</span><span class="mi">1</span><span class="o">][</span><span class="mi">1</span><span class="o">];</span>
+    <span class="n">A</span><span class="o">[</span><span class="mi">0</span><span class="o">][</span><span class="mi">0</span><span class="o">]</span> <span class="o">=</span> <span class="n">r_0_0</span><span class="o">;</span>
+    <span class="n">A</span><span class="o">[</span><span class="mi">0</span><span class="o">][</span><span class="mi">1</span><span class="o">]</span> <span class="o">=</span> <span class="n">r_0_1</span><span class="o">;</span>
+    <span class="n">A</span><span class="o">[</span><span class="mi">1</span><span class="o">][</span><span class="mi">0</span><span class="o">]</span> <span class="o">=</span> <span class="n">r_1_0</span><span class="o">;</span>
+    <span class="n">A</span><span class="o">[</span><span class="mi">1</span><span class="o">][</span><span class="mi">1</span><span class="o">]</span> <span class="o">=</span> <span class="n">r_1_1</span><span class="o">;</span>
+<span class="o">}</span></code></pre></div>
+
+<p>Described approach is a well-known technique, and you can find more details about it in the following resources: </p>
+
+<ul>
+<li><a href="https://en.wikipedia.org/wiki/Matrix_difference_equation">Matrix difference equation</a></li>
+<li><a href="https://math.stackexchange.com/questions/858268/converting-recursive-equations-into-matrices">Math.StackExchange: Converting recursive equations into matrices</a></li>
+<li><a href="http://zobayer.blogspot.de/2010/11/matrix-exponentiation.html">Matrix Exponentiation</a></li>
+<li><a href="http://fusharblog.com/solving-linear-recurrence-for-programming-contest/">Solving Linear Recurrence for Programming Contest</a></li>
+<li><a href="https://math.stackexchange.com/questions/124178/generating-matrix-for-a-recurrence-relation">Math.StackExchange: Generating matrix for a recurrence relation</a></li>
+<li><a href="http://stackoverflow.com/questions/9858072/generating-matrix-for-a-recurrence-relation">Stackoverflow: Generating matrix for a recurrence relation</a></li>
+</ul>
+
+<h2 id="closed-form-solution-using-characteristic-polynomial"><a href="#closed-form-solution-using-characteristic-polynomial">Closed-form solution using characteristic polynomial</a></h2>
+
+<p>In this section we will continue to work with the recurrence relation, derived in <a href="#derivation-of-a-simpler-recurrence-relation">one of the previous sections</a>:</p>
+
+<p><img src="/images/problem_solving_algorithms_and_math/img17.png" alt="Second-order recurrence relation reminder"></p>
+
+<p>Let&#39;s construct a <a href="https://en.wikipedia.org/wiki/Constant-recursive_sequence#Characterization_in_terms_of_exponential_polynomials">characteristic polynomial</a> for the given recurrence relation:</p>
+
+<p><img src="/images/problem_solving_algorithms_and_math/img27.png" alt="Characteristic polynomial"></p>
+
+<p>In order to find the closed-form solution, we need to solve given equation:</p>
+
+<p><img src="/images/problem_solving_algorithms_and_math/img28.png" alt="Characteristic polynomial factorization"></p>
+
+<p>So, the roots of characteristic polynomial are:</p>
+
+<p><img src="/images/problem_solving_algorithms_and_math/img29.png" alt="Roots of the characteristic polynomial"></p>
+
+<p>According to <a href="https://en.wikipedia.org/wiki/Constant-recursive_sequence#Characterization_in_terms_of_exponential_polynomials">the properties of linear recurrence relations</a>, 
+the closed-form solution has the following structure:</p>
+
+<p><img src="/images/problem_solving_algorithms_and_math/img30.png" alt="Structure of the closed form solution"></p>
+
+<p>Let&#39;s find the coefficients, using the values of the first items of the sequence:</p>
+
+<p><img src="/images/problem_solving_algorithms_and_math/img31.png" alt="Finding the coefficients"></p>
+
+<p>So, the closed-form formula for the <em>n-th</em> item of the sequence, defined by our recurrence relation, is:</p>
+
+<p><img src="/images/problem_solving_algorithms_and_math/img32.png" alt="Closed form formula"></p>
+
+<p><strong>Hence, here is a final and very short solution of the problem:</strong></p>
+
+<p><img src="/images/problem_solving_algorithms_and_math/img33.png" alt="Final solution"></p>
+
+<p><strong>And here a final implenetation of solution of the problem:</strong></p>
+
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="kt">int</span> <span class="nf">solve</span><span class="o">(</span><span class="kt">int</span> <span class="n">moves</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">if</span><span class="o">(</span><span class="n">moves</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">1</span><span class="o">)</span> <span class="k">return</span> <span class="mi">0</span><span class="o">;</span>
+    <span class="kt">int</span> <span class="n">result</span> <span class="o">=</span> <span class="o">((</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="n">moves</span><span class="o">)</span> <span class="o">+</span> <span class="mi">2</span><span class="o">)</span> <span class="o">/</span> <span class="mi">3</span><span class="o">;</span>
+    <span class="k">return</span> <span class="n">result</span><span class="o">;</span>
+<span class="o">}</span></code></pre></div>
+
+<p>Frankly speaking, due to the need of calculation of the <em>k-th</em> power of number <em>4</em>  - from the theoretical perspective, the solution still has complexity <code>O(log(k))</code>, however let&#39;s leave these details away and enjoy the neat formula, which we have just derived <em>:-)</em></p>
+
+<p>Additionally, the derived formula is convenient for computation of analytical properties of the solution. 
+For example, we can calculate the probability, that after large amount of steps, traveller will arrive into the vertex &quot;A&quot; (of course, we are interested only in even amounts of steps):</p>
+
+<ul>
+<li>Total amount of possible paths within <em>2k</em> steps is: <img src="/images/problem_solving_algorithms_and_math/img34.png" alt="Total amount of paths"> (we are rising the number <em>2</em> to the power of <em>2k</em> - because on each of <em>2k</em> steps, traveller can choose either of two adjacent vertices)</li>
+<li>Hence, the probability to arrive into vertex &quot;A&quot; is:
+<img src="/images/problem_solving_algorithms_and_math/img35.png" alt="Probability to arrive into the vertex &quot;A&quot;"></li>
+</ul>
+
+<p>Which means, that with a probability approximately <em>0.33</em>  traveller will arrive to the initial vertex after large amount of moves.</p>
+
+<p>As you can see - the closed-form solution is very convenient for the further analysis, and allows to reveal additional insights about the problem.</p>
+
+<h2 id="recurrence-relations-for-other-kinds-of-polygons"><a href="/computer_science/2017/04/17/random_walks_in_a_hexagon.html#recurrence-relations-for-other-kinds-of-polygons">Recurrence relations for other kinds of polygons</a></h2>
+
+<p>So far we have discussed only the neat recurrence relations for the hexagon, but what about other kinds of polygons? </p>
+
+<p>Well, we were able to reduce the complexity of the solution, but we have lost the universality of the developed solutions - it turns out, that for each kind of polygon we need to derive its own linear recurrence relation.</p>
+
+<p>I have derived linear recurrence relations for a couple of different kinds of polygons, and below is provided a table with recurrence relations for the various kinds of polygons:</p>
+
+<table><thead>
+<tr>
+<th></th>
+<th>Type</th>
+<th>Recurrence relation</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>3</td>
+<td><img src="/images/problem_solving_algorithms_and_math/img36.png" alt="Triangle"></td>
+<td><img src="/images/problem_solving_algorithms_and_math/img41.png" alt="Triangle recurrence relation"></td>
+</tr>
+<tr>
+<td>4</td>
+<td><img src="/images/problem_solving_algorithms_and_math/img37.png" alt="Rectangle"></td>
+<td><img src="/images/problem_solving_algorithms_and_math/img42.png" alt="Rectangle recurrence relation"></td>
+</tr>
+<tr>
+<td>5</td>
+<td><img src="/images/problem_solving_algorithms_and_math/img38.png" alt="Pentagon"></td>
+<td><img src="/images/problem_solving_algorithms_and_math/img43.png" alt="Pentagon recurrence relation"></td>
+</tr>
+<tr>
+<td>6</td>
+<td><img src="/images/problem_solving_algorithms_and_math/img39.png" alt="Hexagon"></td>
+<td><img src="/images/problem_solving_algorithms_and_math/img44.png" alt="Hexagon recurrence relation"></td>
+</tr>
+<tr>
+<td>7</td>
+<td><img src="/images/problem_solving_algorithms_and_math/img40.png" alt="Heptagon"></td>
+<td><img src="/images/problem_solving_algorithms_and_math/img45.png" alt="Heptagon recurrence relation"></td>
+</tr>
+</tbody></table>
+
+<p>For me it is still an open question, whether there are any pattern with respect to the structure of the derived recurrence relations (it would be good to have a possibility to obtain a recurrence relation, skipping the boilerplate derivation routine).</p>
+
+<h2 id="conclusion"><a href="#conclusion">Conclusion</a></h2>
+
+<p><a href="/computer_science/2017/04/17/random_walks_in_a_hexagon.html#brute-force-solution">The brute-force solution</a>: </p>
+
+<ul>
+<li>Is a fastest way to tackle the problem</li>
+<li>Can be implemented for different kinds of polygons (not only a hexagon)</li>
+<li>Has <strong>exponential runtime complexity</strong></li>
+<li>Hence, sufficient only for the small instances of the problem</li>
+</ul>
+
+<p><a href="/computer_science/2017/04/17/random_walks_in_a_hexagon.html#dynamic-programming-solution">Dynamic programming based solution</a>:</p>
+
+<ul>
+<li>In case, when brute-force solution depends on solutions of overlapping subproblems - it can be transformed into the Dynamic programming solution</li>
+<li>Can be implemented for different kinds of polygons (not only a hexagon)</li>
+<li>Has <strong>linear runtime complexity</strong></li>
+<li>Hence, can be used for solving the large instances of the problem</li>
+</ul>
+
+<p><strong>More efficient algorithms require an information about additional aspects of the problem - which limits the scope of the developed solution</strong> (for every type of a polygon - we will need to design its own solution):</p>
+
+<ul>
+<li>We are lucky, that for the given kind of problem it is possible <a href="/computer_science/2017/04/17/random_walks_in_a_hexagon.html#derivation-of-a-simpler-recurrence-relation">to derive a linear recurrence relation</a></li>
+<li><a href="/computer_science/2017/04/17/random_walks_in_a_hexagon.html#o-log-n-solution-using-generating-matrix-and-exponentiation-by-squaring">Generating matrices and exponentiation by squaring</a> - allows to design <strong><code>O(log(N))</code> solution</strong></li>
+<li>Derivation of the <a href="/computer_science/2017/04/17/random_walks_in_a_hexagon.html#closed-form-solution-using-characteristic-polynomial">closed-form solution</a> <strong>leads to the most fruitful results</strong>, however requires more efforts in comparison to the previous approaches</li>
+<li>Having the closed-form solution, we can investigate the various interesting properties of the problem</li>
+<li><a href="https://en.wikipedia.org/wiki/Mathematical_induction">Mathematical induction</a> is a useful tool for proving the various properties of designed solutions<br></li>
+</ul>
+
+<h2 id="source-of-the-problem"><a href="/computer_science/2017/04/17/random_walks_in_a_hexagon.html#source-of-the-problem">Source of the problem</a></h2>
+
+<p>The problem and its closed-form solution were discussed during one of the practical lessons of the course <a href="https://www.coursera.org/learn/modern-combinatorics">Modern combinatorics</a>, taught by <a href="http://discrete-mathematics.org/?page_id=29">Andrei Mikhailovich Raigorodskii</a> and <a href="http://wikimipt.org/wiki/%D0%98%D0%BB%D1%8C%D0%B8%D0%BD%D1%81%D0%BA%D0%B8%D0%B9_%D0%94%D0%BC%D0%B8%D1%82%D1%80%D0%B8%D0%B9_%D0%93%D0%B5%D0%BD%D0%BD%D0%B0%D0%B4%D0%B8%D0%B5%D0%B2%D0%B8%D1%87">Dmitriy Gennadievich Ilyinskiy</a>.</p>
+
+<div id="disqus_thread"></div>
+
+<script>
+
+var disqus_config = function () {
+this.page.url = "http://lagodiuk.github.io/computer_science/2017/04/17/random_walks_in_a_hexagon.html";
+this.page.identifier = "random_walks_in_a_hexagon";
+};
+
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+
+s.src = '//lahodiuk.disqus.com/embed.js';
+
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+  </article>
+
+</div>
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+  <div class="wrapper">
+  
+    <div class="footer-col-wrapper">
+        <div class="footer-col  footer-col-50-percent">
+            <h2 class="footer-heading">Yurii Lahodiuk</h2>
+            <p class="text center-justified">This is my personal blog about Algorithms, Programming Problems solving techniques and interesting Computer Science topics.   Expressed opinions are my own.
+</p>
+        </div>
+      
+        <div class="footer-col-right">
+	    
+
+                      <a href="/feed.xml"><svg width="40px" height="40px" viewBox="0 0 60 60" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <path d="M0.112290344,30 C0.112290344,13.4314567 13.3426506,0 29.663129,0 C45.9836073,0 59.2139676,13.4314567 59.2139676,30 C59.2139676,46.5685433 45.9836073,60 29.663129,60 C13.3426506,60 0.112290344,46.5685433 0.112290344,30 Z M0.112290344,30" fill="#E18F00" sketch:type="MSShapeGroup"></path>
+    <path d="M26.5147755,38.7571296 C26.5147755,36.8192934 24.9575021,35.2291656 23.0297047,35.2291656 C21.1094331,35.2291656 19.5492775,36.8192934 19.5492775,38.7571296 C19.5492775,40.7052068 21.1094331,42.277616 23.0297047,42.277616 C24.957422,42.277616 26.5146954,40.7052881 26.5147755,38.7571296 Z M36.8075433,42.2700571 C36.8075433,32.6055847 29.062648,24.7442705 19.5492775,24.7442705 L19.5492775,29.8318017 C22.8128986,29.8318017 25.8817303,31.1272145 28.1920609,33.4740429 C30.4999895,35.8159133 31.7732853,38.9454513 31.7732853,42.2701384 L36.8075433,42.2700571 Z M45.6871482,42.2675375 C45.6871482,27.6346878 33.9604014,15.722384 19.5492775,15.722384 L19.5492775,20.8123535 C31.186916,20.8123535 40.660496,30.438869 40.660496,42.2673749 L45.6871482,42.2675375 Z M45.6871482,42.2675375" id="Path" fill="#FFFFFF" sketch:type="MSShapeGroup"></path>
+    <path d="M59.2139676,30 C59.2139676,46.5685433 45.9836073,60 29.663129,60 C23.6102502,60 17.9824147,58.1525134 13.2970341,54.9827754 L47.1572554,5.81941103 C54.4691534,11.2806503 59.2139676,20.0777973 59.2139676,30 Z M59.2139676,30" id="reflec" fill-opacity="0.08" fill="#000000" sketch:type="MSShapeGroup"></path>
+</svg></a>
+          
+          
+          
+          
+          
+          
+          <a href="http://twitter.com/ylahodiuk"><svg width="40px" height="40px" viewBox="0 0 60 60" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <path d="M0,30 C0,13.4314567 13.4508663,0 30.0433526,0 C46.6358389,0 60.0867052,13.4314567 60.0867052,30 C60.0867052,46.5685433 46.6358389,60 30.0433526,60 C13.4508663,60 0,46.5685433 0,30 Z M0,30" fill="#4099FF" sketch:type="MSShapeGroup"></path>
+    <path d="M29.2997675,23.8879776 L29.3627206,24.9260453 L28.3135016,24.798935 C24.4943445,24.3116787 21.1578281,22.6592444 18.3249368,19.8840023 L16.9399677,18.5069737 L16.5832333,19.5238563 C15.8277956,21.7906572 16.3104363,24.1845684 17.8842648,25.7946325 C18.72364,26.6844048 18.5347806,26.8115152 17.0868584,26.2818888 C16.5832333,26.1124083 16.1425613,25.985298 16.1005925,26.0488532 C15.9537019,26.1971486 16.457327,28.1249885 16.8560302,28.8876505 C17.4016241,29.9469033 18.5137962,30.9849709 19.7308902,31.5993375 L20.7591248,32.0865938 L19.5420308,32.1077788 C18.3669055,32.1077788 18.3249368,32.1289639 18.4508431,32.57385 C18.8705307,33.9508786 20.5282967,35.4126474 22.3749221,36.048199 L23.6759536,36.4930852 L22.5427971,37.1710069 C20.8640467,38.1455194 18.891515,38.6963309 16.9189833,38.738701 C15.9746862,38.759886 15.1982642,38.8446262 15.1982642,38.9081814 C15.1982642,39.1200319 17.7583585,40.306395 19.2482495,40.7724662 C23.7179224,42.1494948 29.0269705,41.5563132 33.0140027,39.2047722 C35.846894,37.5311528 38.6797853,34.2050993 40.0018012,30.9849709 C40.7152701,29.2689815 41.428739,26.1335934 41.428739,24.6294545 C41.428739,23.654942 41.4916922,23.5278317 42.6668174,22.3626537 C43.359302,21.6847319 44.0098178,20.943255 44.135724,20.7314044 C44.3455678,20.3288884 44.3245835,20.3288884 43.2543801,20.6890343 C41.4707078,21.324586 41.2188952,21.2398458 42.1002392,20.2865183 C42.750755,19.6085965 43.527177,18.3798634 43.527177,18.0197174 C43.527177,17.9561623 43.2124113,18.0620876 42.8556769,18.252753 C42.477958,18.4646036 41.6385828,18.7823794 41.0090514,18.9730449 L39.8758949,19.3331908 L38.8476603,18.634084 C38.281082,18.252753 37.4836756,17.829052 37.063988,17.7019416 C35.9937846,17.4053509 34.357003,17.447721 33.3917215,17.7866818 C30.768674,18.7400093 29.110908,21.1974757 29.2997675,23.8879776 Z M29.2997675,23.8879776" id="Path" fill="#FFFFFF" sketch:type="MSShapeGroup"></path>
+    <path d="M60.0867052,30 C60.0867052,46.5685433 46.6358389,60 30.0433526,60 C23.8895925,60 18.1679598,58.1525134 13.4044895,54.9827754 L47.8290478,5.81941103 C55.2628108,11.2806503 60.0867052,20.0777973 60.0867052,30 Z M60.0867052,30" id="reflec" fill-opacity="0.08" fill="#000000" sketch:type="MSShapeGroup"></path>
+</svg></a>
+          <a href="http://linkedin.com/in/ylahodiuk"><svg width="40px" height="40px" viewBox="0 0 60 60" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <path d="M0.449161376,30 C0.449161376,13.4314567 13.6795217,0 30,0 C46.3204783,0 59.5508386,13.4314567 59.5508386,30 C59.5508386,46.5685433 46.3204783,60 30,60 C13.6795217,60 0.449161376,46.5685433 0.449161376,30 Z M0.449161376,30" fill="#007BB6" sketch:type="MSShapeGroup"></path>
+    <path d="M22.4680392,23.7098144 L15.7808366,23.7098144 L15.7808366,44.1369537 L22.4680392,44.1369537 L22.4680392,23.7098144 Z M22.4680392,23.7098144" id="Path" fill="#FFFFFF" sketch:type="MSShapeGroup"></path>
+    <path d="M22.9084753,17.3908761 C22.8650727,15.3880081 21.4562917,13.862504 19.1686418,13.862504 C16.8809918,13.862504 15.3854057,15.3880081 15.3854057,17.3908761 C15.3854057,19.3522579 16.836788,20.9216886 19.0818366,20.9216886 L19.1245714,20.9216886 C21.4562917,20.9216886 22.9084753,19.3522579 22.9084753,17.3908761 Z M22.9084753,17.3908761" id="Path" fill="#FFFFFF" sketch:type="MSShapeGroup"></path>
+    <path d="M46.5846502,32.4246563 C46.5846502,26.1503226 43.2856534,23.2301456 38.8851658,23.2301456 C35.3347011,23.2301456 33.7450983,25.2128128 32.8575489,26.6036896 L32.8575489,23.7103567 L26.1695449,23.7103567 C26.2576856,25.6271338 26.1695449,44.137496 26.1695449,44.137496 L32.8575489,44.137496 L32.8575489,32.7292961 C32.8575489,32.1187963 32.9009514,31.5097877 33.0777669,31.0726898 C33.5610713,29.8530458 34.6614937,28.5902885 36.5089747,28.5902885 C38.9297703,28.5902885 39.8974476,30.4634101 39.8974476,33.2084226 L39.8974476,44.1369537 L46.5843832,44.1369537 L46.5846502,32.4246563 Z M46.5846502,32.4246563" id="Path" fill="#FFFFFF" sketch:type="MSShapeGroup"></path>
+    <path d="M59.5508386,30 C59.5508386,46.5685433 46.3204783,60 30,60 C23.9471212,60 18.3192858,58.1525134 13.6339051,54.9827754 L47.4941264,5.81941103 C54.8060245,11.2806503 59.5508386,20.0777973 59.5508386,30 Z M59.5508386,30" id="reflec" fill-opacity="0.08" fill="#000000" sketch:type="MSShapeGroup"></path>
+</svg></a>
+          <a href="http://github.com/lagodiuk"><svg width="40px" height="40px" viewBox="0 0 60 60" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <path d="M0.336871032,30 C0.336871032,13.4314567 13.5672313,0 29.8877097,0 C46.208188,0 59.4385483,13.4314567 59.4385483,30 C59.4385483,46.5685433 46.208188,60 29.8877097,60 C13.5672313,60 0.336871032,46.5685433 0.336871032,30 Z M0.336871032,30" id="Github" fill="#333333" sketch:type="MSShapeGroup"></path>
+    <path d="M18.2184245,31.9355566 C19.6068506,34.4507902 22.2845295,36.0156764 26.8007287,36.4485173 C26.1561023,36.9365335 25.3817877,37.8630984 25.2749857,38.9342607 C24.4644348,39.4574749 22.8347506,39.62966 21.5674303,39.2310659 C19.7918469,38.6717023 19.1119377,35.1642642 16.4533306,35.6636959 C15.8773626,35.772144 15.9917933,36.1507609 16.489567,36.4722998 C17.3001179,36.9955141 18.0629894,37.6500075 18.6513541,39.04366 C19.1033554,40.113871 20.0531304,42.0259813 23.0569369,42.0259813 C24.2489236,42.0259813 25.0842679,41.8832865 25.0842679,41.8832865 C25.0842679,41.8832865 25.107154,44.6144649 25.107154,45.6761142 C25.107154,46.9004355 23.4507693,47.2457569 23.4507693,47.8346108 C23.4507693,48.067679 23.9990832,48.0895588 24.4396415,48.0895588 C25.3102685,48.0895588 27.1220883,47.3646693 27.1220883,46.0918317 C27.1220883,45.0806012 27.1382993,41.6806599 27.1382993,41.0860982 C27.1382993,39.785673 27.8372803,39.3737607 27.8372803,39.3737607 C27.8372803,39.3737607 27.924057,46.3153869 27.6704022,47.2457569 C27.3728823,48.3397504 26.8360115,48.1846887 26.8360115,48.6727049 C26.8360115,49.3985458 29.0168704,48.8505978 29.7396911,47.2571725 C30.2984945,46.0166791 30.0543756,39.2072834 30.0543756,39.2072834 L30.650369,39.1949165 C30.650369,39.1949165 30.6837446,42.3123222 30.6637192,43.7373675 C30.6427402,45.2128317 30.5426134,47.0792797 31.4208692,47.9592309 C31.9977907,48.5376205 33.868733,49.5526562 33.868733,48.62514 C33.868733,48.0857536 32.8436245,47.6424485 32.8436245,46.1831564 L32.8436245,39.4688905 C33.6618042,39.4688905 33.5387911,41.6768547 33.5387911,41.6768547 L33.5988673,45.7788544 C33.5988673,45.7788544 33.4186389,47.2733446 35.2190156,47.8992991 C35.8541061,48.1209517 37.2139245,48.1808835 37.277815,47.8089257 C37.3417055,47.4360167 35.6405021,46.8814096 35.6252446,45.7236791 C35.6157088,45.0178155 35.6567131,44.6059032 35.6567131,41.5379651 C35.6567131,38.470027 35.2438089,37.336079 33.8048426,36.4323453 C38.2457082,35.9766732 40.9939527,34.880682 42.3337458,31.9450695 C42.4383619,31.9484966 42.8791491,30.5737742 42.8219835,30.5742482 C43.1223642,29.4659853 43.2844744,28.1550957 43.3168964,26.6025764 C43.3092677,22.3930799 41.2895654,20.9042975 40.9014546,20.205093 C41.4736082,17.0182425 40.8060956,15.5675121 40.4961791,15.0699829 C39.3518719,14.6637784 36.5149435,16.1145088 34.9653608,17.1371548 C32.438349,16.3998984 27.0982486,16.4712458 25.0957109,17.3274146 C21.4005522,14.6875608 19.445694,15.0918628 19.445694,15.0918628 C19.445694,15.0918628 18.1821881,17.351197 19.1119377,20.6569598 C17.8961113,22.2028201 16.9902014,23.2968136 16.9902014,26.1963718 C16.9902014,27.8297516 17.1828264,29.2918976 17.6176632,30.5685404 C17.5643577,30.5684093 18.2008493,31.9359777 18.2184245,31.9355566 Z M18.2184245,31.9355566" id="Path" fill="#FFFFFF" sketch:type="MSShapeGroup"></path>
+    <path d="M59.4385483,30 C59.4385483,46.5685433 46.208188,60 29.8877097,60 C23.8348308,60 18.2069954,58.1525134 13.5216148,54.9827754 L47.3818361,5.81941103 C54.6937341,11.2806503 59.4385483,20.0777973 59.4385483,30 Z M59.4385483,30" id="reflec" fill-opacity="0.08" fill="#000000" sketch:type="MSShapeGroup"></path>
+</svg></a>
+          
+          <a href="http://www.spoj.com/users/stemm"><svg width="40px" height="40px" version="1.0" xmlns="http://www.w3.org/2000/svg"
+ width="192.000000pt" height="192.000000pt" viewBox="0 0 192.000000 192.000000"
+ preserveAspectRatio="xMidYMid meet">
+<metadata>
+Created by potrace 1.10, written by Peter Selinger 2001-2011
+</metadata>
+<g transform="translate(0.000000,192.000000) scale(0.100000,-0.100000)"
+fill="#2775bf" stroke="none">
+<path d="M884 1830 c-6 -6 -30 -13 -54 -16 -31 -4 -50 -13 -69 -35 -14 -16
+-35 -29 -49 -29 -12 0 -25 -7 -28 -15 -4 -8 -15 -15 -25 -15 -11 0 -22 -7 -25
+-15 -4 -8 -16 -15 -28 -15 -12 0 -36 -13 -54 -30 -18 -16 -41 -30 -52 -30 -10
+0 -20 -7 -24 -15 -3 -8 -16 -15 -30 -15 -13 0 -26 -7 -30 -15 -3 -8 -16 -15
+-30 -15 -13 0 -26 -7 -30 -15 -3 -8 -12 -15 -20 -15 -8 0 -24 -13 -36 -30 -12
+-16 -29 -30 -39 -30 -25 0 -111 -91 -111 -118 0 -13 -7 -25 -15 -28 -23 -9
+-23 -759 0 -768 8 -3 15 -16 15 -29 0 -26 86 -117 112 -117 9 0 26 -13 38 -30
+12 -16 28 -30 36 -30 8 0 17 -7 20 -15 4 -8 17 -15 30 -15 14 0 27 -7 30 -15
+4 -8 17 -15 30 -15 14 0 27 -7 30 -15 4 -8 14 -15 24 -15 11 0 34 -13 52 -30
+18 -16 42 -30 54 -30 12 0 24 -7 28 -15 3 -8 14 -15 25 -15 10 0 21 -7 25 -15
+3 -8 16 -15 28 -15 14 0 34 -13 48 -30 17 -21 34 -30 55 -30 16 0 43 -7 59
+-15 36 -19 115 -19 151 -1 15 8 33 12 39 10 7 -3 21 4 31 16 10 11 25 20 34
+20 9 1 27 14 41 30 13 17 31 30 40 30 8 0 28 7 44 15 15 8 36 15 46 15 10 0
+25 11 34 25 10 14 28 30 42 35 13 5 24 14 24 20 0 5 13 10 29 10 16 0 31 6 35
+15 3 9 18 15 36 15 26 0 70 29 70 46 0 13 46 43 66 44 23 0 64 39 64 60 0 7
+11 28 25 46 l25 33 0 391 0 391 -25 33 c-14 18 -25 40 -25 48 0 20 -42 58 -66
+58 -18 1 -64 32 -64 44 0 17 -44 46 -70 46 -18 0 -33 6 -36 15 -4 9 -19 15
+-35 15 -16 0 -29 5 -29 10 0 6 -11 15 -24 20 -14 5 -32 21 -42 35 -9 14 -24
+25 -34 25 -10 0 -31 7 -46 15 -16 8 -36 15 -44 15 -9 0 -27 13 -40 30 -14 16
+-32 29 -41 30 -9 0 -24 9 -34 20 -10 12 -24 19 -31 16 -6 -2 -24 2 -39 10 -32
+16 -126 19 -141 4z m238 -317 c17 -15 19 -15 37 1 16 15 19 15 31 1 7 -8 20
+-15 30 -15 30 0 71 -57 64 -88 -4 -15 -11 -31 -15 -37 -5 -5 -9 -20 -9 -33 0
+-51 -90 -100 -106 -57 -4 10 -20 15 -45 15 -26 0 -42 5 -45 15 -5 11 -22 15
+-69 15 -43 0 -66 -5 -75 -15 -7 -8 -19 -15 -26 -15 -18 0 -54 -36 -54 -55 0
+-7 -8 -19 -17 -25 -14 -8 -15 -12 -5 -17 7 -3 17 -16 22 -29 6 -13 21 -29 34
+-34 13 -5 27 -14 31 -19 3 -6 22 -11 41 -11 22 0 37 -6 40 -15 4 -8 14 -15 24
+-15 10 0 23 -7 30 -15 7 -8 25 -15 41 -15 15 0 30 -4 34 -9 3 -5 19 -13 36
+-16 38 -8 169 -136 169 -164 0 -10 7 -21 15 -25 22 -8 22 -214 0 -222 -8 -4
+-15 -17 -15 -30 0 -14 -7 -27 -15 -30 -8 -4 -15 -14 -15 -25 0 -25 -43 -69
+-68 -69 -11 0 -22 -7 -26 -15 -3 -8 -16 -15 -29 -15 -14 0 -30 -7 -37 -15 -8
+-10 -30 -15 -64 -15 -29 0 -57 -5 -64 -12 -17 -17 -160 -18 -174 -1 -7 8 -34
+13 -78 13 -51 0 -69 4 -74 15 -3 8 -17 15 -31 15 -14 0 -28 7 -31 15 -4 9 -19
+15 -35 15 -26 0 -29 3 -29 34 0 21 6 36 15 40 8 3 15 17 15 31 0 14 7 28 15
+31 9 4 15 19 15 39 0 19 4 36 10 40 11 7 51 -14 63 -32 4 -7 27 -13 51 -13 27
+0 48 -6 56 -15 18 -22 208 -22 216 0 4 8 16 15 28 15 33 0 51 29 51 80 0 48
+-18 80 -47 80 -9 0 -32 14 -50 30 -30 27 -55 35 -100 32 -9 -1 -22 5 -28 13
+-7 8 -27 15 -45 15 -24 0 -43 11 -79 45 -27 25 -58 45 -70 45 -16 0 -27 11
+-39 38 -9 21 -17 46 -17 56 0 9 -7 19 -15 22 -22 9 -22 222 0 230 9 4 15 19
+15 40 0 21 6 37 14 40 8 3 16 14 19 25 3 12 14 19 29 19 13 1 33 14 48 30 13
+17 33 30 45 30 12 0 25 4 31 9 14 14 49 18 183 20 103 1 128 -2 143 -16z"/>
+</g>
+</svg>
+</a>
+
+
+            <a href="http://stackoverflow.com/users/653511/stemm?tab=profile">
+            <img src="http://stackexchange.com/users/flair/329794.png" width="208" height="58" alt="profile for stemm on Stack Exchange, a network of free, community-driven Q&amp;A sites" title="profile for stemm on Stack Exchange, a network of free, community-driven Q&amp;A sites">
+            </a>
+        </div>
+    </div>
+
+  </div>
+</footer>
+
+
+    <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-83288425-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+  </body>
+
+</html>
