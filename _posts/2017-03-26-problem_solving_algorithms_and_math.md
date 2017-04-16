@@ -12,14 +12,14 @@ comments: false
 
 There is a hexagon and a traveller, which moves between vertices of the hexagon.
 At every step the traveller randomly chooses one of adjacent vertices and moves there.
-The traveller starts to move from the vertex, named "A".
-The question is: how many paths are there - which end in the initial vertex after N steps?
+The question is: how many paths are there - which end in the initial vertex after *N* steps?
 
+For the sake of convenience, let's assign letters to the vertices of the hexagon, and let's assume that initial vertex is "A".
 Below is an illustration, which demonstrates two paths (out of six possible), which end in the initial vertex after four steps (the arrows are indexed in the order of performed moves):
 
 ![Demonstration of the problem](/images/problem_solving_algorithms_and_math/img2.png)
 
-I will describe a couple of algorithms for tackilng of this problem, we will see how the runtime efficiency of solutions can be improved from an exponential complexity down to almost a constant time complexity. 
+I will describe a couple of algorithms for tackling described problem, we will see how the runtime efficiency of solutions can be improved from an exponential complexity down to almost a constant time complexity. 
 And, finally, we will discuss the pros and cons of each approach.
 
 ## Table of contents
@@ -28,15 +28,18 @@ And, finally, we will discuss the pros and cons of each approach.
 * [Derivation of a simpler recurrence relation]({{page.url}}#derivation-of-a-simpler-recurrence-relation)
   * [O(log(N)) solution using generating matrix and exponentiation by squaring]({{page.url}}#o-log-n-solution-using-generating-matrix-and-exponentiation-by-squaring)
   * [Closed-form solution using characteristic polynomial]({{page.url}}#closed-form-solution-using-characteristic-polynomial)
+  * [Recurrence relations for other kinds of polygons]({{page.url}}#recurrence-relations-for-other-kinds-of-polygons)
+* [Conclusion]({{page.url}}#conclusion)
+* [Source of the problem]({{page.url}}#source-of-the-problem)
 
 <!--more-->
 
 ## [Brute-force solution](#brute-force-solution) ##
 
-Let's start with a Brute-force solution. 
+Let's start with a Brute-force solution.   
 As an auxiliary step, let's assign indices to the vertices of the hexagon (from the interval *0 to 5*).
 We can observe that an amount of paths, which end in any specific vertex, 
-depends only on the amount of paths to adjacent vertices of the given vertex:
+depends only on the amount of paths to adjacent vertices:
 
 ![Demonstration of the Brute-force solution](/images/problem_solving_algorithms_and_math/img3.png)
 
@@ -176,22 +179,23 @@ Now, our goal is to reduce an amount of variables inside the recurrence relation
 
 ![Simplified recurrence relations](/images/problem_solving_algorithms_and_math/img9.png)
 
-So, we have obtained a system of two recurrence relations with two variables (6) and (7):
+So, we have obtained a system of two recurrence relations: (6) and (7), with two variables:
 
 ![System of two recurrence relations](/images/problem_solving_algorithms_and_math/img10.png)
 
-Now, let's derive the recurrence relation for amount of paths, which ends in the vertex "A" after *n* moves:
+Now, let's derive the recurrence relation for amount of paths, which end in the vertex "A" after *n* moves:
 
 ![Solution of the system of two recurrence relations](/images/problem_solving_algorithms_and_math/img11.png)
 
-So, finally, we have derived a neat recurrence relation for calculation of the amount of paths, which ends in the vertex "A" after given amount of moves.
+So, finally, we have derived a neat recurrence relation for calculation of the amount of paths, which end in the vertex "A" after given amount of moves.
+
 I would like to show its formula once more, together with solutions for the base cases (when *N* is *1, 2, 3 or 4*):
 
 ![Recurrence relation for An](/images/problem_solving_algorithms_and_math/img13.png)
 
 You can verify by hand the correctness of the derived recurrence relation, using the table with solutions, which was presented in the previous section of the post.
 
-Using the derived recurrence relation, we can implement very simple non-recursive solution for calculation of the amount of random walks in a hexagon:
+Using the derived recurrence relation, we can implement very simple non-recursive solution:
 
 {% highlight java %}
 int solve(int moves) {
@@ -224,8 +228,8 @@ int solve(int moves) {
 However, the runtime complexity of presented algorithm is obviously, still `O(N)`!   
 So, why would be bother ourselves with all these derivations, if we still get the linear-time solution?
 
-Well, we have revealed the fact, that the solution of the problem can be expressed in the form of a [homogeneous linear recurrence relation of the 4th order with constant coefficients](https://en.wikipedia.org/wiki/Constant-recursive_sequence).
-We can make use of this observation for development of the more efficient algorithms.
+Well, we have revealed the fact, that the solution of the problem can be expressed in the form of a [linear recurrence relation of the 4th order with constant coefficients](https://en.wikipedia.org/wiki/Constant-recursive_sequence).
+We can make use of this fact for development of more efficient algorithms.
 
 Additionally, based on the discovered recurrence and the principle of [induction](https://en.wikipedia.org/wiki/Mathematical_induction), we can prove, that the solution for odd values of *N* is always zero:
 ![Solution for the odd values of N](/images/problem_solving_algorithms_and_math/img14.png)
@@ -234,7 +238,7 @@ This observation allows us to solve immediately the problems with odd values of 
 and for instances of the problem with even values of *N* we can *transform the 4th-order recurrence relation into the 2nd-order recurrence relation*:
 ![Second-order recurrence relation](/images/problem_solving_algorithms_and_math/img15.png)
 
-So, here is a more accurate description of solution, based on the 2nd-order recurrence relation:
+So, here is a full description of solution, based on the 2nd-order recurrence relation:
 ![Second-order recurrence relation detailed](/images/problem_solving_algorithms_and_math/img16.png)
 
 Now, before moving to the more optimal algorithm, let's implement the simpler version of `O(N)` solution, based on the derived 2-nd order recurrence:
@@ -394,7 +398,7 @@ In this section we will continue to work with the recurrence relation, derived i
 
 ![Second-order recurrence relation reminder](/images/problem_solving_algorithms_and_math/img17.png)
 
-Let's construct a [characteristic polynomial](https://en.wikipedia.org/wiki/Constant-recursive_sequence ) for the given recurrence relation:
+Let's construct a [characteristic polynomial](https://en.wikipedia.org/wiki/Constant-recursive_sequence#Characterization_in_terms_of_exponential_polynomials ) for the given recurrence relation:
 
 ![Characteristic polynomial](/images/problem_solving_algorithms_and_math/img27.png)
 
@@ -438,9 +442,50 @@ Frankly speaking, due to the need of calculation of the *k-th* power of number *
 Additionally, the derived formula is convenient for computation of analytical properties of the solution. 
 For example, we can calculate the probability, that after large amount of steps, traveller will arrive into the vertex "A" (of course, we are interested only in even amounts of steps):
 * Total amount of possible paths within *2k* steps is: ![Total amount of paths](/images/problem_solving_algorithms_and_math/img34.png) (we are rising the number *2* to the power of *2k* - because on each of *2k* steps, traveller can choose either of two adjacent vertices)
-* Hence, the probability to arrive into vertex "A" after large amount of steps is:
+* Hence, the probability to arrive into vertex "A" is:
 ![Probability to arrive into the vertex "A"](/images/problem_solving_algorithms_and_math/img35.png)
 
-Which means, that with a probability approximately *0.33*  traveller will arrive to the initial vertex "A".
+Which means, that with a probability approximately *0.33*  traveller will arrive to the initial vertex after large amount of moves.
 
-As you can see - the closed-form solution is very convenient for the further analysis, which allows to reveal additional insights about the solution of the problem.
+As you can see - the closed-form solution is very convenient for the further analysis, and allows to reveal additional insights about the problem.
+
+## [Recurrence relations for other kinds of polygons]({{page.url}}#recurrence-relations-for-other-kinds-of-polygons) ##
+
+So far we have discussed only the neat recurrence relations for the hexagon, but what about other kinds of polygons? 
+
+Well, we were able to improve the complexity of the solution, but we have lost the universality of the developed solutions - it turns out, that for each kind of polygon we need to derive its own linear recurrence relation.
+
+I have derived linear recurrence relations for a couple of different kinds of polygons, however I didn't notice any pattern with respect to the structure of the derived recurrence relations.
+
+Below is a table with derived recurrence relations for the various kinds of polygons:
+
+| |Type|Recurrence relation|
+|---|---|---|
+|3|![Triangle](/images/problem_solving_algorithms_and_math/img36.png) | ![Triangle recurrence relation](/images/problem_solving_algorithms_and_math/img41.png) |
+|4|![Rectangle](/images/problem_solving_algorithms_and_math/img37.png) | ![Rectangle recurrence relation](/images/problem_solving_algorithms_and_math/img42.png) |
+|5|![Pentagon](/images/problem_solving_algorithms_and_math/img38.png)| ![Pentagon recurrence relation](/images/problem_solving_algorithms_and_math/img43.png) |
+|6|![Hexagon](/images/problem_solving_algorithms_and_math/img39.png)| ![Hexagon recurrence relation](/images/problem_solving_algorithms_and_math/img44.png) |
+|7|![Heptagon](/images/problem_solving_algorithms_and_math/img40.png) | ![Heptagon recurrence relation](/images/problem_solving_algorithms_and_math/img45.png) |
+
+## [Conclusion](#conclusion) ##
+[The brute-force solution]({{page.url}}#brute-force-solution): 
+- Is a fastest way to tackle the problem
+- Can be implemented for different kinds of polygons (not only a hexagon)
+- Has **exponential runtime complexity**
+- Hence, sufficient only for the small instances of the problem
+
+[Dynamic programming based solution]({{page.url}}#dynamic-programming-solution):
+- In case, when brute-force solution depends on solutions of overlapping subproblems - it can be transformed into the Dynamic programming solution
+- Can be implemented for different kinds of polygons (not only a hexagon)
+- Has **linear runtime complexity**
+- Hence, can be used for solving the large instances of the problem
+
+**More efficient algorithms require an information about additional aspects of the problem - which limits the scope of the developed solution** (for every type of a polygon - we will need to design its own solution):
+* We are lucky, that for the given kind of problem it is possible [to derive a linear recurrence relation]({{page.url}}#derivation-of-a-simpler-recurrence-relation)
+* [Generating matrices and exponentiation by squaring]({{page.url}}#o-log-n-solution-using-generating-matrix-and-exponentiation-by-squaring) - allows to design **`O(log(N))` solution**
+* Derivation of the [closed-form solution]({{page.url}}#closed-form-solution-using-characteristic-polynomial) **leads to the most fruitful results**, however requires more efforts in comparison to the previous approaches
+* Having the closed-form solution, we can investigate the various interesting properties of the problem
+* [Mathematical induction](https://en.wikipedia.org/wiki/Mathematical_induction ) is a useful tool for proving the various properties of designed solutions  
+
+## [Source of the problem]({{page.url}}#source-of-the-problem) ##
+The problem and its closed-form solution were discussed during one of the practical lessons of the course [Modern combinatorics](https://www.coursera.org/learn/modern-combinatorics ), taught by [Andrei Mikhailovich Raigorodskii](http://discrete-mathematics.org/?page_id=29 ) and [Dmitriy Gennadievich Ilyinskiy](http://wikimipt.org/wiki/%D0%98%D0%BB%D1%8C%D0%B8%D0%BD%D1%81%D0%BA%D0%B8%D0%B9_%D0%94%D0%BC%D0%B8%D1%82%D1%80%D0%B8%D0%B9_%D0%93%D0%B5%D0%BD%D0%BD%D0%B0%D0%B4%D0%B8%D0%B5%D0%B2%D0%B8%D1%87 ).
