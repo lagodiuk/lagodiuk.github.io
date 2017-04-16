@@ -455,9 +455,7 @@ So far we have discussed only the neat recurrence relations for the hexagon, but
 
 Well, we were able to improve the complexity of the solution, but we have lost the universality of the developed solutions - it turns out, that for each kind of polygon we need to derive its own linear recurrence relation.
 
-I have derived linear recurrence relations for a couple of different kinds of polygons, however I didn't notice any pattern with respect to the structure of the derived recurrence relations.
-
-Below is a table with derived recurrence relations for the various kinds of polygons:
+I have derived linear recurrence relations for a couple of different kinds of polygons, and below is a table with recurrence relations for the various kinds of polygons:
 
 | |Type|Recurrence relation|
 |---|---|---|
@@ -466,6 +464,8 @@ Below is a table with derived recurrence relations for the various kinds of poly
 |5|![Pentagon](/images/problem_solving_algorithms_and_math/img38.png)| ![Pentagon recurrence relation](/images/problem_solving_algorithms_and_math/img43.png) |
 |6|![Hexagon](/images/problem_solving_algorithms_and_math/img39.png)| ![Hexagon recurrence relation](/images/problem_solving_algorithms_and_math/img44.png) |
 |7|![Heptagon](/images/problem_solving_algorithms_and_math/img40.png) | ![Heptagon recurrence relation](/images/problem_solving_algorithms_and_math/img45.png) |
+
+For me it is still an open question, whether there are any pattern with respect to the structure of the derived recurrence relations (it would be good to have a possibility to obtain a recurrence relation, skipping the boilerplate derivation routine).
 
 ## [Conclusion](#conclusion) ##
 [The brute-force solution]({{page.url}}#brute-force-solution): 
