@@ -7,7 +7,7 @@ tags:
 - algorithms
 - combinatorics
 - math
-comments: false
+comments: true
 ---
 
 There is a hexagon and a traveller, which moves between vertices of the hexagon.
@@ -489,3 +489,22 @@ For me it is still an open question, whether there are any pattern with respect 
 
 ## [Source of the problem]({{page.url}}#source-of-the-problem) ##
 The problem and its closed-form solution were discussed during one of the practical lessons of the course [Modern combinatorics](https://www.coursera.org/learn/modern-combinatorics ), taught by [Andrei Mikhailovich Raigorodskii](http://discrete-mathematics.org/?page_id=29 ) and [Dmitriy Gennadievich Ilyinskiy](http://wikimipt.org/wiki/%D0%98%D0%BB%D1%8C%D0%B8%D0%BD%D1%81%D0%BA%D0%B8%D0%B9_%D0%94%D0%BC%D0%B8%D1%82%D1%80%D0%B8%D0%B9_%D0%93%D0%B5%D0%BD%D0%BD%D0%B0%D0%B4%D0%B8%D0%B5%D0%B2%D0%B8%D1%87 ).
+
+<div id="disqus_thread"></div>
+<script>
+
+var disqus_config = function () {
+this.page.url = "http://lagodiuk.github.io/computer_science/2017/04/17/random_walks_in_a_hexagon.html";
+this.page.identifier = "random_walks_in_a_hexagon";
+};
+
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+
+s.src = '//lahodiuk.disqus.com/embed.js';
+
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
