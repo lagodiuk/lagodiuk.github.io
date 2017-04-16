@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Random walks in a hexagon"
-date:   2017-03-26 10:00:00
+date:   2017-04-16 22:15:00
 categories: computer_science
 tags:
 - algorithms
@@ -453,9 +453,9 @@ As you can see - the closed-form solution is very convenient for the further ana
 
 So far we have discussed only the neat recurrence relations for the hexagon, but what about other kinds of polygons? 
 
-Well, we were able to improve the complexity of the solution, but we have lost the universality of the developed solutions - it turns out, that for each kind of polygon we need to derive its own linear recurrence relation.
+Well, we were able to reduce the complexity of the solution, but we have lost the universality of the developed solutions - it turns out, that for each kind of polygon we need to derive its own linear recurrence relation.
 
-I have derived linear recurrence relations for a couple of different kinds of polygons, and below is a table with recurrence relations for the various kinds of polygons:
+I have derived linear recurrence relations for a couple of different kinds of polygons, and below is provided a table with recurrence relations for the various kinds of polygons:
 
 | |Type|Recurrence relation|
 |---|---|---|
