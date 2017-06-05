@@ -419,7 +419,7 @@ public class PoissonDistributionCheck {
 }
 {% endhighlight %}
 
-Below are presented an example of table (for *n = 40*) with comparison of observed distribution and the Poisson distribution:
+Below is presented an example of table (for *n = 40*) with comparison of observed distribution and the Poisson distribution:
 
 | n  | k | Observed distribution of the values of ![xi](/images/langford_pairing_problem/xi.png) | Poisson distribution |
 |----|---|---------|---------|
