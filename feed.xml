@@ -6,9 +6,672 @@
 </description>
     <link>http://lagodiuk.github.io/</link>
     <atom:link href="http://lagodiuk.github.io/feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Sun, 16 Apr 2017 22:41:17 +0200</pubDate>
-    <lastBuildDate>Sun, 16 Apr 2017 22:41:17 +0200</lastBuildDate>
+    <pubDate>Tue, 06 Jun 2017 00:04:46 +0200</pubDate>
+    <lastBuildDate>Tue, 06 Jun 2017 00:04:46 +0200</lastBuildDate>
     <generator>Jekyll v2.4.0</generator>
+    
+      <item>
+        <title>Investigation of some probabilistic properties of the Langford pairing problem</title>
+        <description>&lt;p&gt;In combinatorial mathematics, a &lt;a href=&quot;https://en.wikipedia.org/wiki/Langford_pairing&quot;&gt;Langford pairing&lt;/a&gt;, also called a Langford sequence, is a permutation of the sequence of &lt;em&gt;2n&lt;/em&gt; numbers &lt;em&gt;(1, 1, 2, 2, ..., n, n)&lt;/em&gt; in which the two ones are one unit apart, the two twos are two units apart, and more generally the two copies of each number &lt;em&gt;k&lt;/em&gt; are &lt;em&gt;k&lt;/em&gt; units apart.
+Langford pairings are named after C. Dudley Langford, who posed the problem of constructing them in 1958.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/langford_pairing_problem/langford_pairing_picture.png&quot; alt=&quot;Demonstration of the problem&quot;&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;table-of-contents&quot;&gt;Table of contents&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;/computer_science/2017/06/04/langford_pairing_problem.html#when-does-the-langford-pairing-exist&quot;&gt;When does the Langford pairing exist?&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;/computer_science/2017/06/04/langford_pairing_problem.html#langford-pairing-and-the-random-permutations&quot;&gt;Langford pairing and the random permutations&lt;/a&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;/computer_science/2017/06/04/langford_pairing_problem.html#expectation-of-the-amount-of-correct-placements&quot;&gt;Expectation of the amount of correct placements&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;/computer_science/2017/06/04/langford_pairing_problem.html#variance-of-the-amount-of-correct-placements&quot;&gt;Variance of the amount of correct placements&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;/computer_science/2017/06/04/langford_pairing_problem.html#experimental-evaluation&quot;&gt;Experimental evaluation&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;/computer_science/2017/06/04/langford_pairing_problem.html#probabilistic-bounds&quot;&gt;Probabilistic bounds&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;/computer_science/2017/06/04/langford_pairing_problem.html#speculation-around-the-poisson-distribution&quot;&gt;Speculation around the Poisson distribution&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;!--more--&gt;
+
+&lt;h2 id=&quot;when-does-the-langford-pairing-exist&quot;&gt;&lt;a href=&quot;#when-does-the-langford-pairing-exist&quot;&gt;When does the Langford pairing exist?&lt;/a&gt;&lt;/h2&gt;
+
+&lt;p&gt;Let’s consider an arrangement of &lt;em&gt;n&lt;/em&gt; pairs of natural numbers within a sequence of length &lt;em&gt;2n&lt;/em&gt;, which satisfies conditions of the problem.
+Is it possible to obtain a Langford sequence for all values of &lt;em&gt;n&lt;/em&gt;?&lt;/p&gt;
+
+&lt;p&gt;Every number &lt;em&gt;i&lt;/em&gt; can be associated with two numbers: &lt;em&gt;x&lt;sub&gt;i&lt;/sub&gt;&lt;/em&gt; and &lt;em&gt;y&lt;sub&gt;i&lt;/sub&gt;&lt;/em&gt;, which represent the indices of the first and the second occurrence of the number in the sequence.
+Hence, according to the requirements of the problem, we can define the system of following constraints:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/langford_pairing_problem/img_1.png&quot; alt=&quot;img 1&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;The third and the second constraints mean, that all values of &lt;em&gt;x&lt;sub&gt;i&lt;/sub&gt;&lt;/em&gt; and &lt;em&gt;y&lt;sub&gt;i&lt;/sub&gt;&lt;/em&gt; must be unique.
+Having the third constraint in mind, let’s calculate the sum of all &lt;em&gt;x&lt;sub&gt;i&lt;/sub&gt;&lt;/em&gt; and &lt;em&gt;y&lt;sub&gt;i&lt;/sub&gt;&lt;/em&gt;:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/langford_pairing_problem/img_2.png&quot; alt=&quot;img 2&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;On the other hand, having the first constraint in mind, the sum of all &lt;em&gt;x&lt;sub&gt;i&lt;/sub&gt;&lt;/em&gt; and &lt;em&gt;y&lt;sub&gt;i&lt;/sub&gt;&lt;/em&gt; can be represented in a
+following way:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/langford_pairing_problem/img_3.png&quot; alt=&quot;ing 3&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;Hence, from equations (3) and (4) we have:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/langford_pairing_problem/img_4.png&quot; alt=&quot;img 4&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;As far as the sum of all &lt;em&gt;x&lt;sub&gt;i&lt;/sub&gt;&lt;/em&gt; is integer, then &lt;img src=&quot;/images/langford_pairing_problem/img_5.png&quot; alt=&quot;img 5&quot;&gt; must be integer as well.
+It is possible iff &lt;img src=&quot;/images/langford_pairing_problem/img_6.png&quot; alt=&quot;img 6&quot;&gt;.&lt;/p&gt;
+
+&lt;p&gt;Hence, in case if &lt;img src=&quot;/images/langford_pairing_problem/img_6.png&quot; alt=&quot;img 6&quot;&gt; the &lt;em&gt;n&lt;/em&gt; pairs of natural numbers can be arranged into the sequence of
+length &lt;em&gt;2n&lt;/em&gt; (with respect to the constraints of the problem).&lt;/p&gt;
+
+&lt;h2 id=&quot;langford-pairing-and-the-random-permutations&quot;&gt;&lt;a href=&quot;#langford-pairing-and-the-random-permutations&quot;&gt;Langford pairing and the random permutations&lt;/a&gt;&lt;/h2&gt;
+
+&lt;p&gt;Let’s explore the possibility to obtain a Langford sequence (which will satisfy all constraints from equation (2)) as a result of the random permutation of the sequence of &lt;em&gt;n&lt;/em&gt; pairs of natural numbers.&lt;/p&gt;
+
+&lt;h2 id=&quot;expectation-of-the-amount-of-correct-placements&quot;&gt;&lt;a href=&quot;#expectation-of-the-amount-of-correct-placements&quot;&gt;Expectation of the amount of correct placements&lt;/a&gt;&lt;/h2&gt;
+
+&lt;p&gt;Let’s consider a discrete valued random variable &lt;img src=&quot;/images/langford_pairing_problem/xi.png&quot; alt=&quot;xi&quot;&gt;, which represents an amount of correct placements of pairs of numbers (which satisfy the first constraint from the system of constraints (2)).&lt;/p&gt;
+
+&lt;p&gt;In order to proceed, let’s represent &lt;img src=&quot;/images/langford_pairing_problem/xi.png&quot; alt=&quot;xi&quot;&gt; as a sum of indicator random variables:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/langford_pairing_problem/img_7.png&quot; alt=&quot;img 7&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;where &lt;img src=&quot;/images/langford_pairing_problem/xii.png&quot; alt=&quot;xii&quot;&gt; is an indicator random variable, 
+which indicates - whether the pair of &lt;em&gt;i&lt;/em&gt;-th numbers placed correctly (with respect to the constraints from equation (2)):&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/langford_pairing_problem/img_8.png&quot; alt=&quot;img 8&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;Due to the linearity of the expectation:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/langford_pairing_problem/img_9.png&quot; alt=&quot;img 9&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;Where: &lt;img src=&quot;/images/langford_pairing_problem/img_10.png&quot; alt=&quot;img 10&quot;&gt; is a probability, that &lt;em&gt;x&lt;sub&gt;i&lt;/sub&gt;&lt;/em&gt; and &lt;em&gt;y&lt;sub&gt;i&lt;/sub&gt;&lt;/em&gt; are placed correctly (according to the constraints from equation (2)).&lt;/p&gt;
+
+&lt;p&gt;Let&amp;#39;s calculate &lt;img src=&quot;/images/langford_pairing_problem/img_10.png&quot; alt=&quot;img 10&quot;&gt;.
+For every pair of numbers with index &lt;img src=&quot;/images/langford_pairing_problem/img_11.png&quot; alt=&quot;img 11&quot;&gt; out of &lt;img src=&quot;/images/langford_pairing_problem/img_12.png&quot; alt=&quot;img 12&quot;&gt; possible positions for &lt;em&gt;x&lt;sub&gt;i&lt;/sub&gt;&lt;/em&gt; and &lt;em&gt;y&lt;sub&gt;i&lt;/sub&gt;&lt;/em&gt; - there are only &lt;em&gt;(2n − i − 1)&lt;/em&gt; positions, which satisfy constraints from equation (2).
+For example:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/langford_pairing_problem/img_13.png&quot; alt=&quot;img 13&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;Hence:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/langford_pairing_problem/img_14.png&quot; alt=&quot;img 14&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;So, expectation of the amount of correct placements can be represented as:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/langford_pairing_problem/img_15.png&quot; alt=&quot;img 15&quot;&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;variance-of-the-amount-of-correct-placements&quot;&gt;&lt;a href=&quot;#variance-of-the-amount-of-correct-placements&quot;&gt;Variance of the amount of correct placements&lt;/a&gt;&lt;/h2&gt;
+
+&lt;p&gt;Let’s calculate the variance of &lt;img src=&quot;/images/langford_pairing_problem/xi.png&quot; alt=&quot;xi&quot;&gt;. &lt;/p&gt;
+
+&lt;p&gt;By definition of the variance, and according to the equation (6):&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/langford_pairing_problem/img_16.png&quot; alt=&quot;img 16&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;As far, as &lt;img src=&quot;/images/langford_pairing_problem/xii.png&quot; alt=&quot;xii&quot;&gt; is an indicator random variable, then:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/langford_pairing_problem/img_17.png&quot; alt=&quot;img 17&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;We can make use of the linearity property of expectation again:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/langford_pairing_problem/img_18.png&quot; alt=&quot;img 18&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;However, we need to calculate somehow the value of: &lt;img src=&quot;/images/langford_pairing_problem/img_19.png&quot; alt=&quot;img 19&quot;&gt;.&lt;/p&gt;
+
+&lt;p&gt;Due to the symmetry, we can consider only the cases, when &lt;em&gt;i &amp;lt; j&lt;/em&gt;:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/langford_pairing_problem/img_20.png&quot; alt=&quot;img 20&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;It turns out, that &lt;img src=&quot;/images/langford_pairing_problem/xiixij.png&quot; alt=&quot;xiixij&quot;&gt; is also an indicator random variable, which is defined in a following way:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/langford_pairing_problem/img_21.png&quot; alt=&quot;img 21&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;Hence, we have:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/langford_pairing_problem/img_22.png&quot; alt=&quot;img 22&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/langford_pairing_problem/img_23.png&quot; alt=&quot;img 23&quot;&gt; is equal to a joint probability &lt;img src=&quot;/images/langford_pairing_problem/img_24.png&quot; alt=&quot;img 24&quot;&gt;:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/langford_pairing_problem/img_25.png&quot; alt=&quot;img 25&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;Where:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;img src=&quot;/images/langford_pairing_problem/mij.png&quot; alt=&quot;mij&quot;&gt; - number of ways to place correctly the &lt;em&gt;i&lt;/em&gt;-th and &lt;em&gt;j&lt;/em&gt;-th pairs of numbers&lt;/li&gt;
+&lt;li&gt;&lt;img src=&quot;/images/langford_pairing_problem/img_26.png&quot; alt=&quot;img 26&quot;&gt; - number of ways to choose values for: &lt;em&gt;x&lt;sub&gt;i&lt;/sub&gt;&lt;/em&gt;, &lt;em&gt;y&lt;sub&gt;i&lt;/sub&gt;&lt;/em&gt;, &lt;em&gt;x&lt;sub&gt;j&lt;/sub&gt;&lt;/em&gt; and &lt;em&gt;y&lt;sub&gt;j&lt;/sub&gt;&lt;/em&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Let’s calculate &lt;img src=&quot;/images/langford_pairing_problem/mij.png&quot; alt=&quot;mij&quot;&gt;.&lt;/p&gt;
+
+&lt;p&gt;The set of all correct relative arrangements of &lt;em&gt;x&lt;sub&gt;i&lt;/sub&gt;&lt;/em&gt;, &lt;em&gt;y&lt;sub&gt;i&lt;/sub&gt;&lt;/em&gt;, &lt;em&gt;x&lt;sub&gt;j&lt;/sub&gt;&lt;/em&gt; and &lt;em&gt;y&lt;sub&gt;j&lt;/sub&gt;&lt;/em&gt; can be divided into three disjoint sets with &lt;em&gt;interleaved&lt;/em&gt; (&lt;img src=&quot;/images/langford_pairing_problem/iij.png&quot; alt=&quot;iij&quot;&gt;), &lt;em&gt;nested&lt;/em&gt; (&lt;img src=&quot;/images/langford_pairing_problem/nij.png&quot; alt=&quot;nij&quot;&gt;) and &lt;em&gt;separate&lt;/em&gt; (&lt;img src=&quot;/images/langford_pairing_problem/sij.png&quot; alt=&quot;sij&quot;&gt;) relative placements.
+Hence:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/langford_pairing_problem/img_27.png&quot; alt=&quot;img 27&quot;&gt;&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Interleaved arrangements:&lt;/strong&gt;&lt;br&gt;
+&lt;img src=&quot;/images/langford_pairing_problem/img_28.png&quot; alt=&quot;img 28&quot;&gt;&lt;br&gt;
+Without loss of generality let’s consider only a first variant: &lt;img src=&quot;/images/langford_pairing_problem/img_29.png&quot; alt=&quot;img 29&quot;&gt; (the counting for the second variant will be exactly the same - so, we will just multiple an obtained result by 2).&lt;br&gt;
+In order to produce the correct interleaved placement, we need to choose the proper positions of the leftmost and rightmost occupied cells (&lt;em&gt;x&lt;sub&gt;i&lt;/sub&gt;&lt;/em&gt; and &lt;em&gt;y&lt;sub&gt;j&lt;/sub&gt;&lt;/em&gt;), and afterwards we can solely define the positions of &lt;em&gt;y&lt;sub&gt;i&lt;/sub&gt;&lt;/em&gt; and &lt;em&gt;x&lt;sub&gt;j&lt;/sub&gt;&lt;/em&gt; inside:&lt;br&gt;
+&lt;img src=&quot;/images/langford_pairing_problem/img_30.png&quot; alt=&quot;img 30&quot;&gt;&lt;br&gt;
+An amount of cells between the leftmost and rightmost occupied cells is:&lt;br&gt;
+&lt;img src=&quot;/images/langford_pairing_problem/img_31.png&quot; alt=&quot;img 31&quot;&gt;&lt;br&gt;
+where: &lt;img src=&quot;/images/langford_pairing_problem/img_32.png&quot; alt=&quot;img 32&quot;&gt;&lt;br&gt;
+As far as &lt;img src=&quot;/images/langford_pairing_problem/img_33.png&quot; alt=&quot;img 33&quot;&gt;, then &lt;img src=&quot;/images/langford_pairing_problem/img_34.png&quot; alt=&quot;img 34&quot;&gt;.
+Hence the total amount of all possible interleaved placements is:&lt;br&gt;
+&lt;img src=&quot;/images/langford_pairing_problem/img_35.png&quot; alt=&quot;img 35&quot;&gt;   &lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Nested arrangement:&lt;/strong&gt;&lt;br&gt;
+&lt;img src=&quot;/images/langford_pairing_problem/img_36.png&quot; alt=&quot;img 36&quot;&gt;&lt;br&gt;
+In order to produce the correct nested placement, we need to choose the proper positions of the leftmost and rightmost occupied cells (&lt;em&gt;x&lt;sub&gt;j&lt;/sub&gt;&lt;/em&gt; and &lt;em&gt;&lt;sub&gt;yj&lt;/sub&gt;&lt;/em&gt;), and afterwards we should choose the proper positions for &lt;em&gt;x&lt;sub&gt;i&lt;/sub&gt;&lt;/em&gt; and &lt;em&gt;y&lt;sub&gt;i&lt;/sub&gt;&lt;/em&gt; inside:&lt;br&gt;
+&lt;img src=&quot;/images/langford_pairing_problem/img_37.png&quot; alt=&quot;img 37&quot;&gt;&lt;br&gt;
+An amount of ways to choose the proper positions for &lt;em&gt;x&lt;sub&gt;j&lt;/sub&gt;&lt;/em&gt; and &lt;em&gt;y&lt;sub&gt;j&lt;/sub&gt;&lt;/em&gt; is: &lt;em&gt;(2n − j − 1)&lt;/em&gt;.
+Now, we need to choose the proper positions for &lt;em&gt;x&lt;sub&gt;i&lt;/sub&gt;&lt;/em&gt; and &lt;em&gt;y&lt;sub&gt;i&lt;/sub&gt;&lt;/em&gt; inside, and an amount of ways to do so is: &lt;em&gt;(j − i − 1)&lt;/em&gt;.&lt;br&gt;
+Hence:&lt;br&gt;
+&lt;img src=&quot;/images/langford_pairing_problem/img_38.png&quot; alt=&quot;img 38&quot;&gt;    &lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Separate arrangements:&lt;/strong&gt;&lt;br&gt;
+&lt;img src=&quot;/images/langford_pairing_problem/img_39.png&quot; alt=&quot;img 39&quot;&gt;&lt;br&gt;
+Without loss of generality let’s consider only a first variant: &lt;img src=&quot;/images/langford_pairing_problem/img_40.png&quot; alt=&quot;img 40&quot;&gt; (the counting for the second variant will be exactly the same - so, we will just multiple an obtained result by 2).&lt;br&gt;
+In order to produce the correct interleaved placement, we need to choose the proper positions of the leftmost and rightmost occupied cells (&lt;em&gt;x&lt;sub&gt;i&lt;/sub&gt;&lt;/em&gt; and &lt;em&gt;y&lt;sub&gt;j&lt;/sub&gt;&lt;/em&gt;), and afterwards we can solely define the positions of &lt;em&gt;y&lt;sub&gt;i&lt;/sub&gt;&lt;/em&gt; and &lt;em&gt;x&lt;sub&gt;j&lt;/sub&gt;&lt;/em&gt; inside:&lt;br&gt;
+&lt;img src=&quot;/images/langford_pairing_problem/img_41.png&quot; alt=&quot;img 41&quot;&gt;&lt;br&gt;
+An amount of cells between the leftmost and rightmost occupied cells is:&lt;br&gt;
+&lt;img src=&quot;/images/langford_pairing_problem/img_42.png&quot; alt=&quot;img 42&quot;&gt;&lt;br&gt;
+where: &lt;img src=&quot;/images/langford_pairing_problem/img_43.png&quot; alt=&quot;img 43&quot;&gt;&lt;br&gt;
+As far as &lt;img src=&quot;/images/langford_pairing_problem/img_44.png&quot; alt=&quot;img 44&quot;&gt;, then &lt;img src=&quot;/images/langford_pairing_problem/img_45.png&quot; alt=&quot;img 45&quot;&gt;.&lt;br&gt;
+Hence, the total amount of all possible separate placements is:&lt;br&gt;
+&lt;img src=&quot;/images/langford_pairing_problem/img_46.png&quot; alt=&quot;img 46&quot;&gt;&lt;br&gt;
+The tidy analysis shows, that in case if &lt;em&gt;i + j &amp;gt; 2n − 3&lt;/em&gt; any separate arrangement of &lt;em&gt;i&lt;/em&gt;-th and &lt;em&gt;j&lt;/em&gt;-th pairs of characters is impossible within &lt;em&gt;2n&lt;/em&gt; slots.
+Hence, the complete formula for |&lt;img src=&quot;/images/langford_pairing_problem/sij.png&quot; alt=&quot;sij&quot;&gt;| is:&lt;br&gt;
+&lt;img src=&quot;/images/langford_pairing_problem/img_47.png&quot; alt=&quot;img 47&quot;&gt;    &lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;So, finally, using equations (20), (21) and (24) - we can express &lt;img src=&quot;/images/langford_pairing_problem/mij.png&quot; alt=&quot;mij&quot;&gt; in terms of &lt;em&gt;i&lt;/em&gt;, &lt;em&gt;j&lt;/em&gt; and &lt;em&gt;n&lt;/em&gt;:&lt;br&gt;
+&lt;img src=&quot;/images/langford_pairing_problem/img_48.png&quot; alt=&quot;img 48&quot;&gt;    &lt;/p&gt;
+
+&lt;p&gt;After simplification, we can obtain the closed form for &lt;img src=&quot;/images/langford_pairing_problem/mij.png&quot; alt=&quot;mij&quot;&gt;:&lt;br&gt;
+&lt;img src=&quot;/images/langford_pairing_problem/img_49.png&quot; alt=&quot;img 49&quot;&gt;    &lt;/p&gt;
+
+&lt;p&gt;Now, we are almost ready to calculate &lt;img src=&quot;/images/langford_pairing_problem/img_50.png&quot; alt=&quot;img 50&quot;&gt;, using equations (16) and (17):&lt;br&gt;
+&lt;img src=&quot;/images/langford_pairing_problem/img_51.png&quot; alt=&quot;img 51&quot;&gt;    &lt;/p&gt;
+
+&lt;p&gt;In order to calculate the sum &lt;img src=&quot;/images/langford_pairing_problem/img_52.png&quot; alt=&quot;img 52&quot;&gt; let’s consider separately the cases where &lt;img src=&quot;/images/langford_pairing_problem/img_53.png&quot; alt=&quot;img 53&quot;&gt; and &lt;img src=&quot;/images/langford_pairing_problem/img_54.png&quot; alt=&quot;img 54&quot;&gt;:&lt;br&gt;
+&lt;img src=&quot;/images/langford_pairing_problem/img_55.png&quot; alt=&quot;img 55&quot;&gt;    &lt;/p&gt;
+
+&lt;p&gt;After simplification, we can obtain the closed form:&lt;br&gt;
+&lt;img src=&quot;/images/langford_pairing_problem/img_56.png&quot; alt=&quot;img 56&quot;&gt;    &lt;/p&gt;
+
+&lt;p&gt;According to equations (14), (27) and (29) we can obtain the value of &lt;img src=&quot;/images/langford_pairing_problem/img_57.png&quot; alt=&quot;img 57&quot;&gt;:&lt;br&gt;
+&lt;img src=&quot;/images/langford_pairing_problem/img_58.png&quot; alt=&quot;img 58&quot;&gt;    &lt;/p&gt;
+
+&lt;p&gt;So, using equations (10), (13) and (14) we can calculate the variance:&lt;br&gt;
+&lt;img src=&quot;/images/langford_pairing_problem/img_59.png&quot; alt=&quot;img 59&quot;&gt;    &lt;/p&gt;
+
+&lt;h2 id=&quot;experimental-evaluation&quot;&gt;&lt;a href=&quot;#experimental-evaluation&quot;&gt;Experimental evaluation&lt;/a&gt;&lt;/h2&gt;
+
+&lt;p&gt;In order to verify derived formulas for expectation and variance, I have developed an application for simulation of random permutations on the sequences with different amounts of pairs of natural numbers. 
+For every &lt;em&gt;n&lt;/em&gt; application simulates 500000 random permutations, and calculates the average amount (and variance) of correctly placed pairs of numbers.&lt;/p&gt;
+
+&lt;p&gt;Below is presented the code of a Java application for simulation:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;java.util.*&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;ExpectationVarianceCheck&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+
+    &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[]&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;args&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;Random&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rnd&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;Random&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;size&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;size&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;46&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;evaluate&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rnd&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;evaluate&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Random&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rnd&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+
+        &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;trials_count&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;500000&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+        &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;correct_placements_cnt&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;correct_placements_cnt_sqr&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;trials_count&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Integer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;characters&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;random_placement&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rnd&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+            &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;correct&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;calc_correct_placements&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;characters&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;correct_placements_cnt&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;correct&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;correct_placements_cnt_sqr&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;correct&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;correct&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+        &lt;span class=&quot;kt&quot;&gt;double&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;avg_correct_placements&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;
+                &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;double&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;correct_placements_cnt&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;trials_count&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;kt&quot;&gt;double&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;experimental_variance&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;
+                &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;double&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;correct_placements_cnt_sqr&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;trials_count&lt;/span&gt;
+                        &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Math&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;pow&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;avg_correct_placements&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+
+        &lt;span class=&quot;n&quot;&gt;System&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;out&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;printf&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;%d  %3.3f  %3.3f  %3.3f  %3.3f %n&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;
+                &lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;avg_correct_placements&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;expectation&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;),&lt;/span&gt;
+                &lt;span class=&quot;n&quot;&gt;experimental_variance&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;variance&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;));&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;double&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;expectation&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;3.0&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;n&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;n&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;double&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;variance&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;3.0&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;4.0&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;4.0&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+                &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;127.0&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;96&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;n&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;363.0&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;32&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;n&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;))&lt;/span&gt;
+                &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;9.0&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;16&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Math&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;pow&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;n&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;));&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;calc_correct_placements&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Integer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;characters&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;Map&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Integer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Integer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;first_occurrence&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;HashMap&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;gt;();&lt;/span&gt;
+        &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;correct&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;characters&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;c&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;characters&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;first_occurrence&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;n&quot;&gt;first_occurrence&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;put&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+            &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;firstOccurrencePos&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;first_occurrence&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+                &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;firstOccurrencePos&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+                    &lt;span class=&quot;n&quot;&gt;correct&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++;&lt;/span&gt;
+                &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+            &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;correct&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Integer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;random_placement&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Random&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rnd&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Integer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;characters&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ArrayList&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;gt;();&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;characters&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;add&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;characters&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;add&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;Collections&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;shuffle&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;characters&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rnd&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;characters&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Below is presented a table with comparison of the expectation and variance obtained experimentally and calculated, based on the derived formulas: &lt;/p&gt;
+
+&lt;table&gt;&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;n (amount of pairs of numbers)&lt;/th&gt;
+&lt;th&gt;average amount of correct placements&lt;/th&gt;
+&lt;th&gt;theoretical expectation&lt;/th&gt;
+&lt;th&gt;experimental variance&lt;/th&gt;
+&lt;th&gt;theoretical variance&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;2&lt;/td&gt;
+&lt;td&gt;0.502&lt;/td&gt;
+&lt;td&gt;0.500&lt;/td&gt;
+&lt;td&gt;0.250&lt;/td&gt;
+&lt;td&gt;0.250&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;3&lt;/td&gt;
+&lt;td&gt;0.601&lt;/td&gt;
+&lt;td&gt;0.600&lt;/td&gt;
+&lt;td&gt;0.462&lt;/td&gt;
+&lt;td&gt;0.462&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;4&lt;/td&gt;
+&lt;td&gt;0.643&lt;/td&gt;
+&lt;td&gt;0.643&lt;/td&gt;
+&lt;td&gt;0.520&lt;/td&gt;
+&lt;td&gt;0.520&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;5&lt;/td&gt;
+&lt;td&gt;0.669&lt;/td&gt;
+&lt;td&gt;0.667&lt;/td&gt;
+&lt;td&gt;0.562&lt;/td&gt;
+&lt;td&gt;0.560&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;6&lt;/td&gt;
+&lt;td&gt;0.681&lt;/td&gt;
+&lt;td&gt;0.682&lt;/td&gt;
+&lt;td&gt;0.590&lt;/td&gt;
+&lt;td&gt;0.589&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;7&lt;/td&gt;
+&lt;td&gt;0.691&lt;/td&gt;
+&lt;td&gt;0.692&lt;/td&gt;
+&lt;td&gt;0.611&lt;/td&gt;
+&lt;td&gt;0.611&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;8&lt;/td&gt;
+&lt;td&gt;0.699&lt;/td&gt;
+&lt;td&gt;0.700&lt;/td&gt;
+&lt;td&gt;0.630&lt;/td&gt;
+&lt;td&gt;0.628&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;9&lt;/td&gt;
+&lt;td&gt;0.708&lt;/td&gt;
+&lt;td&gt;0.706&lt;/td&gt;
+&lt;td&gt;0.644&lt;/td&gt;
+&lt;td&gt;0.641&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;10&lt;/td&gt;
+&lt;td&gt;0.713&lt;/td&gt;
+&lt;td&gt;0.711&lt;/td&gt;
+&lt;td&gt;0.653&lt;/td&gt;
+&lt;td&gt;0.651&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;11&lt;/td&gt;
+&lt;td&gt;0.716&lt;/td&gt;
+&lt;td&gt;0.714&lt;/td&gt;
+&lt;td&gt;0.660&lt;/td&gt;
+&lt;td&gt;0.660&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;12&lt;/td&gt;
+&lt;td&gt;0.720&lt;/td&gt;
+&lt;td&gt;0.717&lt;/td&gt;
+&lt;td&gt;0.670&lt;/td&gt;
+&lt;td&gt;0.667&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;13&lt;/td&gt;
+&lt;td&gt;0.719&lt;/td&gt;
+&lt;td&gt;0.720&lt;/td&gt;
+&lt;td&gt;0.674&lt;/td&gt;
+&lt;td&gt;0.674&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;14&lt;/td&gt;
+&lt;td&gt;0.723&lt;/td&gt;
+&lt;td&gt;0.722&lt;/td&gt;
+&lt;td&gt;0.679&lt;/td&gt;
+&lt;td&gt;0.679&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;15&lt;/td&gt;
+&lt;td&gt;0.724&lt;/td&gt;
+&lt;td&gt;0.724&lt;/td&gt;
+&lt;td&gt;0.684&lt;/td&gt;
+&lt;td&gt;0.684&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;16&lt;/td&gt;
+&lt;td&gt;0.725&lt;/td&gt;
+&lt;td&gt;0.726&lt;/td&gt;
+&lt;td&gt;0.688&lt;/td&gt;
+&lt;td&gt;0.688&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;17&lt;/td&gt;
+&lt;td&gt;0.728&lt;/td&gt;
+&lt;td&gt;0.727&lt;/td&gt;
+&lt;td&gt;0.695&lt;/td&gt;
+&lt;td&gt;0.691&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;18&lt;/td&gt;
+&lt;td&gt;0.727&lt;/td&gt;
+&lt;td&gt;0.729&lt;/td&gt;
+&lt;td&gt;0.692&lt;/td&gt;
+&lt;td&gt;0.695&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;19&lt;/td&gt;
+&lt;td&gt;0.730&lt;/td&gt;
+&lt;td&gt;0.730&lt;/td&gt;
+&lt;td&gt;0.699&lt;/td&gt;
+&lt;td&gt;0.698&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;20&lt;/td&gt;
+&lt;td&gt;0.730&lt;/td&gt;
+&lt;td&gt;0.731&lt;/td&gt;
+&lt;td&gt;0.700&lt;/td&gt;
+&lt;td&gt;0.700&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;21&lt;/td&gt;
+&lt;td&gt;0.733&lt;/td&gt;
+&lt;td&gt;0.732&lt;/td&gt;
+&lt;td&gt;0.703&lt;/td&gt;
+&lt;td&gt;0.703&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;22&lt;/td&gt;
+&lt;td&gt;0.734&lt;/td&gt;
+&lt;td&gt;0.733&lt;/td&gt;
+&lt;td&gt;0.705&lt;/td&gt;
+&lt;td&gt;0.705&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;23&lt;/td&gt;
+&lt;td&gt;0.732&lt;/td&gt;
+&lt;td&gt;0.733&lt;/td&gt;
+&lt;td&gt;0.705&lt;/td&gt;
+&lt;td&gt;0.707&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;24&lt;/td&gt;
+&lt;td&gt;0.735&lt;/td&gt;
+&lt;td&gt;0.734&lt;/td&gt;
+&lt;td&gt;0.711&lt;/td&gt;
+&lt;td&gt;0.708&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;25&lt;/td&gt;
+&lt;td&gt;0.733&lt;/td&gt;
+&lt;td&gt;0.735&lt;/td&gt;
+&lt;td&gt;0.710&lt;/td&gt;
+&lt;td&gt;0.710&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/langford_pairing_problem/img_68.png&quot; alt=&quot;img 68&quot;&gt;&lt;br&gt;
+&lt;img src=&quot;/images/langford_pairing_problem/img_69.png&quot; alt=&quot;img 69&quot;&gt;   &lt;/p&gt;
+
+&lt;p&gt;As you can see, the values obtained via derived formulas of expectation and variance are consistent to the values obtained via computer simulation.  &lt;/p&gt;
+
+&lt;h2 id=&quot;probabilistic-bounds&quot;&gt;&lt;a href=&quot;#probabilistic-bounds&quot;&gt;Probabilistic bounds&lt;/a&gt;&lt;/h2&gt;
+
+&lt;p&gt;Having the explicit expressions for expectation and variance we can make use of a couple of probabilistic inequalities, in order to estimate the probability of obtaining the correct placement of all &lt;em&gt;n&lt;/em&gt; pairs of numbers:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Markov&amp;#39;s inequality:&lt;br&gt;
+&lt;img src=&quot;/images/langford_pairing_problem/img_60.png&quot; alt=&quot;img 60&quot;&gt;   &lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Chebyshev&amp;#39;s inequality:&lt;br&gt;
+&lt;img src=&quot;/images/langford_pairing_problem/img_61.png&quot; alt=&quot;img 61&quot;&gt;   &lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Unfortunately, these probabilistic bounds are still very weak.&lt;/p&gt;
+
+&lt;h2 id=&quot;speculation-around-the-poisson-distribution&quot;&gt;&lt;a href=&quot;#speculation-around-the-poisson-distribution&quot;&gt;Speculation around the Poisson distribution&lt;/a&gt;&lt;/h2&gt;
+
+&lt;p&gt;Strictly speaking, the indicator random values of &lt;img src=&quot;/images/langford_pairing_problem/xii.png&quot; alt=&quot;xii&quot;&gt; are not independent, hence generally speaking, we can’t model the distribution of values of &lt;img src=&quot;/images/langford_pairing_problem/xi.png&quot; alt=&quot;xi&quot;&gt; using the Poisson distribution.&lt;/p&gt;
+
+&lt;p&gt;Nevertheless, let’s consider the values of expectation and variance for the large amounts of pairs &lt;em&gt;n&lt;/em&gt;:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/langford_pairing_problem/img_62.png&quot; alt=&quot;img 62&quot;&gt;   &lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/langford_pairing_problem/img_63.png&quot; alt=&quot;img 63&quot;&gt;   &lt;/p&gt;
+
+&lt;p&gt;We can see, that &lt;img src=&quot;/images/langford_pairing_problem/img_64.png&quot; alt=&quot;img 64&quot;&gt;.
+Hence, to some extent, I assume that it is still viable to use a Poisson distribution as a rough approximation of the distribution of values of the random variable &lt;img src=&quot;/images/langford_pairing_problem/xi.png&quot; alt=&quot;xi&quot;&gt;.
+This assumption is also based on the observation, that occurrence of the correctly placed pair of numbers is a rare event.&lt;/p&gt;
+
+&lt;p&gt;The event rate of the given Poisson distribution is &lt;img src=&quot;/images/langford_pairing_problem/img_65.png&quot; alt=&quot;img 65&quot;&gt;. 
+Hence, the probability of occurrence of &lt;em&gt;k&lt;/em&gt; correctly placed pairs is:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/langford_pairing_problem/img_66.png&quot; alt=&quot;img 66&quot;&gt;   &lt;/p&gt;
+
+&lt;p&gt;Let’s evaluate adequacy of the Poisson approximation experimentally (again, using the computer simulation):&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;java.util.*&lt;/span&gt;  &lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;PoissonDistributionCheck&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+
+    &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[]&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;args&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;Random&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rnd&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;Random&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;size&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;20&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;size&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;41&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;size&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;evaluate&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rnd&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;System&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;out&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;evaluate&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Random&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rnd&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;trialsCount&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;500000&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;Map&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Integer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Integer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;correct_placements_count&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;TreeMap&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;gt;();&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;trialsCount&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Integer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;characters&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;random_placement&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rnd&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+            &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;correct&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;calc_correct_placements&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;characters&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+            &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;count&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;correct_placements_count&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getOrDefault&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;correct&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;correct_placements_count&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;put&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;correct&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;count&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;correct&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;correct_placements_count&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;keySet&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;())&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;simulated_count&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;correct_placements_count&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;correct&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+            &lt;span class=&quot;kt&quot;&gt;double&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;simulated_prob&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;double&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;simulated_count&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;trialsCount&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;System&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;out&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;printf&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;%d %d %1.5f %1.5f %n&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;correct&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;simulated_prob&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;poisson_prob&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;correct&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;));&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;double&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;poisson_prob&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;correct&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;kt&quot;&gt;long&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;fact&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;factorial&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;correct&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Math&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;exp&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(-&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.75&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Math&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;pow&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.75&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;correct&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;fact&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;long&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;factorial&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;kt&quot;&gt;long&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;fact&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;fact&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;fact&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;calc_correct_placements&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Integer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;characters&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;Map&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Integer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Integer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;first_occurrence&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;HashMap&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;gt;();&lt;/span&gt;
+        &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;correct&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;characters&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;c&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;characters&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;first_occurrence&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;n&quot;&gt;first_occurrence&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;put&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+            &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;firstOccurrencePos&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;first_occurrence&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+                &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;firstOccurrencePos&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+                    &lt;span class=&quot;n&quot;&gt;correct&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++;&lt;/span&gt;
+                &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+            &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;correct&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Integer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;random_placement&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Random&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rnd&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Integer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;characters&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ArrayList&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;gt;();&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;characters&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;add&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;characters&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;add&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;Collections&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;shuffle&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;characters&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rnd&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;characters&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Below are presented an example of table (for &lt;em&gt;n = 40&lt;/em&gt;) with comparison of observed distribution and the Poisson distribution:&lt;/p&gt;
+
+&lt;table&gt;&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;n&lt;/th&gt;
+&lt;th&gt;k&lt;/th&gt;
+&lt;th&gt;Observed distribution of the values of &lt;img src=&quot;/images/langford_pairing_problem/xi.png&quot; alt=&quot;xi&quot;&gt;&lt;/th&gt;
+&lt;th&gt;Poisson distribution&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;40&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;td&gt;0.47407&lt;/td&gt;
+&lt;td&gt;0.47237&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;40&lt;/td&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;td&gt;0.35732&lt;/td&gt;
+&lt;td&gt;0.35427&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;40&lt;/td&gt;
+&lt;td&gt;2&lt;/td&gt;
+&lt;td&gt;0.13153&lt;/td&gt;
+&lt;td&gt;0.13285&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;40&lt;/td&gt;
+&lt;td&gt;3&lt;/td&gt;
+&lt;td&gt;0.03100&lt;/td&gt;
+&lt;td&gt;0.03321&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;40&lt;/td&gt;
+&lt;td&gt;4&lt;/td&gt;
+&lt;td&gt;0.00533&lt;/td&gt;
+&lt;td&gt;0.00623&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;40&lt;/td&gt;
+&lt;td&gt;5&lt;/td&gt;
+&lt;td&gt;0.00068&lt;/td&gt;
+&lt;td&gt;0.00093&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;40&lt;/td&gt;
+&lt;td&gt;6&lt;/td&gt;
+&lt;td&gt;0.00008&lt;/td&gt;
+&lt;td&gt;0.00012&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;40&lt;/td&gt;
+&lt;td&gt;7&lt;/td&gt;
+&lt;td&gt;0.00000&lt;/td&gt;
+&lt;td&gt;0.00001&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/langford_pairing_problem/img_67.png&quot; alt=&quot;img 67&quot;&gt;   &lt;/p&gt;
+
+&lt;p&gt;As you can see, the Poisson distribution can be used as an approximate upper bound of distribution of values of a random variable, which represents an amount of correctly placed pairs of numbers (after the random shuffling).&lt;/p&gt;
+
+&lt;div id=&quot;disqus_thread&quot;&gt;&lt;/div&gt;
+
+&lt;script&gt;
+
+var disqus_config = function () {
+this.page.url = &quot;http://lagodiuk.github.io/computer_science/2017/06/04/langford_pairing_problem.html&quot;;
+this.page.identifier = &quot;langford_pairing_problem&quot;;
+};
+
+(function() { // DON&#39;T EDIT BELOW THIS LINE
+var d = document, s = d.createElement(&#39;script&#39;);
+
+s.src = &#39;//lahodiuk.disqus.com/embed.js&#39;;
+
+s.setAttribute(&#39;data-timestamp&#39;, +new Date());
+(d.head || d.body).appendChild(s);
+})();
+&lt;/script&gt;
+
+&lt;noscript&gt;Please enable JavaScript to view the &lt;a href=&quot;https://disqus.com/?ref_noscript&quot; rel=&quot;nofollow&quot;&gt;comments powered by Disqus.&lt;/a&gt;&lt;/noscript&gt;
+</description>
+        <pubDate>Sun, 04 Jun 2017 14:15:00 +0200</pubDate>
+        <link>http://lagodiuk.github.io/computer_science/2017/06/04/langford_pairing_problem.html</link>
+        <guid isPermaLink="true">http://lagodiuk.github.io/computer_science/2017/06/04/langford_pairing_problem.html</guid>
+        
+        <category>combinatorics</category>
+        
+        <category>math</category>
+        
+        
+        <category>computer_science</category>
+        
+      </item>
     
       <item>
         <title>Random walks in a hexagon</title>

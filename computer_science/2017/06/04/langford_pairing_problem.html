@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width initial-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>Investigation of some probabilistic properties of the Langford pairing problem</title>
+    <meta name="description" content="This is my personal blog about Algorithms, Programming Problems solving techniques and interesting Computer Science topics.   Expressed opinions are my own.
+">
+
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="canonical" href="http://lagodiuk.github.io/computer_science/2017/06/04/langford_pairing_problem.html">
+    
+    
+
+    
+</head>
+
+
+  <body >
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="/">Home</a>
+
+    <a class="site-archive" href="/archive.html">Archive</a>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+
+      <div class="trigger">
+        
+          
+          <a class="page-link" href="/about/">About</a>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrapper">
+        <div class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Investigation of some probabilistic properties of the Langford pairing problem</h1>
+    <p class="post-meta">Jun 4, 2017</p>
+  </header>
+
+  <article class="post-content">
+    <p>In combinatorial mathematics, a <a href="https://en.wikipedia.org/wiki/Langford_pairing">Langford pairing</a>, also called a Langford sequence, is a permutation of the sequence of <em>2n</em> numbers <em>(1, 1, 2, 2, ..., n, n)</em> in which the two ones are one unit apart, the two twos are two units apart, and more generally the two copies of each number <em>k</em> are <em>k</em> units apart.
+Langford pairings are named after C. Dudley Langford, who posed the problem of constructing them in 1958.</p>
+
+<p><img src="/images/langford_pairing_problem/langford_pairing_picture.png" alt="Demonstration of the problem"></p>
+
+<h2 id="table-of-contents">Table of contents</h2>
+
+<ul>
+<li><a href="/computer_science/2017/06/04/langford_pairing_problem.html#when-does-the-langford-pairing-exist">When does the Langford pairing exist?</a></li>
+<li><a href="/computer_science/2017/06/04/langford_pairing_problem.html#langford-pairing-and-the-random-permutations">Langford pairing and the random permutations</a>
+
+<ul>
+<li><a href="/computer_science/2017/06/04/langford_pairing_problem.html#expectation-of-the-amount-of-correct-placements">Expectation of the amount of correct placements</a></li>
+<li><a href="/computer_science/2017/06/04/langford_pairing_problem.html#variance-of-the-amount-of-correct-placements">Variance of the amount of correct placements</a></li>
+<li><a href="/computer_science/2017/06/04/langford_pairing_problem.html#experimental-evaluation">Experimental evaluation</a></li>
+<li><a href="/computer_science/2017/06/04/langford_pairing_problem.html#probabilistic-bounds">Probabilistic bounds</a></li>
+<li><a href="/computer_science/2017/06/04/langford_pairing_problem.html#speculation-around-the-poisson-distribution">Speculation around the Poisson distribution</a></li>
+</ul></li>
+</ul>
+
+<!--more-->
+
+<h2 id="when-does-the-langford-pairing-exist"><a href="#when-does-the-langford-pairing-exist">When does the Langford pairing exist?</a></h2>
+
+<p>Let’s consider an arrangement of <em>n</em> pairs of natural numbers within a sequence of length <em>2n</em>, which satisfies conditions of the problem.
+Is it possible to obtain a Langford sequence for all values of <em>n</em>?</p>
+
+<p>Every number <em>i</em> can be associated with two numbers: <em>x<sub>i</sub></em> and <em>y<sub>i</sub></em>, which represent the indices of the first and the second occurrence of the number in the sequence.
+Hence, according to the requirements of the problem, we can define the system of following constraints:</p>
+
+<p><img src="/images/langford_pairing_problem/img_1.png" alt="img 1"></p>
+
+<p>The third and the second constraints mean, that all values of <em>x<sub>i</sub></em> and <em>y<sub>i</sub></em> must be unique.
+Having the third constraint in mind, let’s calculate the sum of all <em>x<sub>i</sub></em> and <em>y<sub>i</sub></em>:</p>
+
+<p><img src="/images/langford_pairing_problem/img_2.png" alt="img 2"></p>
+
+<p>On the other hand, having the first constraint in mind, the sum of all <em>x<sub>i</sub></em> and <em>y<sub>i</sub></em> can be represented in a
+following way:</p>
+
+<p><img src="/images/langford_pairing_problem/img_3.png" alt="ing 3"></p>
+
+<p>Hence, from equations (3) and (4) we have:</p>
+
+<p><img src="/images/langford_pairing_problem/img_4.png" alt="img 4"></p>
+
+<p>As far as the sum of all <em>x<sub>i</sub></em> is integer, then <img src="/images/langford_pairing_problem/img_5.png" alt="img 5"> must be integer as well.
+It is possible iff <img src="/images/langford_pairing_problem/img_6.png" alt="img 6">.</p>
+
+<p>Hence, in case if <img src="/images/langford_pairing_problem/img_6.png" alt="img 6"> the <em>n</em> pairs of natural numbers can be arranged into the sequence of
+length <em>2n</em> (with respect to the constraints of the problem).</p>
+
+<h2 id="langford-pairing-and-the-random-permutations"><a href="#langford-pairing-and-the-random-permutations">Langford pairing and the random permutations</a></h2>
+
+<p>Let’s explore the possibility to obtain a Langford sequence (which will satisfy all constraints from equation (2)) as a result of the random permutation of the sequence of <em>n</em> pairs of natural numbers.</p>
+
+<h2 id="expectation-of-the-amount-of-correct-placements"><a href="#expectation-of-the-amount-of-correct-placements">Expectation of the amount of correct placements</a></h2>
+
+<p>Let’s consider a discrete valued random variable <img src="/images/langford_pairing_problem/xi.png" alt="xi">, which represents an amount of correct placements of pairs of numbers (which satisfy the first constraint from the system of constraints (2)).</p>
+
+<p>In order to proceed, let’s represent <img src="/images/langford_pairing_problem/xi.png" alt="xi"> as a sum of indicator random variables:</p>
+
+<p><img src="/images/langford_pairing_problem/img_7.png" alt="img 7"></p>
+
+<p>where <img src="/images/langford_pairing_problem/xii.png" alt="xii"> is an indicator random variable, 
+which indicates - whether the pair of <em>i</em>-th numbers placed correctly (with respect to the constraints from equation (2)):</p>
+
+<p><img src="/images/langford_pairing_problem/img_8.png" alt="img 8"></p>
+
+<p>Due to the linearity of the expectation:</p>
+
+<p><img src="/images/langford_pairing_problem/img_9.png" alt="img 9"></p>
+
+<p>Where: <img src="/images/langford_pairing_problem/img_10.png" alt="img 10"> is a probability, that <em>x<sub>i</sub></em> and <em>y<sub>i</sub></em> are placed correctly (according to the constraints from equation (2)).</p>
+
+<p>Let&#39;s calculate <img src="/images/langford_pairing_problem/img_10.png" alt="img 10">.
+For every pair of numbers with index <img src="/images/langford_pairing_problem/img_11.png" alt="img 11"> out of <img src="/images/langford_pairing_problem/img_12.png" alt="img 12"> possible positions for <em>x<sub>i</sub></em> and <em>y<sub>i</sub></em> - there are only <em>(2n − i − 1)</em> positions, which satisfy constraints from equation (2).
+For example:</p>
+
+<p><img src="/images/langford_pairing_problem/img_13.png" alt="img 13"></p>
+
+<p>Hence:</p>
+
+<p><img src="/images/langford_pairing_problem/img_14.png" alt="img 14"></p>
+
+<p>So, expectation of the amount of correct placements can be represented as:</p>
+
+<p><img src="/images/langford_pairing_problem/img_15.png" alt="img 15"></p>
+
+<h2 id="variance-of-the-amount-of-correct-placements"><a href="#variance-of-the-amount-of-correct-placements">Variance of the amount of correct placements</a></h2>
+
+<p>Let’s calculate the variance of <img src="/images/langford_pairing_problem/xi.png" alt="xi">. </p>
+
+<p>By definition of the variance, and according to the equation (6):</p>
+
+<p><img src="/images/langford_pairing_problem/img_16.png" alt="img 16"></p>
+
+<p>As far, as <img src="/images/langford_pairing_problem/xii.png" alt="xii"> is an indicator random variable, then:</p>
+
+<p><img src="/images/langford_pairing_problem/img_17.png" alt="img 17"></p>
+
+<p>We can make use of the linearity property of expectation again:</p>
+
+<p><img src="/images/langford_pairing_problem/img_18.png" alt="img 18"></p>
+
+<p>However, we need to calculate somehow the value of: <img src="/images/langford_pairing_problem/img_19.png" alt="img 19">.</p>
+
+<p>Due to the symmetry, we can consider only the cases, when <em>i &lt; j</em>:</p>
+
+<p><img src="/images/langford_pairing_problem/img_20.png" alt="img 20"></p>
+
+<p>It turns out, that <img src="/images/langford_pairing_problem/xiixij.png" alt="xiixij"> is also an indicator random variable, which is defined in a following way:</p>
+
+<p><img src="/images/langford_pairing_problem/img_21.png" alt="img 21"></p>
+
+<p>Hence, we have:</p>
+
+<p><img src="/images/langford_pairing_problem/img_22.png" alt="img 22"></p>
+
+<p><img src="/images/langford_pairing_problem/img_23.png" alt="img 23"> is equal to a joint probability <img src="/images/langford_pairing_problem/img_24.png" alt="img 24">:</p>
+
+<p><img src="/images/langford_pairing_problem/img_25.png" alt="img 25"></p>
+
+<p>Where:</p>
+
+<ul>
+<li><img src="/images/langford_pairing_problem/mij.png" alt="mij"> - number of ways to place correctly the <em>i</em>-th and <em>j</em>-th pairs of numbers</li>
+<li><img src="/images/langford_pairing_problem/img_26.png" alt="img 26"> - number of ways to choose values for: <em>x<sub>i</sub></em>, <em>y<sub>i</sub></em>, <em>x<sub>j</sub></em> and <em>y<sub>j</sub></em></li>
+</ul>
+
+<p>Let’s calculate <img src="/images/langford_pairing_problem/mij.png" alt="mij">.</p>
+
+<p>The set of all correct relative arrangements of <em>x<sub>i</sub></em>, <em>y<sub>i</sub></em>, <em>x<sub>j</sub></em> and <em>y<sub>j</sub></em> can be divided into three disjoint sets with <em>interleaved</em> (<img src="/images/langford_pairing_problem/iij.png" alt="iij">), <em>nested</em> (<img src="/images/langford_pairing_problem/nij.png" alt="nij">) and <em>separate</em> (<img src="/images/langford_pairing_problem/sij.png" alt="sij">) relative placements.
+Hence:</p>
+
+<p><img src="/images/langford_pairing_problem/img_27.png" alt="img 27"></p>
+
+<ol>
+<li><p><strong>Interleaved arrangements:</strong><br>
+<img src="/images/langford_pairing_problem/img_28.png" alt="img 28"><br>
+Without loss of generality let’s consider only a first variant: <img src="/images/langford_pairing_problem/img_29.png" alt="img 29"> (the counting for the second variant will be exactly the same - so, we will just multiple an obtained result by 2).<br>
+In order to produce the correct interleaved placement, we need to choose the proper positions of the leftmost and rightmost occupied cells (<em>x<sub>i</sub></em> and <em>y<sub>j</sub></em>), and afterwards we can solely define the positions of <em>y<sub>i</sub></em> and <em>x<sub>j</sub></em> inside:<br>
+<img src="/images/langford_pairing_problem/img_30.png" alt="img 30"><br>
+An amount of cells between the leftmost and rightmost occupied cells is:<br>
+<img src="/images/langford_pairing_problem/img_31.png" alt="img 31"><br>
+where: <img src="/images/langford_pairing_problem/img_32.png" alt="img 32"><br>
+As far as <img src="/images/langford_pairing_problem/img_33.png" alt="img 33">, then <img src="/images/langford_pairing_problem/img_34.png" alt="img 34">.
+Hence the total amount of all possible interleaved placements is:<br>
+<img src="/images/langford_pairing_problem/img_35.png" alt="img 35">   </p></li>
+<li><p><strong>Nested arrangement:</strong><br>
+<img src="/images/langford_pairing_problem/img_36.png" alt="img 36"><br>
+In order to produce the correct nested placement, we need to choose the proper positions of the leftmost and rightmost occupied cells (<em>x<sub>j</sub></em> and <em><sub>yj</sub></em>), and afterwards we should choose the proper positions for <em>x<sub>i</sub></em> and <em>y<sub>i</sub></em> inside:<br>
+<img src="/images/langford_pairing_problem/img_37.png" alt="img 37"><br>
+An amount of ways to choose the proper positions for <em>x<sub>j</sub></em> and <em>y<sub>j</sub></em> is: <em>(2n − j − 1)</em>.
+Now, we need to choose the proper positions for <em>x<sub>i</sub></em> and <em>y<sub>i</sub></em> inside, and an amount of ways to do so is: <em>(j − i − 1)</em>.<br>
+Hence:<br>
+<img src="/images/langford_pairing_problem/img_38.png" alt="img 38">    </p></li>
+<li><p><strong>Separate arrangements:</strong><br>
+<img src="/images/langford_pairing_problem/img_39.png" alt="img 39"><br>
+Without loss of generality let’s consider only a first variant: <img src="/images/langford_pairing_problem/img_40.png" alt="img 40"> (the counting for the second variant will be exactly the same - so, we will just multiple an obtained result by 2).<br>
+In order to produce the correct interleaved placement, we need to choose the proper positions of the leftmost and rightmost occupied cells (<em>x<sub>i</sub></em> and <em>y<sub>j</sub></em>), and afterwards we can solely define the positions of <em>y<sub>i</sub></em> and <em>x<sub>j</sub></em> inside:<br>
+<img src="/images/langford_pairing_problem/img_41.png" alt="img 41"><br>
+An amount of cells between the leftmost and rightmost occupied cells is:<br>
+<img src="/images/langford_pairing_problem/img_42.png" alt="img 42"><br>
+where: <img src="/images/langford_pairing_problem/img_43.png" alt="img 43"><br>
+As far as <img src="/images/langford_pairing_problem/img_44.png" alt="img 44">, then <img src="/images/langford_pairing_problem/img_45.png" alt="img 45">.<br>
+Hence, the total amount of all possible separate placements is:<br>
+<img src="/images/langford_pairing_problem/img_46.png" alt="img 46"><br>
+The tidy analysis shows, that in case if <em>i + j &gt; 2n − 3</em> any separate arrangement of <em>i</em>-th and <em>j</em>-th pairs of characters is impossible within <em>2n</em> slots.
+Hence, the complete formula for |<img src="/images/langford_pairing_problem/sij.png" alt="sij">| is:<br>
+<img src="/images/langford_pairing_problem/img_47.png" alt="img 47">    </p></li>
+</ol>
+
+<p>So, finally, using equations (20), (21) and (24) - we can express <img src="/images/langford_pairing_problem/mij.png" alt="mij"> in terms of <em>i</em>, <em>j</em> and <em>n</em>:<br>
+<img src="/images/langford_pairing_problem/img_48.png" alt="img 48">    </p>
+
+<p>After simplification, we can obtain the closed form for <img src="/images/langford_pairing_problem/mij.png" alt="mij">:<br>
+<img src="/images/langford_pairing_problem/img_49.png" alt="img 49">    </p>
+
+<p>Now, we are almost ready to calculate <img src="/images/langford_pairing_problem/img_50.png" alt="img 50">, using equations (16) and (17):<br>
+<img src="/images/langford_pairing_problem/img_51.png" alt="img 51">    </p>
+
+<p>In order to calculate the sum <img src="/images/langford_pairing_problem/img_52.png" alt="img 52"> let’s consider separately the cases where <img src="/images/langford_pairing_problem/img_53.png" alt="img 53"> and <img src="/images/langford_pairing_problem/img_54.png" alt="img 54">:<br>
+<img src="/images/langford_pairing_problem/img_55.png" alt="img 55">    </p>
+
+<p>After simplification, we can obtain the closed form:<br>
+<img src="/images/langford_pairing_problem/img_56.png" alt="img 56">    </p>
+
+<p>According to equations (14), (27) and (29) we can obtain the value of <img src="/images/langford_pairing_problem/img_57.png" alt="img 57">:<br>
+<img src="/images/langford_pairing_problem/img_58.png" alt="img 58">    </p>
+
+<p>So, using equations (10), (13) and (14) we can calculate the variance:<br>
+<img src="/images/langford_pairing_problem/img_59.png" alt="img 59">    </p>
+
+<h2 id="experimental-evaluation"><a href="#experimental-evaluation">Experimental evaluation</a></h2>
+
+<p>In order to verify derived formulas for expectation and variance, I have developed an application for simulation of random permutations on the sequences with different amounts of pairs of natural numbers. 
+For every <em>n</em> application simulates 500000 random permutations, and calculates the average amount (and variance) of correctly placed pairs of numbers.</p>
+
+<p>Below is presented the code of a Java application for simulation:</p>
+
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="kn">import</span> <span class="nn">java.util.*</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">ExpectationVarianceCheck</span> <span class="o">{</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">Random</span> <span class="n">rnd</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">Random</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span>
+        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">size</span> <span class="o">=</span> <span class="mi">2</span><span class="o">;</span> <span class="n">size</span> <span class="o">&lt;</span> <span class="mi">46</span><span class="o">;</span> <span class="n">size</span><span class="o">++)</span> <span class="o">{</span>
+            <span class="n">evaluate</span><span class="o">(</span><span class="n">size</span><span class="o">,</span> <span class="n">rnd</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">evaluate</span><span class="o">(</span><span class="kt">int</span> <span class="n">size</span><span class="o">,</span> <span class="n">Random</span> <span class="n">rnd</span><span class="o">)</span> <span class="o">{</span>
+
+        <span class="kt">int</span> <span class="n">trials_count</span> <span class="o">=</span> <span class="mi">500000</span><span class="o">;</span>
+
+        <span class="kt">int</span> <span class="n">correct_placements_cnt</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">correct_placements_cnt_sqr</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">trials_count</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+            <span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">characters</span> <span class="o">=</span> <span class="n">random_placement</span><span class="o">(</span><span class="n">size</span><span class="o">,</span> <span class="n">rnd</span><span class="o">);</span>
+            <span class="kt">int</span> <span class="n">correct</span> <span class="o">=</span> <span class="n">calc_correct_placements</span><span class="o">(</span><span class="n">characters</span><span class="o">);</span>
+            <span class="n">correct_placements_cnt</span> <span class="o">+=</span> <span class="n">correct</span><span class="o">;</span>
+            <span class="n">correct_placements_cnt_sqr</span> <span class="o">+=</span> <span class="n">correct</span> <span class="o">*</span> <span class="n">correct</span><span class="o">;</span>
+        <span class="o">}</span>
+
+        <span class="kt">double</span> <span class="n">avg_correct_placements</span> <span class="o">=</span>
+                <span class="o">(</span><span class="kt">double</span><span class="o">)</span> <span class="n">correct_placements_cnt</span> <span class="o">/</span> <span class="n">trials_count</span><span class="o">;</span>
+        <span class="kt">double</span> <span class="n">experimental_variance</span> <span class="o">=</span>
+                <span class="o">(</span><span class="kt">double</span><span class="o">)</span> <span class="n">correct_placements_cnt_sqr</span> <span class="o">/</span> <span class="n">trials_count</span>
+                        <span class="o">-</span> <span class="n">Math</span><span class="o">.</span><span class="na">pow</span><span class="o">(</span><span class="n">avg_correct_placements</span><span class="o">,</span> <span class="mi">2</span><span class="o">);</span>
+
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">printf</span><span class="o">(</span><span class="s">&quot;%d  %3.3f  %3.3f  %3.3f  %3.3f %n&quot;</span><span class="o">,</span>
+                <span class="n">size</span><span class="o">,</span> <span class="n">avg_correct_placements</span><span class="o">,</span> <span class="n">expectation</span><span class="o">(</span><span class="n">size</span><span class="o">),</span>
+                <span class="n">experimental_variance</span><span class="o">,</span> <span class="n">variance</span><span class="o">(</span><span class="n">size</span><span class="o">));</span>
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kt">double</span> <span class="nf">expectation</span><span class="o">(</span><span class="kt">int</span> <span class="n">n</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="o">(</span><span class="mf">3.0</span> <span class="o">*</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">3</span><span class="o">)</span> <span class="o">/</span> <span class="o">(</span><span class="mi">4</span> <span class="o">*</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">2</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kt">double</span> <span class="nf">variance</span><span class="o">(</span><span class="kt">int</span> <span class="n">n</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="mf">3.0</span> <span class="o">/</span> <span class="mi">4</span> <span class="o">+</span> <span class="mf">4.0</span> <span class="o">/</span> <span class="o">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="o">)</span> <span class="o">+</span> <span class="mf">4.0</span> <span class="o">/</span> <span class="o">(</span><span class="mi">3</span> <span class="o">*</span> <span class="n">n</span><span class="o">)</span>
+                <span class="o">-</span> <span class="mf">127.0</span> <span class="o">/</span> <span class="o">(</span><span class="mi">96</span> <span class="o">*</span> <span class="o">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">3</span><span class="o">))</span> <span class="o">-</span> <span class="mf">363.0</span> <span class="o">/</span> <span class="o">(</span><span class="mi">32</span> <span class="o">*</span> <span class="o">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="o">))</span>
+                <span class="o">-</span> <span class="mf">9.0</span> <span class="o">/</span> <span class="o">(</span><span class="mi">16</span> <span class="o">*</span> <span class="n">Math</span><span class="o">.</span><span class="na">pow</span><span class="o">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="o">,</span> <span class="mi">2</span><span class="o">));</span>
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kt">int</span> <span class="nf">calc_correct_placements</span><span class="o">(</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">characters</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">Map</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">,</span> <span class="n">Integer</span><span class="o">&gt;</span> <span class="n">first_occurrence</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;&gt;();</span>
+        <span class="kt">int</span> <span class="n">correct</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">characters</span><span class="o">.</span><span class="na">size</span><span class="o">();</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+            <span class="kt">int</span> <span class="n">c</span> <span class="o">=</span> <span class="n">characters</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">i</span><span class="o">);</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">first_occurrence</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">c</span><span class="o">)</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">first_occurrence</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">c</span><span class="o">,</span> <span class="n">i</span><span class="o">);</span>
+            <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+                <span class="kt">int</span> <span class="n">firstOccurrencePos</span> <span class="o">=</span> <span class="n">first_occurrence</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">c</span><span class="o">);</span>
+                <span class="k">if</span> <span class="o">(</span><span class="n">i</span> <span class="o">-</span> <span class="n">firstOccurrencePos</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">==</span> <span class="n">c</span><span class="o">)</span> <span class="o">{</span>
+                    <span class="n">correct</span><span class="o">++;</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">correct</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="kd">static</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="nf">random_placement</span><span class="o">(</span><span class="kt">int</span> <span class="n">size</span><span class="o">,</span> <span class="n">Random</span> <span class="n">rnd</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">characters</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;();</span>
+        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">size</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+            <span class="n">characters</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">i</span><span class="o">);</span>
+            <span class="n">characters</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">i</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="n">Collections</span><span class="o">.</span><span class="na">shuffle</span><span class="o">(</span><span class="n">characters</span><span class="o">,</span> <span class="n">rnd</span><span class="o">);</span>
+        <span class="k">return</span> <span class="n">characters</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span></code></pre></div>
+
+<p>Below is presented a table with comparison of the expectation and variance obtained experimentally and calculated, based on the derived formulas: </p>
+
+<table><thead>
+<tr>
+<th>n (amount of pairs of numbers)</th>
+<th>average amount of correct placements</th>
+<th>theoretical expectation</th>
+<th>experimental variance</th>
+<th>theoretical variance</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>2</td>
+<td>0.502</td>
+<td>0.500</td>
+<td>0.250</td>
+<td>0.250</td>
+</tr>
+<tr>
+<td>3</td>
+<td>0.601</td>
+<td>0.600</td>
+<td>0.462</td>
+<td>0.462</td>
+</tr>
+<tr>
+<td>4</td>
+<td>0.643</td>
+<td>0.643</td>
+<td>0.520</td>
+<td>0.520</td>
+</tr>
+<tr>
+<td>5</td>
+<td>0.669</td>
+<td>0.667</td>
+<td>0.562</td>
+<td>0.560</td>
+</tr>
+<tr>
+<td>6</td>
+<td>0.681</td>
+<td>0.682</td>
+<td>0.590</td>
+<td>0.589</td>
+</tr>
+<tr>
+<td>7</td>
+<td>0.691</td>
+<td>0.692</td>
+<td>0.611</td>
+<td>0.611</td>
+</tr>
+<tr>
+<td>8</td>
+<td>0.699</td>
+<td>0.700</td>
+<td>0.630</td>
+<td>0.628</td>
+</tr>
+<tr>
+<td>9</td>
+<td>0.708</td>
+<td>0.706</td>
+<td>0.644</td>
+<td>0.641</td>
+</tr>
+<tr>
+<td>10</td>
+<td>0.713</td>
+<td>0.711</td>
+<td>0.653</td>
+<td>0.651</td>
+</tr>
+<tr>
+<td>11</td>
+<td>0.716</td>
+<td>0.714</td>
+<td>0.660</td>
+<td>0.660</td>
+</tr>
+<tr>
+<td>12</td>
+<td>0.720</td>
+<td>0.717</td>
+<td>0.670</td>
+<td>0.667</td>
+</tr>
+<tr>
+<td>13</td>
+<td>0.719</td>
+<td>0.720</td>
+<td>0.674</td>
+<td>0.674</td>
+</tr>
+<tr>
+<td>14</td>
+<td>0.723</td>
+<td>0.722</td>
+<td>0.679</td>
+<td>0.679</td>
+</tr>
+<tr>
+<td>15</td>
+<td>0.724</td>
+<td>0.724</td>
+<td>0.684</td>
+<td>0.684</td>
+</tr>
+<tr>
+<td>16</td>
+<td>0.725</td>
+<td>0.726</td>
+<td>0.688</td>
+<td>0.688</td>
+</tr>
+<tr>
+<td>17</td>
+<td>0.728</td>
+<td>0.727</td>
+<td>0.695</td>
+<td>0.691</td>
+</tr>
+<tr>
+<td>18</td>
+<td>0.727</td>
+<td>0.729</td>
+<td>0.692</td>
+<td>0.695</td>
+</tr>
+<tr>
+<td>19</td>
+<td>0.730</td>
+<td>0.730</td>
+<td>0.699</td>
+<td>0.698</td>
+</tr>
+<tr>
+<td>20</td>
+<td>0.730</td>
+<td>0.731</td>
+<td>0.700</td>
+<td>0.700</td>
+</tr>
+<tr>
+<td>21</td>
+<td>0.733</td>
+<td>0.732</td>
+<td>0.703</td>
+<td>0.703</td>
+</tr>
+<tr>
+<td>22</td>
+<td>0.734</td>
+<td>0.733</td>
+<td>0.705</td>
+<td>0.705</td>
+</tr>
+<tr>
+<td>23</td>
+<td>0.732</td>
+<td>0.733</td>
+<td>0.705</td>
+<td>0.707</td>
+</tr>
+<tr>
+<td>24</td>
+<td>0.735</td>
+<td>0.734</td>
+<td>0.711</td>
+<td>0.708</td>
+</tr>
+<tr>
+<td>25</td>
+<td>0.733</td>
+<td>0.735</td>
+<td>0.710</td>
+<td>0.710</td>
+</tr>
+</tbody></table>
+
+<p><img src="/images/langford_pairing_problem/img_68.png" alt="img 68"><br>
+<img src="/images/langford_pairing_problem/img_69.png" alt="img 69">   </p>
+
+<p>As you can see, the values obtained via derived formulas of expectation and variance are consistent to the values obtained via computer simulation.  </p>
+
+<h2 id="probabilistic-bounds"><a href="#probabilistic-bounds">Probabilistic bounds</a></h2>
+
+<p>Having the explicit expressions for expectation and variance we can make use of a couple of probabilistic inequalities, in order to estimate the probability of obtaining the correct placement of all <em>n</em> pairs of numbers:</p>
+
+<ul>
+<li><p>Markov&#39;s inequality:<br>
+<img src="/images/langford_pairing_problem/img_60.png" alt="img 60">   </p></li>
+<li><p>Chebyshev&#39;s inequality:<br>
+<img src="/images/langford_pairing_problem/img_61.png" alt="img 61">   </p></li>
+</ul>
+
+<p>Unfortunately, these probabilistic bounds are still very weak.</p>
+
+<h2 id="speculation-around-the-poisson-distribution"><a href="#speculation-around-the-poisson-distribution">Speculation around the Poisson distribution</a></h2>
+
+<p>Strictly speaking, the indicator random values of <img src="/images/langford_pairing_problem/xii.png" alt="xii"> are not independent, hence generally speaking, we can’t model the distribution of values of <img src="/images/langford_pairing_problem/xi.png" alt="xi"> using the Poisson distribution.</p>
+
+<p>Nevertheless, let’s consider the values of expectation and variance for the large amounts of pairs <em>n</em>:</p>
+
+<p><img src="/images/langford_pairing_problem/img_62.png" alt="img 62">   </p>
+
+<p><img src="/images/langford_pairing_problem/img_63.png" alt="img 63">   </p>
+
+<p>We can see, that <img src="/images/langford_pairing_problem/img_64.png" alt="img 64">.
+Hence, to some extent, I assume that it is still viable to use a Poisson distribution as a rough approximation of the distribution of values of the random variable <img src="/images/langford_pairing_problem/xi.png" alt="xi">.
+This assumption is also based on the observation, that occurrence of the correctly placed pair of numbers is a rare event.</p>
+
+<p>The event rate of the given Poisson distribution is <img src="/images/langford_pairing_problem/img_65.png" alt="img 65">. 
+Hence, the probability of occurrence of <em>k</em> correctly placed pairs is:</p>
+
+<p><img src="/images/langford_pairing_problem/img_66.png" alt="img 66">   </p>
+
+<p>Let’s evaluate adequacy of the Poisson approximation experimentally (again, using the computer simulation):</p>
+
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="kn">import</span> <span class="nn">java.util.*</span>  <span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">PoissonDistributionCheck</span> <span class="o">{</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">Random</span> <span class="n">rnd</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">Random</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span>
+        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">size</span> <span class="o">=</span> <span class="mi">20</span><span class="o">;</span> <span class="n">size</span> <span class="o">&lt;</span> <span class="mi">41</span><span class="o">;</span> <span class="n">size</span> <span class="o">+=</span> <span class="mi">5</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">evaluate</span><span class="o">(</span><span class="n">size</span><span class="o">,</span> <span class="n">rnd</span><span class="o">);</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">();</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">evaluate</span><span class="o">(</span><span class="kt">int</span> <span class="n">size</span><span class="o">,</span> <span class="n">Random</span> <span class="n">rnd</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kt">int</span> <span class="n">trialsCount</span> <span class="o">=</span> <span class="mi">500000</span><span class="o">;</span>
+        <span class="n">Map</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">,</span> <span class="n">Integer</span><span class="o">&gt;</span> <span class="n">correct_placements_count</span> <span class="o">=</span> <span class="k">new</span> <span class="n">TreeMap</span><span class="o">&lt;&gt;();</span>
+        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">trialsCount</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+            <span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">characters</span> <span class="o">=</span> <span class="n">random_placement</span><span class="o">(</span><span class="n">size</span><span class="o">,</span> <span class="n">rnd</span><span class="o">);</span>
+            <span class="kt">int</span> <span class="n">correct</span> <span class="o">=</span> <span class="n">calc_correct_placements</span><span class="o">(</span><span class="n">characters</span><span class="o">);</span>
+            <span class="kt">int</span> <span class="n">count</span> <span class="o">=</span> <span class="n">correct_placements_count</span><span class="o">.</span><span class="na">getOrDefault</span><span class="o">(</span><span class="n">correct</span><span class="o">,</span> <span class="mi">0</span><span class="o">);</span>
+            <span class="n">correct_placements_count</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">correct</span><span class="o">,</span> <span class="n">count</span> <span class="o">+</span> <span class="mi">1</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">correct</span> <span class="o">:</span> <span class="n">correct_placements_count</span><span class="o">.</span><span class="na">keySet</span><span class="o">())</span> <span class="o">{</span>
+            <span class="kt">int</span> <span class="n">simulated_count</span> <span class="o">=</span> <span class="n">correct_placements_count</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">correct</span><span class="o">);</span>
+            <span class="kt">double</span> <span class="n">simulated_prob</span> <span class="o">=</span> <span class="o">(</span><span class="kt">double</span><span class="o">)</span> <span class="n">simulated_count</span> <span class="o">/</span> <span class="n">trialsCount</span><span class="o">;</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">printf</span><span class="o">(</span><span class="s">&quot;%d %d %1.5f %1.5f %n&quot;</span><span class="o">,</span> <span class="n">size</span><span class="o">,</span> <span class="n">correct</span><span class="o">,</span> <span class="n">simulated_prob</span><span class="o">,</span> <span class="n">poisson_prob</span><span class="o">(</span><span class="n">correct</span><span class="o">));</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kt">double</span> <span class="nf">poisson_prob</span><span class="o">(</span><span class="kt">int</span> <span class="n">correct</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kt">long</span> <span class="n">fact</span> <span class="o">=</span> <span class="n">factorial</span><span class="o">(</span><span class="n">correct</span><span class="o">);</span>
+        <span class="k">return</span> <span class="n">Math</span><span class="o">.</span><span class="na">exp</span><span class="o">(-</span><span class="mf">0.75</span><span class="o">)</span> <span class="o">*</span> <span class="n">Math</span><span class="o">.</span><span class="na">pow</span><span class="o">(</span><span class="mf">0.75</span><span class="o">,</span> <span class="n">correct</span><span class="o">)</span> <span class="o">/</span> <span class="n">fact</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kt">long</span> <span class="nf">factorial</span><span class="o">(</span><span class="kt">int</span> <span class="n">n</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kt">long</span> <span class="n">fact</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
+        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">n</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+            <span class="n">fact</span> <span class="o">*=</span> <span class="n">i</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">fact</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kt">int</span> <span class="nf">calc_correct_placements</span><span class="o">(</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">characters</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">Map</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">,</span> <span class="n">Integer</span><span class="o">&gt;</span> <span class="n">first_occurrence</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;&gt;();</span>
+        <span class="kt">int</span> <span class="n">correct</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">characters</span><span class="o">.</span><span class="na">size</span><span class="o">();</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+            <span class="kt">int</span> <span class="n">c</span> <span class="o">=</span> <span class="n">characters</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">i</span><span class="o">);</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">first_occurrence</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">c</span><span class="o">)</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">first_occurrence</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">c</span><span class="o">,</span> <span class="n">i</span><span class="o">);</span>
+            <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+                <span class="kt">int</span> <span class="n">firstOccurrencePos</span> <span class="o">=</span> <span class="n">first_occurrence</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">c</span><span class="o">);</span>
+                <span class="k">if</span> <span class="o">(</span><span class="n">i</span> <span class="o">-</span> <span class="n">firstOccurrencePos</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">==</span> <span class="n">c</span><span class="o">)</span> <span class="o">{</span>
+                    <span class="n">correct</span><span class="o">++;</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">correct</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="kd">static</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="nf">random_placement</span><span class="o">(</span><span class="kt">int</span> <span class="n">size</span><span class="o">,</span> <span class="n">Random</span> <span class="n">rnd</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">characters</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;();</span>
+        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">size</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+            <span class="n">characters</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">i</span><span class="o">);</span>
+            <span class="n">characters</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">i</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="n">Collections</span><span class="o">.</span><span class="na">shuffle</span><span class="o">(</span><span class="n">characters</span><span class="o">,</span> <span class="n">rnd</span><span class="o">);</span>
+        <span class="k">return</span> <span class="n">characters</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span></code></pre></div>
+
+<p>Below are presented an example of table (for <em>n = 40</em>) with comparison of observed distribution and the Poisson distribution:</p>
+
+<table><thead>
+<tr>
+<th>n</th>
+<th>k</th>
+<th>Observed distribution of the values of <img src="/images/langford_pairing_problem/xi.png" alt="xi"></th>
+<th>Poisson distribution</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>40</td>
+<td>0</td>
+<td>0.47407</td>
+<td>0.47237</td>
+</tr>
+<tr>
+<td>40</td>
+<td>1</td>
+<td>0.35732</td>
+<td>0.35427</td>
+</tr>
+<tr>
+<td>40</td>
+<td>2</td>
+<td>0.13153</td>
+<td>0.13285</td>
+</tr>
+<tr>
+<td>40</td>
+<td>3</td>
+<td>0.03100</td>
+<td>0.03321</td>
+</tr>
+<tr>
+<td>40</td>
+<td>4</td>
+<td>0.00533</td>
+<td>0.00623</td>
+</tr>
+<tr>
+<td>40</td>
+<td>5</td>
+<td>0.00068</td>
+<td>0.00093</td>
+</tr>
+<tr>
+<td>40</td>
+<td>6</td>
+<td>0.00008</td>
+<td>0.00012</td>
+</tr>
+<tr>
+<td>40</td>
+<td>7</td>
+<td>0.00000</td>
+<td>0.00001</td>
+</tr>
+</tbody></table>
+
+<p><img src="/images/langford_pairing_problem/img_67.png" alt="img 67">   </p>
+
+<p>As you can see, the Poisson distribution can be used as an approximate upper bound of distribution of values of a random variable, which represents an amount of correctly placed pairs of numbers (after the random shuffling).</p>
+
+<div id="disqus_thread"></div>
+
+<script>
+
+var disqus_config = function () {
+this.page.url = "http://lagodiuk.github.io/computer_science/2017/06/04/langford_pairing_problem.html";
+this.page.identifier = "langford_pairing_problem";
+};
+
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+
+s.src = '//lahodiuk.disqus.com/embed.js';
+
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+  </article>
+
+</div>
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+  <div class="wrapper">
+  
+    <div class="footer-col-wrapper">
+        <div class="footer-col  footer-col-50-percent">
+            <h2 class="footer-heading">Yurii Lahodiuk</h2>
+            <p class="text center-justified">This is my personal blog about Algorithms, Programming Problems solving techniques and interesting Computer Science topics.   Expressed opinions are my own.
+</p>
+        </div>
+      
+        <div class="footer-col-right">
+	    
+
+                      <a href="/feed.xml"><svg width="40px" height="40px" viewBox="0 0 60 60" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <path d="M0.112290344,30 C0.112290344,13.4314567 13.3426506,0 29.663129,0 C45.9836073,0 59.2139676,13.4314567 59.2139676,30 C59.2139676,46.5685433 45.9836073,60 29.663129,60 C13.3426506,60 0.112290344,46.5685433 0.112290344,30 Z M0.112290344,30" fill="#E18F00" sketch:type="MSShapeGroup"></path>
+    <path d="M26.5147755,38.7571296 C26.5147755,36.8192934 24.9575021,35.2291656 23.0297047,35.2291656 C21.1094331,35.2291656 19.5492775,36.8192934 19.5492775,38.7571296 C19.5492775,40.7052068 21.1094331,42.277616 23.0297047,42.277616 C24.957422,42.277616 26.5146954,40.7052881 26.5147755,38.7571296 Z M36.8075433,42.2700571 C36.8075433,32.6055847 29.062648,24.7442705 19.5492775,24.7442705 L19.5492775,29.8318017 C22.8128986,29.8318017 25.8817303,31.1272145 28.1920609,33.4740429 C30.4999895,35.8159133 31.7732853,38.9454513 31.7732853,42.2701384 L36.8075433,42.2700571 Z M45.6871482,42.2675375 C45.6871482,27.6346878 33.9604014,15.722384 19.5492775,15.722384 L19.5492775,20.8123535 C31.186916,20.8123535 40.660496,30.438869 40.660496,42.2673749 L45.6871482,42.2675375 Z M45.6871482,42.2675375" id="Path" fill="#FFFFFF" sketch:type="MSShapeGroup"></path>
+    <path d="M59.2139676,30 C59.2139676,46.5685433 45.9836073,60 29.663129,60 C23.6102502,60 17.9824147,58.1525134 13.2970341,54.9827754 L47.1572554,5.81941103 C54.4691534,11.2806503 59.2139676,20.0777973 59.2139676,30 Z M59.2139676,30" id="reflec" fill-opacity="0.08" fill="#000000" sketch:type="MSShapeGroup"></path>
+</svg></a>
+          
+          
+          
+          
+          
+          
+          <a href="http://twitter.com/ylahodiuk"><svg width="40px" height="40px" viewBox="0 0 60 60" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <path d="M0,30 C0,13.4314567 13.4508663,0 30.0433526,0 C46.6358389,0 60.0867052,13.4314567 60.0867052,30 C60.0867052,46.5685433 46.6358389,60 30.0433526,60 C13.4508663,60 0,46.5685433 0,30 Z M0,30" fill="#4099FF" sketch:type="MSShapeGroup"></path>
+    <path d="M29.2997675,23.8879776 L29.3627206,24.9260453 L28.3135016,24.798935 C24.4943445,24.3116787 21.1578281,22.6592444 18.3249368,19.8840023 L16.9399677,18.5069737 L16.5832333,19.5238563 C15.8277956,21.7906572 16.3104363,24.1845684 17.8842648,25.7946325 C18.72364,26.6844048 18.5347806,26.8115152 17.0868584,26.2818888 C16.5832333,26.1124083 16.1425613,25.985298 16.1005925,26.0488532 C15.9537019,26.1971486 16.457327,28.1249885 16.8560302,28.8876505 C17.4016241,29.9469033 18.5137962,30.9849709 19.7308902,31.5993375 L20.7591248,32.0865938 L19.5420308,32.1077788 C18.3669055,32.1077788 18.3249368,32.1289639 18.4508431,32.57385 C18.8705307,33.9508786 20.5282967,35.4126474 22.3749221,36.048199 L23.6759536,36.4930852 L22.5427971,37.1710069 C20.8640467,38.1455194 18.891515,38.6963309 16.9189833,38.738701 C15.9746862,38.759886 15.1982642,38.8446262 15.1982642,38.9081814 C15.1982642,39.1200319 17.7583585,40.306395 19.2482495,40.7724662 C23.7179224,42.1494948 29.0269705,41.5563132 33.0140027,39.2047722 C35.846894,37.5311528 38.6797853,34.2050993 40.0018012,30.9849709 C40.7152701,29.2689815 41.428739,26.1335934 41.428739,24.6294545 C41.428739,23.654942 41.4916922,23.5278317 42.6668174,22.3626537 C43.359302,21.6847319 44.0098178,20.943255 44.135724,20.7314044 C44.3455678,20.3288884 44.3245835,20.3288884 43.2543801,20.6890343 C41.4707078,21.324586 41.2188952,21.2398458 42.1002392,20.2865183 C42.750755,19.6085965 43.527177,18.3798634 43.527177,18.0197174 C43.527177,17.9561623 43.2124113,18.0620876 42.8556769,18.252753 C42.477958,18.4646036 41.6385828,18.7823794 41.0090514,18.9730449 L39.8758949,19.3331908 L38.8476603,18.634084 C38.281082,18.252753 37.4836756,17.829052 37.063988,17.7019416 C35.9937846,17.4053509 34.357003,17.447721 33.3917215,17.7866818 C30.768674,18.7400093 29.110908,21.1974757 29.2997675,23.8879776 Z M29.2997675,23.8879776" id="Path" fill="#FFFFFF" sketch:type="MSShapeGroup"></path>
+    <path d="M60.0867052,30 C60.0867052,46.5685433 46.6358389,60 30.0433526,60 C23.8895925,60 18.1679598,58.1525134 13.4044895,54.9827754 L47.8290478,5.81941103 C55.2628108,11.2806503 60.0867052,20.0777973 60.0867052,30 Z M60.0867052,30" id="reflec" fill-opacity="0.08" fill="#000000" sketch:type="MSShapeGroup"></path>
+</svg></a>
+          <a href="http://linkedin.com/in/ylahodiuk"><svg width="40px" height="40px" viewBox="0 0 60 60" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <path d="M0.449161376,30 C0.449161376,13.4314567 13.6795217,0 30,0 C46.3204783,0 59.5508386,13.4314567 59.5508386,30 C59.5508386,46.5685433 46.3204783,60 30,60 C13.6795217,60 0.449161376,46.5685433 0.449161376,30 Z M0.449161376,30" fill="#007BB6" sketch:type="MSShapeGroup"></path>
+    <path d="M22.4680392,23.7098144 L15.7808366,23.7098144 L15.7808366,44.1369537 L22.4680392,44.1369537 L22.4680392,23.7098144 Z M22.4680392,23.7098144" id="Path" fill="#FFFFFF" sketch:type="MSShapeGroup"></path>
+    <path d="M22.9084753,17.3908761 C22.8650727,15.3880081 21.4562917,13.862504 19.1686418,13.862504 C16.8809918,13.862504 15.3854057,15.3880081 15.3854057,17.3908761 C15.3854057,19.3522579 16.836788,20.9216886 19.0818366,20.9216886 L19.1245714,20.9216886 C21.4562917,20.9216886 22.9084753,19.3522579 22.9084753,17.3908761 Z M22.9084753,17.3908761" id="Path" fill="#FFFFFF" sketch:type="MSShapeGroup"></path>
+    <path d="M46.5846502,32.4246563 C46.5846502,26.1503226 43.2856534,23.2301456 38.8851658,23.2301456 C35.3347011,23.2301456 33.7450983,25.2128128 32.8575489,26.6036896 L32.8575489,23.7103567 L26.1695449,23.7103567 C26.2576856,25.6271338 26.1695449,44.137496 26.1695449,44.137496 L32.8575489,44.137496 L32.8575489,32.7292961 C32.8575489,32.1187963 32.9009514,31.5097877 33.0777669,31.0726898 C33.5610713,29.8530458 34.6614937,28.5902885 36.5089747,28.5902885 C38.9297703,28.5902885 39.8974476,30.4634101 39.8974476,33.2084226 L39.8974476,44.1369537 L46.5843832,44.1369537 L46.5846502,32.4246563 Z M46.5846502,32.4246563" id="Path" fill="#FFFFFF" sketch:type="MSShapeGroup"></path>
+    <path d="M59.5508386,30 C59.5508386,46.5685433 46.3204783,60 30,60 C23.9471212,60 18.3192858,58.1525134 13.6339051,54.9827754 L47.4941264,5.81941103 C54.8060245,11.2806503 59.5508386,20.0777973 59.5508386,30 Z M59.5508386,30" id="reflec" fill-opacity="0.08" fill="#000000" sketch:type="MSShapeGroup"></path>
+</svg></a>
+          <a href="http://github.com/lagodiuk"><svg width="40px" height="40px" viewBox="0 0 60 60" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <path d="M0.336871032,30 C0.336871032,13.4314567 13.5672313,0 29.8877097,0 C46.208188,0 59.4385483,13.4314567 59.4385483,30 C59.4385483,46.5685433 46.208188,60 29.8877097,60 C13.5672313,60 0.336871032,46.5685433 0.336871032,30 Z M0.336871032,30" id="Github" fill="#333333" sketch:type="MSShapeGroup"></path>
+    <path d="M18.2184245,31.9355566 C19.6068506,34.4507902 22.2845295,36.0156764 26.8007287,36.4485173 C26.1561023,36.9365335 25.3817877,37.8630984 25.2749857,38.9342607 C24.4644348,39.4574749 22.8347506,39.62966 21.5674303,39.2310659 C19.7918469,38.6717023 19.1119377,35.1642642 16.4533306,35.6636959 C15.8773626,35.772144 15.9917933,36.1507609 16.489567,36.4722998 C17.3001179,36.9955141 18.0629894,37.6500075 18.6513541,39.04366 C19.1033554,40.113871 20.0531304,42.0259813 23.0569369,42.0259813 C24.2489236,42.0259813 25.0842679,41.8832865 25.0842679,41.8832865 C25.0842679,41.8832865 25.107154,44.6144649 25.107154,45.6761142 C25.107154,46.9004355 23.4507693,47.2457569 23.4507693,47.8346108 C23.4507693,48.067679 23.9990832,48.0895588 24.4396415,48.0895588 C25.3102685,48.0895588 27.1220883,47.3646693 27.1220883,46.0918317 C27.1220883,45.0806012 27.1382993,41.6806599 27.1382993,41.0860982 C27.1382993,39.785673 27.8372803,39.3737607 27.8372803,39.3737607 C27.8372803,39.3737607 27.924057,46.3153869 27.6704022,47.2457569 C27.3728823,48.3397504 26.8360115,48.1846887 26.8360115,48.6727049 C26.8360115,49.3985458 29.0168704,48.8505978 29.7396911,47.2571725 C30.2984945,46.0166791 30.0543756,39.2072834 30.0543756,39.2072834 L30.650369,39.1949165 C30.650369,39.1949165 30.6837446,42.3123222 30.6637192,43.7373675 C30.6427402,45.2128317 30.5426134,47.0792797 31.4208692,47.9592309 C31.9977907,48.5376205 33.868733,49.5526562 33.868733,48.62514 C33.868733,48.0857536 32.8436245,47.6424485 32.8436245,46.1831564 L32.8436245,39.4688905 C33.6618042,39.4688905 33.5387911,41.6768547 33.5387911,41.6768547 L33.5988673,45.7788544 C33.5988673,45.7788544 33.4186389,47.2733446 35.2190156,47.8992991 C35.8541061,48.1209517 37.2139245,48.1808835 37.277815,47.8089257 C37.3417055,47.4360167 35.6405021,46.8814096 35.6252446,45.7236791 C35.6157088,45.0178155 35.6567131,44.6059032 35.6567131,41.5379651 C35.6567131,38.470027 35.2438089,37.336079 33.8048426,36.4323453 C38.2457082,35.9766732 40.9939527,34.880682 42.3337458,31.9450695 C42.4383619,31.9484966 42.8791491,30.5737742 42.8219835,30.5742482 C43.1223642,29.4659853 43.2844744,28.1550957 43.3168964,26.6025764 C43.3092677,22.3930799 41.2895654,20.9042975 40.9014546,20.205093 C41.4736082,17.0182425 40.8060956,15.5675121 40.4961791,15.0699829 C39.3518719,14.6637784 36.5149435,16.1145088 34.9653608,17.1371548 C32.438349,16.3998984 27.0982486,16.4712458 25.0957109,17.3274146 C21.4005522,14.6875608 19.445694,15.0918628 19.445694,15.0918628 C19.445694,15.0918628 18.1821881,17.351197 19.1119377,20.6569598 C17.8961113,22.2028201 16.9902014,23.2968136 16.9902014,26.1963718 C16.9902014,27.8297516 17.1828264,29.2918976 17.6176632,30.5685404 C17.5643577,30.5684093 18.2008493,31.9359777 18.2184245,31.9355566 Z M18.2184245,31.9355566" id="Path" fill="#FFFFFF" sketch:type="MSShapeGroup"></path>
+    <path d="M59.4385483,30 C59.4385483,46.5685433 46.208188,60 29.8877097,60 C23.8348308,60 18.2069954,58.1525134 13.5216148,54.9827754 L47.3818361,5.81941103 C54.6937341,11.2806503 59.4385483,20.0777973 59.4385483,30 Z M59.4385483,30" id="reflec" fill-opacity="0.08" fill="#000000" sketch:type="MSShapeGroup"></path>
+</svg></a>
+          
+          <a href="http://www.spoj.com/users/stemm"><svg width="40px" height="40px" version="1.0" xmlns="http://www.w3.org/2000/svg"
+ width="192.000000pt" height="192.000000pt" viewBox="0 0 192.000000 192.000000"
+ preserveAspectRatio="xMidYMid meet">
+<metadata>
+Created by potrace 1.10, written by Peter Selinger 2001-2011
+</metadata>
+<g transform="translate(0.000000,192.000000) scale(0.100000,-0.100000)"
+fill="#2775bf" stroke="none">
+<path d="M884 1830 c-6 -6 -30 -13 -54 -16 -31 -4 -50 -13 -69 -35 -14 -16
+-35 -29 -49 -29 -12 0 -25 -7 -28 -15 -4 -8 -15 -15 -25 -15 -11 0 -22 -7 -25
+-15 -4 -8 -16 -15 -28 -15 -12 0 -36 -13 -54 -30 -18 -16 -41 -30 -52 -30 -10
+0 -20 -7 -24 -15 -3 -8 -16 -15 -30 -15 -13 0 -26 -7 -30 -15 -3 -8 -16 -15
+-30 -15 -13 0 -26 -7 -30 -15 -3 -8 -12 -15 -20 -15 -8 0 -24 -13 -36 -30 -12
+-16 -29 -30 -39 -30 -25 0 -111 -91 -111 -118 0 -13 -7 -25 -15 -28 -23 -9
+-23 -759 0 -768 8 -3 15 -16 15 -29 0 -26 86 -117 112 -117 9 0 26 -13 38 -30
+12 -16 28 -30 36 -30 8 0 17 -7 20 -15 4 -8 17 -15 30 -15 14 0 27 -7 30 -15
+4 -8 17 -15 30 -15 14 0 27 -7 30 -15 4 -8 14 -15 24 -15 11 0 34 -13 52 -30
+18 -16 42 -30 54 -30 12 0 24 -7 28 -15 3 -8 14 -15 25 -15 10 0 21 -7 25 -15
+3 -8 16 -15 28 -15 14 0 34 -13 48 -30 17 -21 34 -30 55 -30 16 0 43 -7 59
+-15 36 -19 115 -19 151 -1 15 8 33 12 39 10 7 -3 21 4 31 16 10 11 25 20 34
+20 9 1 27 14 41 30 13 17 31 30 40 30 8 0 28 7 44 15 15 8 36 15 46 15 10 0
+25 11 34 25 10 14 28 30 42 35 13 5 24 14 24 20 0 5 13 10 29 10 16 0 31 6 35
+15 3 9 18 15 36 15 26 0 70 29 70 46 0 13 46 43 66 44 23 0 64 39 64 60 0 7
+11 28 25 46 l25 33 0 391 0 391 -25 33 c-14 18 -25 40 -25 48 0 20 -42 58 -66
+58 -18 1 -64 32 -64 44 0 17 -44 46 -70 46 -18 0 -33 6 -36 15 -4 9 -19 15
+-35 15 -16 0 -29 5 -29 10 0 6 -11 15 -24 20 -14 5 -32 21 -42 35 -9 14 -24
+25 -34 25 -10 0 -31 7 -46 15 -16 8 -36 15 -44 15 -9 0 -27 13 -40 30 -14 16
+-32 29 -41 30 -9 0 -24 9 -34 20 -10 12 -24 19 -31 16 -6 -2 -24 2 -39 10 -32
+16 -126 19 -141 4z m238 -317 c17 -15 19 -15 37 1 16 15 19 15 31 1 7 -8 20
+-15 30 -15 30 0 71 -57 64 -88 -4 -15 -11 -31 -15 -37 -5 -5 -9 -20 -9 -33 0
+-51 -90 -100 -106 -57 -4 10 -20 15 -45 15 -26 0 -42 5 -45 15 -5 11 -22 15
+-69 15 -43 0 -66 -5 -75 -15 -7 -8 -19 -15 -26 -15 -18 0 -54 -36 -54 -55 0
+-7 -8 -19 -17 -25 -14 -8 -15 -12 -5 -17 7 -3 17 -16 22 -29 6 -13 21 -29 34
+-34 13 -5 27 -14 31 -19 3 -6 22 -11 41 -11 22 0 37 -6 40 -15 4 -8 14 -15 24
+-15 10 0 23 -7 30 -15 7 -8 25 -15 41 -15 15 0 30 -4 34 -9 3 -5 19 -13 36
+-16 38 -8 169 -136 169 -164 0 -10 7 -21 15 -25 22 -8 22 -214 0 -222 -8 -4
+-15 -17 -15 -30 0 -14 -7 -27 -15 -30 -8 -4 -15 -14 -15 -25 0 -25 -43 -69
+-68 -69 -11 0 -22 -7 -26 -15 -3 -8 -16 -15 -29 -15 -14 0 -30 -7 -37 -15 -8
+-10 -30 -15 -64 -15 -29 0 -57 -5 -64 -12 -17 -17 -160 -18 -174 -1 -7 8 -34
+13 -78 13 -51 0 -69 4 -74 15 -3 8 -17 15 -31 15 -14 0 -28 7 -31 15 -4 9 -19
+15 -35 15 -26 0 -29 3 -29 34 0 21 6 36 15 40 8 3 15 17 15 31 0 14 7 28 15
+31 9 4 15 19 15 39 0 19 4 36 10 40 11 7 51 -14 63 -32 4 -7 27 -13 51 -13 27
+0 48 -6 56 -15 18 -22 208 -22 216 0 4 8 16 15 28 15 33 0 51 29 51 80 0 48
+-18 80 -47 80 -9 0 -32 14 -50 30 -30 27 -55 35 -100 32 -9 -1 -22 5 -28 13
+-7 8 -27 15 -45 15 -24 0 -43 11 -79 45 -27 25 -58 45 -70 45 -16 0 -27 11
+-39 38 -9 21 -17 46 -17 56 0 9 -7 19 -15 22 -22 9 -22 222 0 230 9 4 15 19
+15 40 0 21 6 37 14 40 8 3 16 14 19 25 3 12 14 19 29 19 13 1 33 14 48 30 13
+17 33 30 45 30 12 0 25 4 31 9 14 14 49 18 183 20 103 1 128 -2 143 -16z"/>
+</g>
+</svg>
+</a>
+
+
+            <a href="http://stackoverflow.com/users/653511/stemm?tab=profile">
+            <img src="http://stackexchange.com/users/flair/329794.png" width="208" height="58" alt="profile for stemm on Stack Exchange, a network of free, community-driven Q&amp;A sites" title="profile for stemm on Stack Exchange, a network of free, community-driven Q&amp;A sites">
+            </a>
+        </div>
+    </div>
+
+  </div>
+</footer>
+
+
+    <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-83288425-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+  </body>
+
+</html>
