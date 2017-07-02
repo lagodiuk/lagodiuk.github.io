@@ -6,8 +6,8 @@
 </description>
     <link>http://lagodiuk.github.io/</link>
     <atom:link href="http://lagodiuk.github.io/feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Tue, 06 Jun 2017 00:14:24 +0200</pubDate>
-    <lastBuildDate>Tue, 06 Jun 2017 00:14:24 +0200</lastBuildDate>
+    <pubDate>Sun, 02 Jul 2017 14:50:32 +0200</pubDate>
+    <lastBuildDate>Sun, 02 Jul 2017 14:50:32 +0200</lastBuildDate>
     <generator>Jekyll v2.4.0</generator>
     
       <item>
@@ -16,8 +16,6 @@
 Langford pairings are named after C. Dudley Langford, who posed the problem of constructing them in 1958.&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;/images/langford_pairing_problem/langford_pairing_picture.png&quot; alt=&quot;Demonstration of the problem&quot;&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;table-of-contents&quot;&gt;Table of contents&lt;/h2&gt;
 
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&quot;/computer_science/2017/06/04/langford_pairing_problem.html#when-does-the-langford-pairing-exist&quot;&gt;When does the Langford pairing exist?&lt;/a&gt;&lt;/li&gt;
@@ -687,8 +685,6 @@ Below is an illustration, which demonstrates two paths (out of six possible), wh
 &lt;p&gt;I will describe a couple of algorithms for tackling described problem, we will see how the runtime efficiency of solutions can be improved from an exponential complexity down to almost a constant time complexity. 
 And, finally, we will discuss the pros and cons of each approach.&lt;/p&gt;
 
-&lt;h2 id=&quot;table-of-contents&quot;&gt;Table of contents&lt;/h2&gt;
-
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&quot;/computer_science/2017/04/17/random_walks_in_a_hexagon.html#brute-force-solution&quot;&gt;Brute-force solution&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&quot;/computer_science/2017/04/17/random_walks_in_a_hexagon.html#dynamic-programming-solution&quot;&gt;Dynamic programming solution&lt;/a&gt;&lt;/li&gt;
@@ -1285,8 +1281,6 @@ s.setAttribute(&#39;data-timestamp&#39;, +new Date());
 
 &lt;p&gt;&lt;img src=&quot;/images/minimax_tic_tac_toe/intro.png&quot; alt=&quot;Introduction image&quot;&gt;&lt;/p&gt;
 
-&lt;h2 id=&quot;table-of-contents&quot;&gt;Table of contents&lt;/h2&gt;
-
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&quot;/computer_science/2017/01/12/minimax_tic_tac_toe_scala.html#minimax-principle&quot;&gt;Minimax Principle&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&quot;/computer_science/2017/01/12/minimax_tic_tac_toe_scala.html#minimax-algorithm-in-scala&quot;&gt;Minimax Algorithm in Scala&lt;/a&gt;&lt;/li&gt;
@@ -1663,8 +1657,6 @@ s.setAttribute(&#39;data-timestamp&#39;, +new Date());
         <description>&lt;p&gt;While I was solving various problems, which can be reduced to computation on graphs (e.g.: &lt;a href=&quot;http://www.spoj.com/problems/VOCV/&quot;&gt;&amp;quot;VOCV - Con-Junctions&amp;quot;&lt;/a&gt;, &lt;a href=&quot;http://www.spoj.com/problems/NAJKRACI/&quot;&gt;&amp;quot;NAJKRACI - Najkraci&amp;quot;&lt;/a&gt;, &lt;a href=&quot;http://www.spoj.com/problems/MTREE/&quot;&gt;&amp;quot;MTREE - Another Tree Problem&amp;quot;&lt;/a&gt;), I have discovered a very convenient pattern of implementation of adjacency lists, which I would like to describe in this post. &lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;/images/adj_lists/img_1.png&quot; alt=&quot;Memory efficient adjacency list implementation illustration&quot;&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;table-of-contents&quot;&gt;Table of contents&lt;/h2&gt;
 
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&quot;/computer_science/2016/12/19/efficient_adjacency_lists_in_c.html#motivation&quot;&gt;Motivation&lt;/a&gt;&lt;/li&gt;
@@ -2246,8 +2238,6 @@ s.setAttribute(&#39;data-timestamp&#39;, +new Date());
 
 &lt;p&gt;&lt;img src=&quot;/images/entropy/shannon_entropy.png&quot; alt=&quot;Illustration to the problem&quot;&gt;&lt;/p&gt;
 
-&lt;h2 id=&quot;table-of-contents&quot;&gt;Table of contents&lt;/h2&gt;
-
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&quot;/computer_science/2016/10/31/entropy.html#counting-permutations&quot;&gt;Counting permutations&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&quot;/computer_science/2016/10/31/entropy.html#from-permutations-to-combinatorial-entropy&quot;&gt;From permutations to combinatorial entropy&lt;/a&gt;&lt;/li&gt;
@@ -2346,8 +2336,6 @@ s.setAttribute(&#39;data-timestamp&#39;, +new Date());
       <item>
         <title>Tiny JavaScript parser of the subset of German</title>
         <description>&lt;p&gt;I have combined the process of learning German with my hobby, and would like to present the prototype of the parser of the subset of German language.&lt;/p&gt;
-
-&lt;h2 id=&quot;table-of-contents&quot;&gt;Table of contents&lt;/h2&gt;
 
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&quot;/nlp/2016/05/23/deutsch_nlp.html#vorwort-deutsch&quot;&gt;Vorwort (Deutsch)&lt;/a&gt;&lt;/li&gt;
@@ -2680,8 +2668,6 @@ s.setAttribute(&#39;data-timestamp&#39;, +new Date());
         <title>Is it possible to express all prime numbers using a regular grammar?</title>
         <description>&lt;p&gt;We will use the Pumping Lemma, in order to understand whether it is possible to describe the prime numbers using a Regular Grammar.&lt;/p&gt;
 
-&lt;h2 id=&quot;table-of-contents&quot;&gt;Table of contents&lt;/h2&gt;
-
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&quot;/computer_science/2016/04/30/prime_numbers_regular_grammar.html#problem-statement&quot;&gt;Problem Statement&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&quot;/computer_science/2016/04/30/prime_numbers_regular_grammar.html#pumping-lemma&quot;&gt;Pumping Lemma&lt;/a&gt;&lt;/li&gt;
@@ -2800,8 +2786,6 @@ s.setAttribute(&#39;data-timestamp&#39;, +new Date());
       <item>
         <title>Recurring decimal of a rational number</title>
         <description>&lt;p&gt;I will describe two algorithms for calculation of decimal representation of rational numbers together with &lt;a href=&quot;https://en.wikipedia.org/wiki/Repeating_decimal&quot;&gt;recurring decimal&lt;/a&gt; (e.g. &lt;code&gt;1/3 = 0.(3)&lt;/code&gt;, &lt;code&gt;3227/555 = 5.8(144)&lt;/code&gt;, etc.).&lt;/p&gt;
-
-&lt;h2 id=&quot;table-of-contents&quot;&gt;Table of contents&lt;/h2&gt;
 
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&quot;/programming_puzzles/2016/01/31/puzzles_repeating_decimal.html#problem-analysis&quot;&gt;Problem analysis&lt;/a&gt;&lt;/li&gt;
@@ -3223,8 +3207,6 @@ s.setAttribute(&#39;data-timestamp&#39;, +new Date());
       <item>
         <title>Catch Fish problem from SPOJ: MFISH</title>
         <description>&lt;p&gt;Analysis and solution of the problem: &lt;a href=&quot;http://www.spoj.com/problems/MFISH/&quot;&gt;http://www.spoj.com/problems/MFISH/&lt;/a&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;table-of-contents&quot;&gt;Table of contents&lt;/h2&gt;
 
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&quot;/spoj/dynamic_programming/2016/01/23/spoj_mfish_solution.html#description-of-the-problem&quot;&gt; Description of the problem &lt;/a&gt;&lt;/li&gt;
