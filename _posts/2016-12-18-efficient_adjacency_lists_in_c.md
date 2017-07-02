@@ -13,7 +13,6 @@ While I was solving various problems, which can be reduced to computation on gra
 
 ![Memory efficient adjacency list implementation illustration](/images/adj_lists/img_1.png)
 
-## Table of contents ##
 - [Motivation]({{page.url}}#motivation)
 - [The commonly used approaches]({{page.url}}#the-commonly-used-approaches)
 - [The proposed approach]({{page.url}}#the-proposed-approach)

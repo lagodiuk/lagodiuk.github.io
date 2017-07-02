@@ -22,7 +22,6 @@ Below is an illustration, which demonstrates two paths (out of six possible), wh
 I will describe a couple of algorithms for tackling described problem, we will see how the runtime efficiency of solutions can be improved from an exponential complexity down to almost a constant time complexity. 
 And, finally, we will discuss the pros and cons of each approach.
 
-## Table of contents
 * [Brute-force solution]({{page.url}}#brute-force-solution)
 * [Dynamic programming solution]({{page.url}}#dynamic-programming-solution)
 * [Derivation of a simpler recurrence relation]({{page.url}}#derivation-of-a-simpler-recurrence-relation)

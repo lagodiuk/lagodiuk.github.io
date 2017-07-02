@@ -12,8 +12,6 @@ comments: true
 
 Analysis and solution of the problem: http://www.spoj.com/problems/MFISH/
 
-## Table of contents
-
 * <a href="{{page.url}}#description-of-the-problem"> Description of the problem </a>
 * <a href="{{page.url}}#understanding-the-problem"> Understanding the problem </a>
 * <a href="{{page.url}}#modelling-the-problem"> Modelling the problem </a>

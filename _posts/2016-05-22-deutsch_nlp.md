@@ -20,7 +20,6 @@ body_onload: onload="init()"
 
 I have combined the process of learning German with my hobby, and would like to present the prototype of the parser of the subset of German language.
 
-## Table of contents
 * [Vorwort (Deutsch)]({{page.url}}#vorwort-deutsch)
 * [Preface (English)]({{page.url}}#preface-english)
 * [Demo]({{page.url}}#demo)

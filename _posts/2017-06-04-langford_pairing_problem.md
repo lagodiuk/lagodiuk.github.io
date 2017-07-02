@@ -14,7 +14,6 @@ Langford pairings are named after C. Dudley Langford, who posed the problem of c
 
 ![Demonstration of the problem](/images/langford_pairing_problem/langford_pairing_picture.png)
 
-## Table of contents
 * [When does the Langford pairing exist?]({{page.url}}#when-does-the-langford-pairing-exist)
 * [Langford pairing and the random permutations]({{page.url}}#langford-pairing-and-the-random-permutations)
   * [Expectation of the amount of correct placements]({{page.url}}#expectation-of-the-amount-of-correct-placements)

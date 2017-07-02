@@ -13,7 +13,6 @@ This article contains a brief introduction of the Minimax principle, together wi
 
 ![Introduction image](/images/minimax_tic_tac_toe/intro.png)
 
-## Table of contents
 * [Minimax Principle]({{page.url}}#minimax-principle)
 * [Minimax Algorithm in Scala]({{page.url}}#minimax-algorithm-in-scala)
 * [Tic-Tac-Toe game in Scala]({{page.url}}#tic-tac-toe-game-in-scala)
