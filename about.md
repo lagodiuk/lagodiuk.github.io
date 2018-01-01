@@ -9,8 +9,6 @@ Hello, my name is Yurii Lahodiuk.
 I have experience of solving various problems of technical and research nature. For solving of problems I apply an
 algorithmic approach in combination with a tidy analysis of existing data and domain-specific knowledge.
 
-I work as a Senior Software Engineer in the company [HERE](https://company.here.com/here/).
-
 Activities, which I like to do in my free time: 
 - Develop Open-source hobby projects: [link to my GitHub profile](https://github.com/lagodiuk)
 - Solve Competitive Programming problems on SPOJ: [link to my SPOJ profile](http://www.spoj.com/users/stemm/)
